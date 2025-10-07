@@ -6,11 +6,14 @@ import {
   deleteUserByClerkId,
   getUserByClerkId,
 } from "@/lib/dbFunctions";
+import logger from "../../../../services/logger";
 
 export async function POST(req: NextRequest) {
   try {
     const evt = await verifyWebhook(req);
     const eventType = evt.type;
+
+    logger.info(`Received webhook event: ${eventType}`);
 
     // Only handle user events
     if (
@@ -28,6 +31,7 @@ export async function POST(req: NextRequest) {
       const name = [user.first_name, user.last_name].filter(Boolean).join(" ");
 
       if (!clerkId) {
+        logger.error("Missing Clerk user id in webhook event");
         throw new Error("Missing Clerk user id");
       }
 
@@ -41,17 +45,22 @@ export async function POST(req: NextRequest) {
             name,
             role: "UTILISATEUR",
           });
+          logger.info(`Created new user from webhook: ${clerkId}`);
+        } else {
+          logger.info(`User already exists for clerkId: ${clerkId}`);
         }
       } else if (eventType === "user.updated") {
         await updateUserByClerkId(clerkId, { email, name });
+        logger.info(`Updated user from webhook: ${clerkId}`);
       } else if (eventType === "user.deleted") {
         await deleteUserByClerkId(clerkId);
+        logger.info(`Deleted user from webhook: ${clerkId}`);
       }
     }
 
     return new Response("Webhook received", { status: 200 });
   } catch (err) {
-    console.error("Error verifying webhook:", err);
+    logger.error("Error verifying webhook:", err);
     return new Response("Error verifying webhook", { status: 400 });
   }
 }

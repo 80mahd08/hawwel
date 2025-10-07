@@ -48,9 +48,9 @@ export default function LinkMaison({ maison }: { maison: LinkMaisonProps }) {
           ) : (
             <FavBtn maisonId={maison._id as string} />
           )}
-          {pathname === "/my-maisons" ? (
+          {/* {pathname === "/my-maisons" ? (
             <RemMaisonBtn maisonId={maison._id as string} />
-          ) : null}
+          ) : null} */}
         </div>
       )}
     </div>

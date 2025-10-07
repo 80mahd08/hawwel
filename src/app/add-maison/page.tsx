@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import Swal from "sweetalert2";
-import { supabase } from "@/lib/supabaseClient"; // Make sure this path is correct
+import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@chakra-ui/react";
 
 export default function AddMaisonPage() {
@@ -12,8 +12,9 @@ export default function AddMaisonPage() {
     description: "",
     location: "",
     pricePerDay: "",
-    telephone: "", // <-- Add this line
+    telephone: "",
   });
+  console.log(form);
   const [images, setImages] = useState<FileList | null>(null);
   const [loading, setLoading] = useState(false);
 

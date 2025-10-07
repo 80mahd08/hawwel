@@ -4,6 +4,7 @@ import Maison, { IMaison } from "@/models/Maison";
 import Favori from "@/models/Favori";
 import Avis from "@/models/Avis";
 import { Types } from "mongoose";
+import logger from "../../services/logger";
 
 // ------------------
 // USER FUNCTIONS
@@ -13,12 +14,15 @@ type UserInput = Omit<IUser, "_id" | "createdAt" | "updatedAt">;
 export async function createUser(userData: UserInput) {
   try {
     await dbConnect();
-    console.log("📤 Creating user with data:", userData);
+    logger.info("📤 Creating user", { clerkId: userData.clerkId });
     const user = await User.create(userData);
-    console.log("✅ User created:", user);
+    logger.info("✅ User created", { userId: user._id });
     return user;
-  } catch (error) {
-    console.error("❌ Error in createUser:", error);
+  } catch (error: any) {
+    logger.error("❌ Error in createUser", {
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }
@@ -26,10 +30,14 @@ export async function createUser(userData: UserInput) {
 export async function getUserByClerkId(clerkId: string) {
   try {
     await dbConnect();
-    console.log("🔍 Finding user by clerkId:", clerkId);
+    logger.info("🔍 Finding user by clerkId", { clerkId });
     return await User.findOne({ clerkId });
-  } catch (error) {
-    console.error("❌ Error in getUserByClerkId:", error);
+  } catch (error: any) {
+    logger.error("❌ Error in getUserByClerkId", {
+      clerkId,
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }
@@ -40,10 +48,14 @@ export async function updateUserByClerkId(
 ) {
   try {
     await dbConnect();
-    console.log("🛠 Updating user", clerkId, "with", updateData);
+    logger.info("🛠 Updating user", { clerkId, updateData });
     return await User.findOneAndUpdate({ clerkId }, updateData, { new: true });
-  } catch (error) {
-    console.error("❌ Error in updateUserByClerkId:", error);
+  } catch (error: any) {
+    logger.error("❌ Error in updateUserByClerkId", {
+      clerkId,
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }
@@ -51,10 +63,14 @@ export async function updateUserByClerkId(
 export async function deleteUserByClerkId(clerkId: string) {
   try {
     await dbConnect();
-    console.log("🗑 Deleting user by clerkId:", clerkId);
+    logger.info("🗑 Deleting user", { clerkId });
     return await User.findOneAndDelete({ clerkId });
-  } catch (error) {
-    console.error("❌ Error in deleteUserByClerkId:", error);
+  } catch (error: any) {
+    logger.error("❌ Error in deleteUserByClerkId", {
+      clerkId,
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }
@@ -62,14 +78,18 @@ export async function deleteUserByClerkId(clerkId: string) {
 export async function updateRoleToProprietaire(clerkId: string) {
   try {
     await dbConnect();
-    console.log("🛠 Updating user", clerkId, "to PROPRIETAIRE");
+    logger.info("🛠 Updating role to PROPRIETAIRE", { clerkId });
     return await User.findOneAndUpdate(
       { clerkId },
       { role: "PROPRIETAIRE" },
       { new: true }
     );
-  } catch (error) {
-    console.error("❌ Error in updateRoleToProprietaire:", error);
+  } catch (error: any) {
+    logger.error("❌ Error in updateRoleToProprietaire", {
+      clerkId,
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }
@@ -80,10 +100,16 @@ export async function updateRoleToProprietaire(clerkId: string) {
 export async function createMaison(maisonData: IMaison) {
   try {
     await dbConnect();
-    console.log("🏠 Creating maison:", maisonData);
+    logger.info("🏠 Creating maison", {
+      ownerId: maisonData.ownerId,
+      title: maisonData.title,
+    });
     return await Maison.create(maisonData);
-  } catch (error) {
-    console.error("❌ Error in createMaison:", error);
+  } catch (error: any) {
+    logger.error("❌ Error in createMaison", {
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }
@@ -91,10 +117,13 @@ export async function createMaison(maisonData: IMaison) {
 export async function getAllMaisons() {
   try {
     await dbConnect();
-    console.log("📦 Getting all maisons...");
+    logger.info("📦 Getting all maisons");
     return await Maison.find({});
-  } catch (error) {
-    console.error("❌ Error in getAllMaisons:", error);
+  } catch (error: any) {
+    logger.error("❌ Error in getAllMaisons", {
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }
@@ -102,10 +131,14 @@ export async function getAllMaisons() {
 export async function getMaisonsByOwner(userId: Types.ObjectId) {
   try {
     await dbConnect();
-    console.log("🏘 Getting maisons for owner:", userId);
+    logger.info("🏘 Getting maisons for owner", { userId });
     return await Maison.find({ ownerId: userId });
-  } catch (error) {
-    console.error("❌ Error in getMaisonsByOwner:", error);
+  } catch (error: any) {
+    logger.error("❌ Error in getMaisonsByOwner", {
+      userId,
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }
@@ -113,10 +146,14 @@ export async function getMaisonsByOwner(userId: Types.ObjectId) {
 export async function deleteMaison(maisonId: Types.ObjectId) {
   try {
     await dbConnect();
-    console.log("🗑 Deleting maison:", maisonId);
+    logger.info("🗑 Deleting maison", { maisonId });
     return await Maison.findByIdAndDelete(maisonId);
-  } catch (error) {
-    console.error("❌ Error in deleteMaison:", error);
+  } catch (error: any) {
+    logger.error("❌ Error in deleteMaison", {
+      maisonId,
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }
@@ -124,15 +161,16 @@ export async function deleteMaison(maisonId: Types.ObjectId) {
 export async function getMaisonById(maisonId: string) {
   try {
     await dbConnect();
-    if (!maisonId) {
-      throw new Error("Maison ID is required");
-    }
+    if (!maisonId) throw new Error("Maison ID is required");
     const maisonObjectId = new Types.ObjectId(maisonId);
-
-    console.log("🔍 Finding maison by id:", maisonId);
+    logger.info("🔍 Finding maison by id", { maisonId });
     return await Maison.findById(maisonObjectId);
-  } catch (error) {
-    console.error("❌ Error in getMaisonById:", error);
+  } catch (error: any) {
+    logger.error("❌ Error in getMaisonById", {
+      maisonId,
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }
@@ -146,16 +184,18 @@ export async function addFavori(
 ) {
   try {
     await dbConnect();
-    // Check if the favorite already exists
     const existing = await Favori.findOne({ userId, maisonId });
-    if (existing) {
-      // Optionally, you can throw an error or just return the existing favorite
-      return existing;
-    }
-    console.log("❤️ Adding favori: user", userId, "maison", maisonId);
+    if (existing) return existing;
+
+    logger.info("❤️ Adding favori", { userId, maisonId });
     return await Favori.create({ userId, maisonId });
-  } catch (error) {
-    console.error("❌ Error in addFavori:", error);
+  } catch (error: any) {
+    logger.error("❌ Error in addFavori", {
+      userId,
+      maisonId,
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }
@@ -163,10 +203,14 @@ export async function addFavori(
 export async function getUserFavoris(userId: Types.ObjectId) {
   try {
     await dbConnect();
-    console.log("📚 Getting favoris for user:", userId);
+    logger.info("📚 Getting favoris for user", { userId });
     return await Favori.find({ userId }).populate("maisonId");
-  } catch (error) {
-    console.error("❌ Error in getUserFavoris:", error);
+  } catch (error: any) {
+    logger.error("❌ Error in getUserFavoris", {
+      userId,
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }
@@ -177,10 +221,15 @@ export async function removeFavori(
 ) {
   try {
     await dbConnect();
-    console.log("💔 Removing favori: user", userId, "maison", maisonId);
+    logger.info("💔 Removing favori", { userId, maisonId });
     return await Favori.findOneAndDelete({ userId, maisonId });
-  } catch (error) {
-    console.error("❌ Error in removeFavori:", error);
+  } catch (error: any) {
+    logger.error("❌ Error in removeFavori", {
+      userId,
+      maisonId,
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }
@@ -188,15 +237,21 @@ export async function removeFavori(
 export async function getFavoritesCount(clerkId: string): Promise<number> {
   try {
     await dbConnect();
-    // Find the user by Clerk ID
     const user = await User.findOne({ clerkId });
     if (!user) return 0;
-    // Count the number of Favori documents for this user
-    const count = await Favori.find({ userId: user._id });
 
+    const count = await Favori.find({ userId: user._id });
+    logger.info("🔢 Favorites count", {
+      clerkId,
+      favorites: count.length,
+    });
     return count.length;
-  } catch (error) {
-    console.error("❌ Error in getFavoritesCount:", error);
+  } catch (error: any) {
+    logger.error("❌ Error in getFavoritesCount", {
+      clerkId,
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }
@@ -212,7 +267,7 @@ export async function addAvis(
 ) {
   try {
     await dbConnect();
-    console.log("📝 Adding avis from user", userId, "to maison", maisonId);
+    logger.info("📝 Adding avis", { userId, maisonId, rating });
     return await Avis.create({
       userId,
       maisonId,
@@ -220,8 +275,13 @@ export async function addAvis(
       rating,
       datePosted: new Date(),
     });
-  } catch (error) {
-    console.error("❌ Error in addAvis:", error);
+  } catch (error: any) {
+    logger.error("❌ Error in addAvis", {
+      userId,
+      maisonId,
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }
@@ -229,10 +289,14 @@ export async function addAvis(
 export async function getMaisonAvis(maisonId: Types.ObjectId) {
   try {
     await dbConnect();
-    console.log("📑 Getting avis for maison:", maisonId);
+    logger.info("📑 Getting avis for maison", { maisonId });
     return await Avis.find({ maisonId }).populate("userId");
-  } catch (error) {
-    console.error("❌ Error in getMaisonAvis:", error);
+  } catch (error: any) {
+    logger.error("❌ Error in getMaisonAvis", {
+      maisonId,
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }
@@ -240,9 +304,14 @@ export async function getMaisonAvis(maisonId: Types.ObjectId) {
 export async function removeAvis(avisId: string) {
   try {
     await dbConnect();
+    logger.info("🗑 Removing avis", { avisId });
     return await Avis.findByIdAndDelete(avisId);
-  } catch (error) {
-    console.error("❌ Error in removeAvis:", error);
+  } catch (error: any) {
+    logger.error("❌ Error in removeAvis", {
+      avisId,
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }

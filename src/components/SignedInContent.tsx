@@ -39,13 +39,15 @@ export default function SignedInContent({
 
   const handleChangeRole = async () => {
     try {
-      // Send user.id in the POST body
       const response = await fetch("/api/change-role", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId: user?.id }),
       });
       const data = await response.json();
+      if (!data.user) {
+        throw new Error("User not found or role not updated.");
+      }
       setRole(data.user.role);
       Swal.fire({
         icon: "success",
