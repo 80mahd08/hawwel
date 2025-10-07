@@ -11,18 +11,21 @@ export type LinkMaisonProps = {
   title: string;
   location: string;
   pricePerDay: number;
+  statusMaison: string;
   images: string[];
 };
 
 export default function LinkMaison({ maison }: { maison: LinkMaisonProps }) {
   const pathname = usePathname();
+  console.log(maison);
+
   const { user } = useUser();
   return (
     <div className="maison-link-container">
       <Link href={`/${maison._id}`}>
         <div className="text">
           <h2>{maison.title}</h2>
-
+          <p>{maison.statusMaison}</p>
           <p>{maison.location}</p>
           <p style={{ display: "flex", justifyContent: "flex-end" }}>
             <strong style={{ fontSize: "2rem" }}>

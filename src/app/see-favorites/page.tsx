@@ -6,7 +6,7 @@ import { Types } from "mongoose";
 export default async function page() {
   const { userId: clerkId } = await auth();
   const user = await getUserByClerkId(clerkId as string);
-  const maisons = await getUserFavoris(new Types.ObjectId(user._id));
+  const maisons = await getUserFavoris(user._id as string);
   return (
     <div className="maisons-list">
       {maisons.map((maison) => {

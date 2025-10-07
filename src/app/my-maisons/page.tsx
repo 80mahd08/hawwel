@@ -9,7 +9,7 @@ export default async function page() {
   if (!user) {
     return <div>User not found.</div>;
   }
-  const maisons = await getMaisonsByOwner(new Types.ObjectId(user._id));
+  const maisons = await getMaisonsByOwner(user._id as string);
   return (
     <div className="maisons-list">
       {maisons.map((maison) => {

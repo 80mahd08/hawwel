@@ -6,6 +6,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import Header from "@/components/Header";
 import { FavCountProvider } from "@/context/FavCountProvider";
 import { Provider } from "@/components/ui/provider";
+import { OrderNumberProvider } from "@/context/OrderNumberProvider";
 
 export const metadata: Metadata = {
   title: "Hawwel",
@@ -20,12 +21,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ClerkProvider>
-          <FavCountProvider>
-            <Header />
-            <Provider>{children}</Provider>
-          </FavCountProvider>
-        </ClerkProvider>
+        <OrderNumberProvider>
+          <ClerkProvider>
+            <FavCountProvider>
+              <Header />
+              <Provider>{children}</Provider>
+            </FavCountProvider>
+          </ClerkProvider>
+        </OrderNumberProvider>
       </body>
     </html>
   );

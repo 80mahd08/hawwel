@@ -2,7 +2,6 @@ import dbConnect from "./dbConnect";
 import User, { IUser } from "@/models/User";
 import Maison, { IMaison } from "@/models/Maison";
 import Favori from "@/models/Favori";
-import Avis from "@/models/Avis";
 import { Types } from "mongoose";
 import logger from "../../services/logger";
 
@@ -128,7 +127,7 @@ export async function getAllMaisons() {
   }
 }
 
-export async function getMaisonsByOwner(userId: Types.ObjectId) {
+export async function getMaisonsByOwner(userId: string) {
   try {
     await dbConnect();
     logger.info("🏘 Getting maisons for owner", { userId });
@@ -136,21 +135,6 @@ export async function getMaisonsByOwner(userId: Types.ObjectId) {
   } catch (error: any) {
     logger.error("❌ Error in getMaisonsByOwner", {
       userId,
-      message: error.message,
-      stack: error.stack,
-    });
-    throw error;
-  }
-}
-
-export async function deleteMaison(maisonId: Types.ObjectId) {
-  try {
-    await dbConnect();
-    logger.info("🗑 Deleting maison", { maisonId });
-    return await Maison.findByIdAndDelete(maisonId);
-  } catch (error: any) {
-    logger.error("❌ Error in deleteMaison", {
-      maisonId,
       message: error.message,
       stack: error.stack,
     });
@@ -168,6 +152,28 @@ export async function getMaisonById(maisonId: string) {
   } catch (error: any) {
     logger.error("❌ Error in getMaisonById", {
       maisonId,
+      message: error.message,
+      stack: error.stack,
+    });
+    throw error;
+  }
+}
+
+export async function updateMaisonStatustoUnavailable(
+  maisonId: Types.ObjectId
+) {
+  try {
+    await dbConnect();
+    logger.info("🛠 Updating maison status", { maisonId });
+    return await Maison.findByIdAndUpdate(
+      maisonId,
+      { statusMaison: "unavailable" },
+      { new: true }
+    );
+  } catch (error: any) {
+    logger.error("❌ Error in updateMaisonStatus", {
+      maisonId,
+      statusMaison: "unavailable",
       message: error.message,
       stack: error.stack,
     });
@@ -200,7 +206,7 @@ export async function addFavori(
   }
 }
 
-export async function getUserFavoris(userId: Types.ObjectId) {
+export async function getUserFavoris(userId: string) {
   try {
     await dbConnect();
     logger.info("📚 Getting favoris for user", { userId });
@@ -257,61 +263,5 @@ export async function getFavoritesCount(clerkId: string): Promise<number> {
 }
 
 // ------------------
-// AVIS FUNCTIONS
+// pending functions
 // ------------------
-export async function addAvis(
-  userId: Types.ObjectId,
-  maisonId: Types.ObjectId,
-  comment: string,
-  rating: number
-) {
-  try {
-    await dbConnect();
-    logger.info("📝 Adding avis", { userId, maisonId, rating });
-    return await Avis.create({
-      userId,
-      maisonId,
-      comment,
-      rating,
-      datePosted: new Date(),
-    });
-  } catch (error: any) {
-    logger.error("❌ Error in addAvis", {
-      userId,
-      maisonId,
-      message: error.message,
-      stack: error.stack,
-    });
-    throw error;
-  }
-}
-
-export async function getMaisonAvis(maisonId: Types.ObjectId) {
-  try {
-    await dbConnect();
-    logger.info("📑 Getting avis for maison", { maisonId });
-    return await Avis.find({ maisonId }).populate("userId");
-  } catch (error: any) {
-    logger.error("❌ Error in getMaisonAvis", {
-      maisonId,
-      message: error.message,
-      stack: error.stack,
-    });
-    throw error;
-  }
-}
-
-export async function removeAvis(avisId: string) {
-  try {
-    await dbConnect();
-    logger.info("🗑 Removing avis", { avisId });
-    return await Avis.findByIdAndDelete(avisId);
-  } catch (error: any) {
-    logger.error("❌ Error in removeAvis", {
-      avisId,
-      message: error.message,
-      stack: error.stack,
-    });
-    throw error;
-  }
-}
