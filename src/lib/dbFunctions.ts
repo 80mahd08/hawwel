@@ -1,19 +1,30 @@
+// ============================================
+// Imports
+// ============================================
 import dbConnect from "./dbConnect";
-import User, { IUser } from "@/models/User";
-import Maison, { IMaison } from "@/models/Maison";
-import Favori from "@/models/Favori";
-import { Types } from "mongoose";
 import logger from "../../services/logger";
 
-// ------------------
-// USER FUNCTIONS
-// ------------------
+import User, { IUser } from "@/models/User";
+import house, { Ihouse } from "@/models/house";
+import favorite from "@/models/favorite";
+import Pending from "@/models/Pending";
+
+// ============================================
+// Types
+// ============================================
 type UserInput = Omit<IUser, "_id" | "createdAt" | "updatedAt">;
+
+// ============================================
+// USER FUNCTIONS
+// ============================================
+
+//get owner id by house id
 
 export async function createUser(userData: UserInput) {
   try {
     await dbConnect();
     logger.info("📤 Creating user", { clerkId: userData.clerkId });
+
     const user = await User.create(userData);
     logger.info("✅ User created", { userId: user._id });
     return user;
@@ -30,6 +41,7 @@ export async function getUserByClerkId(clerkId: string) {
   try {
     await dbConnect();
     logger.info("🔍 Finding user by clerkId", { clerkId });
+
     return await User.findOne({ clerkId });
   } catch (error: any) {
     logger.error("❌ Error in getUserByClerkId", {
@@ -41,6 +53,20 @@ export async function getUserByClerkId(clerkId: string) {
   }
 }
 
+export async function getUserById(userId: string) {
+  try {
+    await dbConnect();
+    logger.info("🔍 Finding user by id", { userId });
+    return await User.findById(userId);
+  } catch (error: any) {
+    logger.error("❌ Error in getUserById", {
+      userId,
+      message: error.message,
+      stack: error.stack,
+    });
+    throw error;
+  }
+}
 export async function updateUserByClerkId(
   clerkId: string,
   updateData: Partial<IUser>
@@ -48,6 +74,7 @@ export async function updateUserByClerkId(
   try {
     await dbConnect();
     logger.info("🛠 Updating user", { clerkId, updateData });
+
     return await User.findOneAndUpdate({ clerkId }, updateData, { new: true });
   } catch (error: any) {
     logger.error("❌ Error in updateUserByClerkId", {
@@ -63,6 +90,7 @@ export async function deleteUserByClerkId(clerkId: string) {
   try {
     await dbConnect();
     logger.info("🗑 Deleting user", { clerkId });
+
     return await User.findOneAndDelete({ clerkId });
   } catch (error: any) {
     logger.error("❌ Error in deleteUserByClerkId", {
@@ -74,17 +102,18 @@ export async function deleteUserByClerkId(clerkId: string) {
   }
 }
 
-export async function updateRoleToProprietaire(clerkId: string) {
+export async function updateRoleToOwner(clerkId: string) {
   try {
     await dbConnect();
-    logger.info("🛠 Updating role to PROPRIETAIRE", { clerkId });
+    logger.info("🛠 Updating role to OWNER", { clerkId });
+
     return await User.findOneAndUpdate(
       { clerkId },
-      { role: "PROPRIETAIRE" },
+      { role: "OWNER" },
       { new: true }
     );
   } catch (error: any) {
-    logger.error("❌ Error in updateRoleToProprietaire", {
+    logger.error("❌ Error in updateRoleToOwner", {
       clerkId,
       message: error.message,
       stack: error.stack,
@@ -93,19 +122,20 @@ export async function updateRoleToProprietaire(clerkId: string) {
   }
 }
 
-// ------------------
-// MAISON FUNCTIONS
-// ------------------
-export async function createMaison(maisonData: IMaison) {
+// ============================================
+// HOUSE FUNCTIONS
+// ============================================
+export async function createhouse(houseData: Ihouse) {
   try {
     await dbConnect();
-    logger.info("🏠 Creating maison", {
-      ownerId: maisonData.ownerId,
-      title: maisonData.title,
+    logger.info("🏠 Creating house", {
+      ownerId: houseData.ownerId,
+      title: houseData.title,
     });
-    return await Maison.create(maisonData);
+
+    return await house.create(houseData);
   } catch (error: any) {
-    logger.error("❌ Error in createMaison", {
+    logger.error("❌ Error in createhouse", {
       message: error.message,
       stack: error.stack,
     });
@@ -113,13 +143,14 @@ export async function createMaison(maisonData: IMaison) {
   }
 }
 
-export async function getAllMaisons() {
+export async function getAllhouses() {
   try {
     await dbConnect();
-    logger.info("📦 Getting all maisons");
-    return await Maison.find({});
+    logger.info("📦 Getting all houses");
+
+    return await house.find({});
   } catch (error: any) {
-    logger.error("❌ Error in getAllMaisons", {
+    logger.error("❌ Error in getAllhouses", {
       message: error.message,
       stack: error.stack,
     });
@@ -127,13 +158,14 @@ export async function getAllMaisons() {
   }
 }
 
-export async function getMaisonsByOwner(userId: string) {
+export async function gethousesByOwner(userId: string) {
   try {
     await dbConnect();
-    logger.info("🏘 Getting maisons for owner", { userId });
-    return await Maison.find({ ownerId: userId });
+    logger.info("🏘 Getting houses for owner", { userId });
+
+    return await house.find({ ownerId: userId });
   } catch (error: any) {
-    logger.error("❌ Error in getMaisonsByOwner", {
+    logger.error("❌ Error in gethousesByOwner", {
       userId,
       message: error.message,
       stack: error.stack,
@@ -142,16 +174,19 @@ export async function getMaisonsByOwner(userId: string) {
   }
 }
 
-export async function getMaisonById(maisonId: string) {
+export async function gethouseById(houseId: string) {
   try {
     await dbConnect();
-    if (!maisonId) throw new Error("Maison ID is required");
-    const maisonObjectId = new Types.ObjectId(maisonId);
-    logger.info("🔍 Finding maison by id", { maisonId });
-    return await Maison.findById(maisonObjectId);
+    if (!houseId) throw new Error("house ID is required");
+
+    logger.info("🔍 Finding house by id", { houseId });
+
+    const result = await house.findById(houseId);
+
+    return result;
   } catch (error: any) {
-    logger.error("❌ Error in getMaisonById", {
-      maisonId,
+    logger.error("❌ Error in gethouseById", {
+      houseId,
       message: error.message,
       stack: error.stack,
     });
@@ -159,46 +194,25 @@ export async function getMaisonById(maisonId: string) {
   }
 }
 
-export async function updateMaisonStatustoUnavailable(
-  maisonId: Types.ObjectId
-) {
+// ============================================
+// FAVORITE FUNCTIONS
+// ============================================
+export async function addfavorite(userId: string, houseId: string) {
   try {
     await dbConnect();
-    logger.info("🛠 Updating maison status", { maisonId });
-    return await Maison.findByIdAndUpdate(
-      maisonId,
-      { statusMaison: "unavailable" },
-      { new: true }
-    );
-  } catch (error: any) {
-    logger.error("❌ Error in updateMaisonStatus", {
-      maisonId,
-      statusMaison: "unavailable",
-      message: error.message,
-      stack: error.stack,
-    });
-    throw error;
-  }
-}
 
-// ------------------
-// FAVORI FUNCTIONS
-// ------------------
-export async function addFavori(
-  userId: Types.ObjectId,
-  maisonId: Types.ObjectId
-) {
-  try {
-    await dbConnect();
-    const existing = await Favori.findOne({ userId, maisonId });
-    if (existing) return existing;
+    const existing = await favorite.findOne({ userId, houseId });
+    if (existing) {
+      return { favorite: existing, alreadyExists: true }; // ✅ indicate duplicate
+    }
 
-    logger.info("❤️ Adding favori", { userId, maisonId });
-    return await Favori.create({ userId, maisonId });
+    logger.info("❤️ Adding favorite", { userId, houseId });
+    const newFav = await favorite.create({ userId, houseId });
+    return { favorite: newFav, alreadyExists: false };
   } catch (error: any) {
-    logger.error("❌ Error in addFavori", {
+    logger.error("❌ Error in addfavorite", {
       userId,
-      maisonId,
+      houseId,
       message: error.message,
       stack: error.stack,
     });
@@ -206,13 +220,14 @@ export async function addFavori(
   }
 }
 
-export async function getUserFavoris(userId: string) {
+export async function getUserfavorites(userId: string) {
   try {
     await dbConnect();
-    logger.info("📚 Getting favoris for user", { userId });
-    return await Favori.find({ userId }).populate("maisonId");
+    logger.info("📚 Getting favorites for user", { userId });
+
+    return await favorite.find({ userId }).populate("houseId");
   } catch (error: any) {
-    logger.error("❌ Error in getUserFavoris", {
+    logger.error("❌ Error in getUserfavorites", {
       userId,
       message: error.message,
       stack: error.stack,
@@ -221,18 +236,16 @@ export async function getUserFavoris(userId: string) {
   }
 }
 
-export async function removeFavori(
-  userId: Types.ObjectId,
-  maisonId: Types.ObjectId
-) {
+export async function removefavorite(userId: string, houseId: string) {
   try {
     await dbConnect();
-    logger.info("💔 Removing favori", { userId, maisonId });
-    return await Favori.findOneAndDelete({ userId, maisonId });
+    logger.info("💔 Removing favorite", { userId, houseId });
+
+    return await favorite.findOneAndDelete({ userId, houseId });
   } catch (error: any) {
-    logger.error("❌ Error in removeFavori", {
+    logger.error("❌ Error in removefavorite", {
       userId,
-      maisonId,
+      houseId,
       message: error.message,
       stack: error.stack,
     });
@@ -240,20 +253,19 @@ export async function removeFavori(
   }
 }
 
-export async function getFavoritesCount(clerkId: string): Promise<number> {
+export async function getfavoritesCount(clerkId: string): Promise<number> {
   try {
     await dbConnect();
+
     const user = await User.findOne({ clerkId });
     if (!user) return 0;
 
-    const count = await Favori.find({ userId: user._id });
-    logger.info("🔢 Favorites count", {
-      clerkId,
-      favorites: count.length,
-    });
+    const count = await favorite.find({ userId: user._id });
+    logger.info("🔢 favorites count", { clerkId, count: count.length });
+
     return count.length;
   } catch (error: any) {
-    logger.error("❌ Error in getFavoritesCount", {
+    logger.error("❌ Error in getfavoritesCount", {
       clerkId,
       message: error.message,
       stack: error.stack,
@@ -262,6 +274,187 @@ export async function getFavoritesCount(clerkId: string): Promise<number> {
   }
 }
 
-// ------------------
-// pending functions
-// ------------------
+// ============================================
+// PENDING FUNCTIONS
+// ============================================
+export async function createPending({
+  buyerId,
+  ownerId,
+  houseId,
+}: {
+  buyerId: string;
+  ownerId: string;
+  houseId: string;
+}) {
+  try {
+    await dbConnect();
+
+    logger.info("🕒 Creating pending request", {
+      buyerId,
+      ownerId,
+      houseId,
+    });
+
+    const existing = await Pending.findOne({
+      buyerId,
+      houseId,
+      ownerId,
+      status: "pending",
+    });
+
+    if (existing) {
+      logger.info("⚠️ Pending already exists", {
+        pendingId: existing._id,
+      });
+      return existing;
+    }
+
+    const pending = await Pending.create({ buyerId, ownerId, houseId });
+
+    logger.info("✅ Pending created successfully", {
+      pendingId: pending._id,
+    });
+
+    return pending;
+  } catch (error: any) {
+    logger.error("❌ Error creating pending", {
+      buyerId,
+      ownerId,
+      houseId,
+      message: error.message,
+      stack: error.stack,
+    });
+    throw error;
+  }
+}
+
+export async function getPendingByOwner(ownerId: string) {
+  try {
+    await dbConnect();
+    logger.info("🔍 Getting pending requests for owner", { ownerId });
+
+    return await Pending.find({ ownerId, status: "pending" });
+  } catch (error: any) {
+    logger.error("❌ Error in getPendingByOwner", {
+      ownerId,
+      message: error.message,
+      stack: error.stack,
+    });
+    throw error;
+  }
+}
+export async function getPendingCount(clerkId: string): Promise<number> {
+  try {
+    await dbConnect();
+
+    const user = await User.findOne({ clerkId });
+    if (!user) return 0;
+
+    const count = await Pending.find({ ownerId: user._id, status: "pending" });
+    logger.info("🔢 pending count", { clerkId, count: count.length });
+    return count.length;
+  } catch (error: any) {
+    logger.error("❌ Error in getPendingCount", {
+      clerkId,
+      message: error.message,
+      stack: error.stack,
+    });
+    throw error;
+  }
+}
+
+export async function getPendingByhouse(houseId: string) {
+  try {
+    await dbConnect();
+    logger.info("🔍 Getting pending requests for house", { houseId });
+
+    return await Pending.find({ houseId }).populate("buyerId");
+  } catch (error: any) {
+    logger.error("❌ Error in getPendingByhouse", {
+      houseId,
+      message: error.message,
+      stack: error.stack,
+    });
+    throw error;
+  }
+}
+
+export async function getPendingByBuyerHouse(buyerId: string, houseId: string) {
+  try {
+    await dbConnect();
+    logger.info("🔍 Getting pending by buyer + house", { buyerId, houseId });
+
+    // return a single pending matching buyer + house with status 'pending'
+    return await Pending.findOne({ buyerId, houseId, status: "pending" });
+  } catch (error: any) {
+    logger.error("❌ Error in getPendingByBuyerHouse", {
+      buyerId,
+      houseId,
+      message: error.message,
+      stack: error.stack,
+    });
+    throw error;
+  }
+}
+
+export async function updatePendingStatus(
+  pendingId: string,
+  status: "pending" | "approved" | "rejected"
+) {
+  try {
+    await dbConnect();
+    logger.info("🔁 Updating pending status", { pendingId, status });
+
+    const pending = await Pending.findById(pendingId);
+    if (!pending) {
+      logger.warn("Pending not found", { pendingId });
+      throw new Error("Pending not found");
+    }
+
+    if ((pending as any).status === status) {
+      logger.info("Pending already has the requested status", {
+        pendingId,
+        status,
+      });
+      return pending;
+    }
+
+    const updated = await Pending.findByIdAndUpdate(
+      pendingId,
+      { status },
+      { new: true }
+    );
+
+    logger.info("✅ Pending status updated", {
+      pendingId,
+      oldStatus: (pending as any).status,
+      newStatus: status,
+    });
+
+    return updated;
+  } catch (error: any) {
+    logger.error("❌ Error in updatePendingStatus", {
+      pendingId,
+      status,
+      message: error?.message,
+      stack: error?.stack,
+    });
+    throw error;
+  }
+}
+
+export async function deletePending(pendingId: string) {
+  try {
+    await dbConnect();
+    logger.info("🗑 Deleting pending request", { pendingId });
+
+    return await Pending.findByIdAndDelete(pendingId);
+  } catch (error: any) {
+    logger.error("❌ Error in deletePending", {
+      pendingId,
+      message: error.message,
+      stack: error.stack,
+    });
+    throw error;
+  }
+}

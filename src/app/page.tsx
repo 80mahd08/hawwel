@@ -1,21 +1,22 @@
-import LinkMaison from "@/components/LinkMaison";
-import { getAllMaisons } from "@/lib/dbFunctions";
+import HouseLink from "@/components/HouseLink/HouseLink";
+import { getAllhouses } from "@/lib/dbFunctions";
 
 export default async function page() {
-  const maisons = await getAllMaisons();
+  const housesData = await getAllhouses();
+  const houses = housesData?.map(house => JSON.parse(JSON.stringify(house))) || [];
 
-  if (!maisons || maisons.length === 0) {
+  if (houses.length === 0) {
     return (
       <div style={{ textAlign: "center", marginTop: "2rem" }}>
-        <p>No maisons available.</p>
+        <p>No houses available.</p>
       </div>
     );
   }
 
   return (
-    <div className="maisons-list">
-      {maisons.map((maison) => (
-        <LinkMaison key={maison._id} maison={maison} />
+    <div className="houses-list">
+      {houses.map((house) => (
+        <HouseLink key={house._id} house={house} />
       ))}
     </div>
   );

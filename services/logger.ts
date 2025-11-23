@@ -1,5 +1,5 @@
 import { createLogger, format, transports } from "winston";
-import "winston-daily-rotate-file";
+import DailyRotateFile from "winston-daily-rotate-file";
 
 const emojiByLevel: Record<string, string> = {
   error: "❌",
@@ -12,7 +12,7 @@ const emojiByLevel: Record<string, string> = {
 };
 
 const getLogger = (fileName = "application") => {
-  const fileLogTransport = new transports.DailyRotateFile({
+  const fileLogTransport = new DailyRotateFile({
     filename: `logs/${fileName}-%DATE%.log`,
     datePattern: "YYYY-MM-DD",
     zippedArchive: true,

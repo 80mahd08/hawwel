@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useCallback } from "react";
 type FavCountContextType = {
   count: number;
   setCount: (count: number) => void;
-  refreshCount: (userId: string) => Promise<void>;
+  refreshCountFav: (clerkId: string) => Promise<void>;
 };
 
 const FavCountContext = createContext<FavCountContextType | undefined>(
@@ -12,29 +12,29 @@ const FavCountContext = createContext<FavCountContextType | undefined>(
 );
 
 export const FavCountProvider: React.FC<{
-  userId?: string;
+  clerkId?: string;
   children: React.ReactNode;
-}> = ({ userId, children }) => {
+}> = ({ clerkId, children }) => {
   const [count, setCount] = useState(0);
 
-  const refreshCount = useCallback(
+  const refreshCountFav = useCallback(
     async (uid?: string) => {
-      if (!uid && !userId) return;
+      if (!uid && !clerkId) return;
       try {
         const response = await fetch(
-          `/api/get-favorites-count?userId=${uid || userId}`
+          `/api/favorite/get?clerkId=${uid || clerkId}`
         );
         const data = await response.json();
         setCount(data.count);
-      } catch (error) {
+      } catch {
         setCount(0);
       }
     },
-    [userId]
+    [clerkId]
   );
 
   return (
-    <FavCountContext.Provider value={{ count, setCount, refreshCount }}>
+    <FavCountContext.Provider value={{ count, setCount, refreshCountFav }}>
       {children}
     </FavCountContext.Provider>
   );

@@ -1,0 +1,205 @@
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:10:42"}
+{"level":"info","message":"🔌 Connecting to MongoDB...","timestamp":"2025-11-16 20:10:42"}
+{"level":"info","message":"🚀 Mongoose connected","timestamp":"2025-11-16 20:10:43"}
+{"level":"info","message":"📦 Getting all houses","timestamp":"2025-11-16 20:10:43"}
+{"level":"info","message":"📦 Getting all houses","timestamp":"2025-11-16 20:12:33"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:29:50"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:29:51"}
+{"level":"info","message":"🔌 Connecting to MongoDB...","timestamp":"2025-11-16 20:29:51"}
+{"level":"info","message":"🚀 Mongoose connected","timestamp":"2025-11-16 20:29:51"}
+{"houseId":"68ee914de561b7739b1851d4","level":"info","message":"🔍 Finding house by id","timestamp":"2025-11-16 20:29:51"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:29:52"}
+{"houseId":"68ee914de561b7739b1851d4","level":"info","message":"🔍 Finding house by id","timestamp":"2025-11-16 20:30:08"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:30:09"}
+{"houseId":"68ee914de561b7739b1851d4","level":"info","message":"🔍 Finding house by id","timestamp":"2025-11-16 20:30:22"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:30:23"}
+{"houseId":"68ee914de561b7739b1851d4","level":"info","message":"🔍 Finding house by id","timestamp":"2025-11-16 20:36:57"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 20:36:58"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:36:59"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 20:36:59","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 20:36:59"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 20:36:59","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 20:36:59","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 20:36:59"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 20:36:59","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"houseId":"68ee914de561b7739b1851d4","level":"info","message":"🔍 Finding house by id","timestamp":"2025-11-16 20:43:23"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 20:43:24"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:43:24"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 20:43:24","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 20:43:24"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 20:43:24","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 20:43:25","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 20:43:25"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 20:43:25","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"houseId":"68ee914de561b7739b1851d4","level":"info","message":"🔍 Finding house by id","timestamp":"2025-11-16 20:43:46"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:43:47"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 20:43:48"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 20:43:48","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 20:43:48"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 20:43:48","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 20:43:49","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 20:43:49"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 20:43:49","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"level":"info","message":"📦 Getting all houses","timestamp":"2025-11-16 20:43:57"}
+{"level":"info","message":"📦 Getting all houses","timestamp":"2025-11-16 20:47:38"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 20:47:39","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 20:47:39"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 20:47:39","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 20:47:40","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 20:47:40"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 20:47:40","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"houseId":"68ee914de561b7739b1851d4","level":"info","message":"🔍 Finding house by id","timestamp":"2025-11-16 20:47:48"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 20:47:49"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:47:49"}
+{"level":"info","message":"📦 Getting all houses","timestamp":"2025-11-16 20:48:21"}
+{"houseId":"68ee914de561b7739b1851d4","level":"info","message":"🔍 Finding house by id","timestamp":"2025-11-16 20:48:32"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 20:48:32"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:48:33"}
+{"houseId":"68ee914de561b7739b1851d4","level":"info","message":"🔍 Finding house by id","timestamp":"2025-11-16 20:49:45"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:49:46"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 20:49:49"}
+{"houseId":"user-houses","level":"error","message":"input must be a 24 character hex string, 12 byte Uint8Array, or an integer","stack":"BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer\n    at new ObjectId (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\node_modules\\bson\\lib\\bson.cjs:2538:23)\n    at gethouseById (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:562:31)\n    at async Page (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:895:23)","timestamp":"2025-11-16 20:51:10"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:51:10"}
+{"houseId":"add-house","level":"error","message":"input must be a 24 character hex string, 12 byte Uint8Array, or an integer","stack":"BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer\n    at new ObjectId (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\node_modules\\bson\\lib\\bson.cjs:2538:23)\n    at gethouseById (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:562:31)\n    at async Page (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:895:23)","timestamp":"2025-11-16 20:51:11"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:51:12"}
+{"level":"info","message":"📦 Getting all houses","timestamp":"2025-11-16 20:51:14"}
+{"houseId":"68ee914de561b7739b1851d4","level":"info","message":"🔍 Finding house by id","timestamp":"2025-11-16 20:51:15"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:51:16"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 20:51:16"}
+{"houseId":"add-house","level":"error","message":"input must be a 24 character hex string, 12 byte Uint8Array, or an integer","stack":"BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer\n    at new ObjectId (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\node_modules\\bson\\lib\\bson.cjs:2538:23)\n    at gethouseById (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:562:31)\n    at async Page (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:895:23)","timestamp":"2025-11-16 20:51:18"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:51:19"}
+{"level":"info","message":"📦 Getting all houses","timestamp":"2025-11-16 20:51:21"}
+{"houseId":"68ee914de561b7739b1851d4","level":"info","message":"🔍 Finding house by id","timestamp":"2025-11-16 20:51:22"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:51:22"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 20:51:23"}
+{"houseId":"add-house","level":"error","message":"input must be a 24 character hex string, 12 byte Uint8Array, or an integer","stack":"BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer\n    at new ObjectId (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\node_modules\\bson\\lib\\bson.cjs:2538:23)\n    at gethouseById (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:562:31)\n    at async Page (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:895:23)","timestamp":"2025-11-16 20:54:47"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:54:48"}
+{"houseId":"add-house","level":"error","message":"input must be a 24 character hex string, 12 byte Uint8Array, or an integer","stack":"BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer\n    at new ObjectId (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\node_modules\\bson\\lib\\bson.cjs:2538:23)\n    at gethouseById (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:562:31)\n    at async Page (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:895:23)","timestamp":"2025-11-16 20:55:02"}
+{"houseId":"add-house","level":"error","message":"input must be a 24 character hex string, 12 byte Uint8Array, or an integer","stack":"BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer\n    at new ObjectId (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\node_modules\\bson\\lib\\bson.cjs:2538:23)\n    at gethouseById (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:562:31)\n    at async Page (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:895:23)","timestamp":"2025-11-16 20:55:03"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 20:55:03"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 21:09:03","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:09:03"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 21:09:03","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 21:09:03","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:09:03"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 21:09:03","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 21:12:26","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:12:26"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 21:12:26","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 21:12:26","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:12:26"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 21:12:26","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"level":"info","message":"📦 Getting all houses","timestamp":"2025-11-16 21:12:27"}
+{"level":"info","message":"Received POST /api/set-house request","timestamp":"2025-11-16 21:12:46"}
+{"level":"info","message":"Request payload: userId=user_3466nZx98d6sNKuYPb4AydspLE5, houseData={\"title\":\"qds\",\"description\":\"sqd\",\"location\":\"qsd\",\"pricePerDay\":111,\"telephone\":\"646\",\"images\":[\"https://dvlanrmphynbijwnqtmy.supabase.co/storage/v1/object/public/house-images/houses/1763323965468_integration.png\"]}","timestamp":"2025-11-16 21:12:46"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:12:46"}
+{"level":"info","message":"User found: user_3466nZx98d6sNKuYPb4AydspLE5 with role=OWNER","timestamp":"2025-11-16 21:12:46"}
+{"level":"warn","message":"User user_3466nZx98d6sNKuYPb4AydspLE5 not authorized to create house","timestamp":"2025-11-16 21:12:46"}
+{"level":"info","message":"Received POST /api/set-house request","timestamp":"2025-11-16 21:17:47"}
+{"level":"info","message":"Request payload: userId=user_3466nZx98d6sNKuYPb4AydspLE5, houseData={\"title\":\"qds\",\"description\":\"sqd\",\"location\":\"qsd\",\"pricePerDay\":111,\"telephone\":\"646\",\"images\":[\"https://dvlanrmphynbijwnqtmy.supabase.co/storage/v1/object/public/house-images/houses/1763324265105_integration.png\"]}","timestamp":"2025-11-16 21:17:47"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:17:47"}
+{"level":"info","message":"User found: user_3466nZx98d6sNKuYPb4AydspLE5 with role=OWNER","timestamp":"2025-11-16 21:17:47"}
+{"level":"warn","message":"User user_3466nZx98d6sNKuYPb4AydspLE5 not authorized to create house","timestamp":"2025-11-16 21:17:47"}
+{"level":"info","message":"Received POST /api/set-house request","timestamp":"2025-11-16 21:33:39"}
+{"level":"info","message":"Request payload: userId=user_3466nZx98d6sNKuYPb4AydspLE5, houseData={\"title\":\"qds\",\"description\":\"sqd\",\"location\":\"qsd\",\"pricePerDay\":111,\"telephone\":\"646\",\"images\":[\"https://dvlanrmphynbijwnqtmy.supabase.co/storage/v1/object/public/house-images/houses/1763325216602_integration.png\"]}","timestamp":"2025-11-16 21:33:39"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:33:39"}
+{"level":"info","message":"User found: user_3466nZx98d6sNKuYPb4AydspLE5 with role=OWNER","timestamp":"2025-11-16 21:33:39"}
+{"level":"info","message":"Creating house for user user_3466nZx98d6sNKuYPb4AydspLE5","timestamp":"2025-11-16 21:33:39"}
+{"level":"info","message":"🏠 Creating house","ownerId":"68ef6e82686427ed552448d3","timestamp":"2025-11-16 21:33:39","title":"qds"}
+{"level":"info","message":"house created successfully: houseId=691a3523e8dbde3b55dcdad4","timestamp":"2025-11-16 21:33:39"}
+{"level":"info","message":"📦 Getting all houses","timestamp":"2025-11-16 21:33:43"}
+{"houseId":"user-houses","level":"error","message":"input must be a 24 character hex string, 12 byte Uint8Array, or an integer","stack":"BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer\n    at new ObjectId (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\node_modules\\bson\\lib\\bson.cjs:2538:23)\n    at gethouseById (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__3d1163ce._.js:594:31)\n    at async Page (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:895:23)","timestamp":"2025-11-16 21:33:59"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 21:34:00"}
+{"houseId":"user-houses","level":"error","message":"input must be a 24 character hex string, 12 byte Uint8Array, or an integer","stack":"BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer\n    at new ObjectId (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\node_modules\\bson\\lib\\bson.cjs:2538:23)\n    at gethouseById (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:562:31)\n    at async Page (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:895:23)","timestamp":"2025-11-16 21:35:20"}
+{"houseId":"user-houses","level":"error","message":"input must be a 24 character hex string, 12 byte Uint8Array, or an integer","stack":"BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer\n    at new ObjectId (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\node_modules\\bson\\lib\\bson.cjs:2538:23)\n    at gethouseById (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:562:31)\n    at async Page (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:895:23)","timestamp":"2025-11-16 21:35:20"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 21:35:20"}
+{"houseId":"user-houses","level":"error","message":"input must be a 24 character hex string, 12 byte Uint8Array, or an integer","stack":"BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer\n    at new ObjectId (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\node_modules\\bson\\lib\\bson.cjs:2538:23)\n    at gethouseById (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:562:31)\n    at async Page (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:895:23)","timestamp":"2025-11-16 21:35:55"}
+{"houseId":"user-houses","level":"error","message":"input must be a 24 character hex string, 12 byte Uint8Array, or an integer","stack":"BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer\n    at new ObjectId (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\node_modules\\bson\\lib\\bson.cjs:2538:23)\n    at gethouseById (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:562:31)\n    at async Page (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:895:23)","timestamp":"2025-11-16 21:35:55"}
+{"houseId":"user-houses","level":"error","message":"input must be a 24 character hex string, 12 byte Uint8Array, or an integer","stack":"BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer\n    at new ObjectId (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\node_modules\\bson\\lib\\bson.cjs:2538:23)\n    at gethouseById (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:562:31)\n    at async Page (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:895:23)","timestamp":"2025-11-16 21:35:56"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 21:35:56"}
+{"houseId":"user-houses","level":"error","message":"input must be a 24 character hex string, 12 byte Uint8Array, or an integer","stack":"BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer\n    at new ObjectId (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\node_modules\\bson\\lib\\bson.cjs:2538:23)\n    at gethouseById (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:562:31)\n    at async Page (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:895:23)","timestamp":"2025-11-16 21:44:54"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 21:44:55"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 21:44:55","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:44:55"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 21:44:55","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 21:44:56","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:44:56"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 21:44:56","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"level":"info","message":"📦 Getting all houses","timestamp":"2025-11-16 21:45:02"}
+{"houseId":"user-houses","level":"error","message":"input must be a 24 character hex string, 12 byte Uint8Array, or an integer","stack":"BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer\n    at new ObjectId (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\node_modules\\bson\\lib\\bson.cjs:2538:23)\n    at gethouseById (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:562:31)\n    at async Page (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:895:23)","timestamp":"2025-11-16 21:45:09"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 21:45:10"}
+{"houseId":"user-houses","level":"error","message":"input must be a 24 character hex string, 12 byte Uint8Array, or an integer","stack":"BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer\n    at new ObjectId (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\node_modules\\bson\\lib\\bson.cjs:2538:23)\n    at gethouseById (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:562:31)\n    at async Page (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:895:23)","timestamp":"2025-11-16 21:46:16"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 21:46:17"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 21:46:18","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:46:18"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 21:46:18","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 21:46:18","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:46:18"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 21:46:18","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:46:19"}
+{"level":"info","message":"🏘 Getting houses for owner","timestamp":"2025-11-16 21:46:19","userId":"68ef6e82686427ed552448d3"}
+{"houseId":"691a3523e8dbde3b55dcdad4","level":"info","message":"🔍 Finding house by id","timestamp":"2025-11-16 21:46:22"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:46:22"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 21:46:22"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:47:21"}
+{"level":"info","message":"🏘 Getting houses for owner","timestamp":"2025-11-16 21:47:21","userId":"68ef6e82686427ed552448d3"}
+{"houseId":"see-favorites","level":"error","message":"input must be a 24 character hex string, 12 byte Uint8Array, or an integer","stack":"BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer\n    at new ObjectId (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\node_modules\\bson\\lib\\bson.cjs:2538:23)\n    at gethouseById (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:562:31)\n    at async Page (C:\\Users\\amari\\OneDrive\\Bureau\\hawwel-resolve\\.next\\server\\chunks\\ssr\\[root-of-the-server]__909fdbb1._.js:895:23)","timestamp":"2025-11-16 21:47:23"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 21:47:23"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:49:07"}
+{"level":"info","message":"📚 Getting favorites for user","timestamp":"2025-11-16 21:49:07","userId":"68ef6e82686427ed552448d3"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:49:38"}
+{"level":"info","message":"📚 Getting favorites for user","timestamp":"2025-11-16 21:49:38","userId":"68ef6e82686427ed552448d3"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:49:45"}
+{"level":"info","message":"📚 Getting favorites for user","timestamp":"2025-11-16 21:49:45","userId":"68ef6e82686427ed552448d3"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:50:49"}
+{"level":"info","message":"🏘 Getting houses for owner","timestamp":"2025-11-16 21:50:49","userId":"68ef6e82686427ed552448d3"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 21:50:51","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:50:51"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 21:50:51","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 21:50:51","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:50:51"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 21:50:51","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:50:52"}
+{"level":"info","message":"📚 Getting favorites for user","timestamp":"2025-11-16 21:50:52","userId":"68ef6e82686427ed552448d3"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:50:55"}
+{"level":"info","message":"📚 Getting favorites for user","timestamp":"2025-11-16 21:50:55","userId":"68ef6e82686427ed552448d3"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:50:56"}
+{"level":"info","message":"📚 Getting favorites for user","timestamp":"2025-11-16 21:50:56","userId":"68ef6e82686427ed552448d3"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:52:54"}
+{"level":"info","message":"📚 Getting favorites for user","timestamp":"2025-11-16 21:52:54","userId":"68ef6e82686427ed552448d3"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 21:52:57","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:52:57"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 21:52:57","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"level":"info","message":"📩 GET /api/get-user request","timestamp":"2025-11-16 21:52:57","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:52:57"}
+{"level":"info","message":"✅ User found","timestamp":"2025-11-16 21:52:57","userId":"user_3466nZx98d6sNKuYPb4AydspLE5"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:53:04"}
+{"level":"info","message":"📚 Getting favorites for user","timestamp":"2025-11-16 21:53:04","userId":"68ef6e82686427ed552448d3"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:53:13"}
+{"level":"info","message":"📚 Getting favorites for user","timestamp":"2025-11-16 21:53:13","userId":"68ef6e82686427ed552448d3"}
+{"houseId":"68ee914de561b7739b1851d4","level":"info","message":"🔍 Finding house by id","timestamp":"2025-11-16 21:53:15"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:53:15"}
+{"level":"info","message":"🧠 Initialized global.mongoose cache","timestamp":"2025-11-16 21:53:16"}
+{"level":"info","message":"📦 Getting all houses","timestamp":"2025-11-16 21:53:27"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:53:29"}
+{"level":"info","message":"📚 Getting favorites for user","timestamp":"2025-11-16 21:53:29","userId":"68ef6e82686427ed552448d3"}
+{"level":"info","message":"POST /api/rem-fav by user: user_3466nZx98d6sNKuYPb4AydspLE5, houseId: 68ee914de561b7739b1851d4","timestamp":"2025-11-16 21:53:31"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:53:31"}
+{"houseId":"68ee914de561b7739b1851d4","level":"info","message":"💔 Removing favorite","timestamp":"2025-11-16 21:53:31","userId":"68ef6e82686427ed552448d3"}
+{"level":"info","message":"favoritete removed for user: user_3466nZx98d6sNKuYPb4AydspLE5, house: 68ee914de561b7739b1851d4","timestamp":"2025-11-16 21:53:31"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:53:31"}
+{"level":"info","message":"📚 Getting favorites for user","timestamp":"2025-11-16 21:53:31","userId":"68ef6e82686427ed552448d3"}
+{"level":"info","message":"📦 Getting all houses","timestamp":"2025-11-16 21:53:42"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:53:43"}
+{"level":"info","message":"🏘 Getting houses for owner","timestamp":"2025-11-16 21:53:43","userId":"68ef6e82686427ed552448d3"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:53:45"}
+{"level":"info","message":"📚 Getting favorites for user","timestamp":"2025-11-16 21:53:45","userId":"68ef6e82686427ed552448d3"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:53:49"}
+{"level":"info","message":"🏘 Getting houses for owner","timestamp":"2025-11-16 21:53:49","userId":"68ef6e82686427ed552448d3"}
+{"level":"info","message":"📦 Getting all houses","timestamp":"2025-11-16 21:53:52"}
+{"level":"info","message":"POST /api/add-fav by user: user_3466nZx98d6sNKuYPb4AydspLE5, houseId: 68ee914de561b7739b1851d4","timestamp":"2025-11-16 21:53:55"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:53:55"}
+{"houseId":"68ee914de561b7739b1851d4","level":"info","message":"❤️ Adding favorite","timestamp":"2025-11-16 21:53:55","userId":"68ef6e82686427ed552448d3"}
+{"level":"info","message":"favoritete added for user user_3466nZx98d6sNKuYPb4AydspLE5 and house 68ee914de561b7739b1851d4","timestamp":"2025-11-16 21:53:55"}
+{"clerkId":"user_3466nZx98d6sNKuYPb4AydspLE5","level":"info","message":"🔍 Finding user by clerkId","timestamp":"2025-11-16 21:53:58"}
+{"level":"info","message":"📚 Getting favorites for user","timestamp":"2025-11-16 21:53:58","userId":"68ef6e82686427ed552448d3"}

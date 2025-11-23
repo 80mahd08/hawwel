@@ -6,8 +6,8 @@ const userSchema = new Schema({
   name: { type: String },
   role: {
     type: String,
-    enum: ["UTILISATEUR", "PROPRIETAIRE"],
-    default: "UTILISATEUR",
+    enum: ["USER", "OWNER"],
+    default: "USER",
   },
 });
 
