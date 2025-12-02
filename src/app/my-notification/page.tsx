@@ -1,6 +1,6 @@
-import DispPending from "@/components/DispPending/DispPending";
-import { getPendingByOwner, getUserByClerkId } from "@/lib/dbFunctions";
+import { getPendingByBuyer, getUserByClerkId } from "@/lib/dbFunctions";
 import { currentUser } from "@clerk/nextjs/server";
+import DispNotification from "@/components/DispNotification/DispNotification";
 
 export default async function page() {
   const user = await currentUser();
@@ -12,17 +12,13 @@ export default async function page() {
     return <div>User not found.</div>;
   }
 
-  const pendings = await getPendingByOwner(mongoUser._id.toString());
+  const pendings = await getPendingByBuyer(mongoUser._id.toString());
 
   if (pendings) {
     return (
-      <div className="container my-pending">
+      <div className="container my-notification">
         {pendings.map((pending) => (
-          <DispPending
-            key={pending._id}
-            pending={pending}
-            mongoUser={mongoUser}
-          />
+          <DispNotification key={pending._id} pending={pending} />
         ))}
       </div>
     );

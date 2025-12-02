@@ -2,7 +2,6 @@
 // Imports
 // ============================================
 import dbConnect from "./dbConnect";
-import logger from "../../services/logger";
 
 import User, { IUser } from "@/models/User";
 import house, { Ihouse } from "@/models/house";
@@ -23,16 +22,10 @@ type UserInput = Omit<IUser, "_id" | "createdAt" | "updatedAt">;
 export async function createUser(userData: UserInput) {
   try {
     await dbConnect();
-    logger.info("📤 Creating user", { clerkId: userData.clerkId });
 
     const user = await User.create(userData);
-    logger.info("✅ User created", { userId: user._id });
     return user;
   } catch (error: any) {
-    logger.error("❌ Error in createUser", {
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -40,15 +33,9 @@ export async function createUser(userData: UserInput) {
 export async function getUserByClerkId(clerkId: string) {
   try {
     await dbConnect();
-    logger.info("🔍 Finding user by clerkId", { clerkId });
 
     return await User.findOne({ clerkId });
   } catch (error: any) {
-    logger.error("❌ Error in getUserByClerkId", {
-      clerkId,
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -56,14 +43,8 @@ export async function getUserByClerkId(clerkId: string) {
 export async function getUserById(userId: string) {
   try {
     await dbConnect();
-    logger.info("🔍 Finding user by id", { userId });
     return await User.findById(userId);
   } catch (error: any) {
-    logger.error("❌ Error in getUserById", {
-      userId,
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -73,15 +54,9 @@ export async function updateUserByClerkId(
 ) {
   try {
     await dbConnect();
-    logger.info("🛠 Updating user", { clerkId, updateData });
 
     return await User.findOneAndUpdate({ clerkId }, updateData, { new: true });
   } catch (error: any) {
-    logger.error("❌ Error in updateUserByClerkId", {
-      clerkId,
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -89,15 +64,9 @@ export async function updateUserByClerkId(
 export async function deleteUserByClerkId(clerkId: string) {
   try {
     await dbConnect();
-    logger.info("🗑 Deleting user", { clerkId });
 
     return await User.findOneAndDelete({ clerkId });
   } catch (error: any) {
-    logger.error("❌ Error in deleteUserByClerkId", {
-      clerkId,
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -105,7 +74,6 @@ export async function deleteUserByClerkId(clerkId: string) {
 export async function updateRoleToOwner(clerkId: string) {
   try {
     await dbConnect();
-    logger.info("🛠 Updating role to OWNER", { clerkId });
 
     return await User.findOneAndUpdate(
       { clerkId },
@@ -113,11 +81,6 @@ export async function updateRoleToOwner(clerkId: string) {
       { new: true }
     );
   } catch (error: any) {
-    logger.error("❌ Error in updateRoleToOwner", {
-      clerkId,
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -125,20 +88,11 @@ export async function updateRoleToOwner(clerkId: string) {
 // ============================================
 // HOUSE FUNCTIONS
 // ============================================
-export async function createhouse(houseData: Ihouse) {
+export async function createHouse(houseData: Ihouse) {
   try {
     await dbConnect();
-    logger.info("🏠 Creating house", {
-      ownerId: houseData.ownerId,
-      title: houseData.title,
-    });
-
     return await house.create(houseData);
   } catch (error: any) {
-    logger.error("❌ Error in createhouse", {
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -146,14 +100,9 @@ export async function createhouse(houseData: Ihouse) {
 export async function getAllhouses() {
   try {
     await dbConnect();
-    logger.info("📦 Getting all houses");
 
     return await house.find({});
   } catch (error: any) {
-    logger.error("❌ Error in getAllhouses", {
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -161,15 +110,9 @@ export async function getAllhouses() {
 export async function gethousesByOwner(userId: string) {
   try {
     await dbConnect();
-    logger.info("🏘 Getting houses for owner", { userId });
 
     return await house.find({ ownerId: userId });
   } catch (error: any) {
-    logger.error("❌ Error in gethousesByOwner", {
-      userId,
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -178,18 +121,9 @@ export async function gethouseById(houseId: string) {
   try {
     await dbConnect();
     if (!houseId) throw new Error("house ID is required");
-
-    logger.info("🔍 Finding house by id", { houseId });
-
     const result = await house.findById(houseId);
-
     return result;
   } catch (error: any) {
-    logger.error("❌ Error in gethouseById", {
-      houseId,
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -206,16 +140,9 @@ export async function addfavorite(userId: string, houseId: string) {
       return { favorite: existing, alreadyExists: true }; // ✅ indicate duplicate
     }
 
-    logger.info("❤️ Adding favorite", { userId, houseId });
     const newFav = await favorite.create({ userId, houseId });
     return { favorite: newFav, alreadyExists: false };
   } catch (error: any) {
-    logger.error("❌ Error in addfavorite", {
-      userId,
-      houseId,
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -223,15 +150,9 @@ export async function addfavorite(userId: string, houseId: string) {
 export async function getUserfavorites(userId: string) {
   try {
     await dbConnect();
-    logger.info("📚 Getting favorites for user", { userId });
 
     return await favorite.find({ userId }).populate("houseId");
   } catch (error: any) {
-    logger.error("❌ Error in getUserfavorites", {
-      userId,
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -239,16 +160,9 @@ export async function getUserfavorites(userId: string) {
 export async function removefavorite(userId: string, houseId: string) {
   try {
     await dbConnect();
-    logger.info("💔 Removing favorite", { userId, houseId });
 
     return await favorite.findOneAndDelete({ userId, houseId });
   } catch (error: any) {
-    logger.error("❌ Error in removefavorite", {
-      userId,
-      houseId,
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -261,15 +175,9 @@ export async function getfavoritesCount(clerkId: string): Promise<number> {
     if (!user) return 0;
 
     const count = await favorite.find({ userId: user._id });
-    logger.info("🔢 favorites count", { clerkId, count: count.length });
 
     return count.length;
   } catch (error: any) {
-    logger.error("❌ Error in getfavoritesCount", {
-      clerkId,
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -281,49 +189,41 @@ export async function createPending({
   buyerId,
   ownerId,
   houseId,
+  startDate,
+  endDate,
 }: {
   buyerId: string;
   ownerId: string;
   houseId: string;
+  startDate: Date;
+  endDate: Date;
 }) {
   try {
     await dbConnect();
-
-    logger.info("🕒 Creating pending request", {
-      buyerId,
-      ownerId,
-      houseId,
-    });
 
     const existing = await Pending.findOne({
       buyerId,
       houseId,
       ownerId,
       status: "pending",
+      startDate,
+      endDate,
     });
 
     if (existing) {
-      logger.info("⚠️ Pending already exists", {
-        pendingId: existing._id,
-      });
       return existing;
     }
 
-    const pending = await Pending.create({ buyerId, ownerId, houseId });
-
-    logger.info("✅ Pending created successfully", {
-      pendingId: pending._id,
+    const pending = await Pending.create({
+      buyerId,
+      ownerId,
+      houseId,
+      startDate,
+      endDate,
     });
 
     return pending;
   } catch (error: any) {
-    logger.error("❌ Error creating pending", {
-      buyerId,
-      ownerId,
-      houseId,
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -331,15 +231,8 @@ export async function createPending({
 export async function getPendingByOwner(ownerId: string) {
   try {
     await dbConnect();
-    logger.info("🔍 Getting pending requests for owner", { ownerId });
-
     return await Pending.find({ ownerId, status: "pending" });
   } catch (error: any) {
-    logger.error("❌ Error in getPendingByOwner", {
-      ownerId,
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -351,14 +244,8 @@ export async function getPendingCount(clerkId: string): Promise<number> {
     if (!user) return 0;
 
     const count = await Pending.find({ ownerId: user._id, status: "pending" });
-    logger.info("🔢 pending count", { clerkId, count: count.length });
     return count.length;
   } catch (error: any) {
-    logger.error("❌ Error in getPendingCount", {
-      clerkId,
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -366,15 +253,8 @@ export async function getPendingCount(clerkId: string): Promise<number> {
 export async function getPendingByhouse(houseId: string) {
   try {
     await dbConnect();
-    logger.info("🔍 Getting pending requests for house", { houseId });
-
     return await Pending.find({ houseId }).populate("buyerId");
   } catch (error: any) {
-    logger.error("❌ Error in getPendingByhouse", {
-      houseId,
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
   }
 }
@@ -382,17 +262,20 @@ export async function getPendingByhouse(houseId: string) {
 export async function getPendingByBuyerHouse(buyerId: string, houseId: string) {
   try {
     await dbConnect();
-    logger.info("🔍 Getting pending by buyer + house", { buyerId, houseId });
 
     // return a single pending matching buyer + house with status 'pending'
     return await Pending.findOne({ buyerId, houseId, status: "pending" });
   } catch (error: any) {
-    logger.error("❌ Error in getPendingByBuyerHouse", {
-      buyerId,
-      houseId,
-      message: error.message,
-      stack: error.stack,
-    });
+    throw error;
+  }
+}
+
+export async function getPendingByBuyer(buyerId: string) {
+  try {
+    await dbConnect();
+
+    return await Pending.find({ buyerId, status: { $ne: "pending" } });
+  } catch (error: any) {
     throw error;
   }
 }
@@ -403,19 +286,13 @@ export async function updatePendingStatus(
 ) {
   try {
     await dbConnect();
-    logger.info("🔁 Updating pending status", { pendingId, status });
 
     const pending = await Pending.findById(pendingId);
     if (!pending) {
-      logger.warn("Pending not found", { pendingId });
       throw new Error("Pending not found");
     }
 
     if ((pending as any).status === status) {
-      logger.info("Pending already has the requested status", {
-        pendingId,
-        status,
-      });
       return pending;
     }
 
@@ -424,21 +301,8 @@ export async function updatePendingStatus(
       { status },
       { new: true }
     );
-
-    logger.info("✅ Pending status updated", {
-      pendingId,
-      oldStatus: (pending as any).status,
-      newStatus: status,
-    });
-
     return updated;
   } catch (error: any) {
-    logger.error("❌ Error in updatePendingStatus", {
-      pendingId,
-      status,
-      message: error?.message,
-      stack: error?.stack,
-    });
     throw error;
   }
 }
@@ -446,15 +310,90 @@ export async function updatePendingStatus(
 export async function deletePending(pendingId: string) {
   try {
     await dbConnect();
-    logger.info("🗑 Deleting pending request", { pendingId });
-
     return await Pending.findByIdAndDelete(pendingId);
   } catch (error: any) {
-    logger.error("❌ Error in deletePending", {
-      pendingId,
-      message: error.message,
-      stack: error.stack,
-    });
     throw error;
+  }
+}
+
+// ============================================
+// NOTIFICATION FUNCTIONS
+// ============================================
+export async function getNotificationCount(clerkId: string): Promise<number> {
+  try {
+    await dbConnect();
+
+    const user = await User.findOne({ clerkId });
+    if (!user) return 0;
+
+    const count = await Pending.find({
+      buyerId: user._id,
+      status: { $ne: "pending" },
+    });
+    return count.length;
+  } catch (error: any) {
+    throw error;
+  }
+}
+
+// ============================================
+// approved FUNCTIONS
+// ============================================
+export async function getApprovedByHouse(houseId: string) {
+  try {
+    await dbConnect();
+
+    const today = new Date(); // current date
+
+    return await Pending.find({
+      houseId,
+      status: "approved",
+      endDate: { $gte: today }, // keep only future or ongoing reservations
+    });
+  } catch (error: any) {
+    throw error;
+  }
+}
+// ============================================
+// REAL-TIME AVAILABILITY CHECK
+// ============================================
+export async function isHouseAvailable(houseId: string): Promise<boolean> {
+  try {
+    await dbConnect();
+
+    const now = new Date();
+
+    // Create today in UTC to match your database dates
+    const todayUTC = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+    );
+
+    console.log("=== AVAILABILITY DEBUG ===");
+    console.log("Today (UTC):", todayUTC.toISOString());
+    console.log("Now:", now.toISOString());
+
+    // Check if there are any approved reservations that include today
+    const activeReservation = await Pending.findOne({
+      houseId,
+      status: "approved",
+      startDate: { $lte: todayUTC }, // Reservation starts today or earlier
+      endDate: { $gte: todayUTC }, // Reservation ends today or later
+    });
+
+    console.log("Active reservation found:", activeReservation);
+    if (activeReservation) {
+      console.log("Reservation details:", {
+        startDate: activeReservation.startDate,
+        endDate: activeReservation.endDate,
+        startISO: activeReservation.startDate?.toISOString(),
+        endISO: activeReservation.endDate?.toISOString(),
+      });
+    }
+
+    // If there's an active reservation, house is NOT available
+    return !activeReservation;
+  } catch (error: any) {
+    console.error("Error in isHouseAvailable:", error);
+    return true; // Default to available if there's an error
   }
 }

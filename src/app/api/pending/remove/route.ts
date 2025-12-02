@@ -2,12 +2,11 @@ import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import dbConnect from "@/lib/dbConnect";
 import Pending from "@/models/Pending";
-import { getUserByClerkId, updatePendingStatus } from "@/lib/dbFunctions";
+import { getUserByClerkId, deletePending } from "@/lib/dbFunctions";
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const { pendingId } = body || {};
+    const { pendingId } = await req.json();
 
     if (!pendingId) {
       return NextResponse.json(
@@ -17,27 +16,34 @@ export async function POST(req: Request) {
     }
 
     const user = await currentUser();
-    if (!user)
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     const mongoUser = await getUserByClerkId(user.id);
-    if (!mongoUser)
+    if (!mongoUser) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
 
     await dbConnect();
 
     const pending = await Pending.findById(pendingId);
-    if (!pending)
+    if (!pending) {
       return NextResponse.json({ error: "Pending not found" }, { status: 404 });
+    }
 
-    if (pending.ownerId.toString() !== mongoUser._id.toString()) {
+    const userIdStr = mongoUser._id.toString();
+    const buyerIdStr = String(pending.buyerId);
+    const ownerIdStr = String(pending.ownerId);
+
+    if (userIdStr !== buyerIdStr && userIdStr !== ownerIdStr) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    await updatePendingStatus(pendingId, "rejected");
+    await deletePending(pendingId);
 
     return NextResponse.json(
-      { ok: true, message: "Pending rejected" },
+      { ok: true, message: "Pending removed" },
       { status: 200 }
     );
   } catch (error: any) {

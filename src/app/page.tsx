@@ -1,21 +1,23 @@
+import { getAllhouses, isHouseAvailable } from "@/lib/dbFunctions";
 import HouseLink from "@/components/HouseLink/HouseLink";
-import { getAllhouses } from "@/lib/dbFunctions";
-
 export default async function page() {
   const housesData = await getAllhouses();
-  const houses = housesData?.map(house => JSON.parse(JSON.stringify(house))) || [];
 
-  if (houses.length === 0) {
-    return (
-      <div style={{ textAlign: "center", marginTop: "2rem" }}>
-        <p>No houses available.</p>
-      </div>
-    );
-  }
+  // Check real-time availability for each house
+  const housesWithRealTimeAvailability = await Promise.all(
+    housesData.map(async (house) => {
+      const isAvailable = await isHouseAvailable(house._id.toString());
+      return {
+        ...house.toObject(),
+        _id: house._id.toString(),
+        isAvailable, // This will override the stored 'available' field
+      };
+    })
+  );
 
   return (
     <div className="houses-list">
-      {houses.map((house) => (
+      {housesWithRealTimeAvailability.map((house) => (
         <HouseLink key={house._id} house={house} />
       ))}
     </div>

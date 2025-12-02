@@ -2,11 +2,7 @@ import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import dbConnect from "@/lib/dbConnect";
 import Pending from "@/models/Pending";
-import {
-  getUserByClerkId,
-  deletePending,
-  updatePendingStatus,
-} from "@/lib/dbFunctions";
+import { getUserByClerkId, updatePendingStatus } from "@/lib/dbFunctions";
 
 export async function POST(req: Request) {
   try {
@@ -41,7 +37,7 @@ export async function POST(req: Request) {
     await updatePendingStatus(pendingId, "approved");
 
     return NextResponse.json(
-      { ok: true, message: "Pending accepted" },
+      { ok: true, message: "Pending accepted and reservation confirmed" },
       { status: 200 }
     );
   } catch (error: any) {

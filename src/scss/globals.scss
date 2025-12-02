@@ -12,6 +12,31 @@ $title: #1c73a1; // Deep blue for title text
   box-sizing: border-box;
 }
 
+.house-link-container.unavailable-house {
+  opacity: 0.7;
+  position: relative;
+}
+
+.house-link-container.unavailable-house::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.05);
+  pointer-events: none;
+}
+
+.house-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.house-link:hover {
+  text-decoration: none;
+}
+
 html,
 body {
   margin: 0;
@@ -29,7 +54,7 @@ img {
 .btn {
   background: #313131;
   color: #fff;
-  font-size: 10px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,7 +62,7 @@ img {
   padding: 0.5rem 1.5rem;
   border-radius: 20px;
   cursor: pointer;
-
+  transition: background 0.2s;
   &:hover {
     background: #444444;
   }
@@ -345,6 +370,15 @@ header {
 }
 
 .house-info {
+  strong {
+    color: $title;
+    min-width: 130px;
+    display: inline-block;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.5rem;
+  }
+
   margin: 2rem auto 0 auto;
   max-width: 600px;
   background: #f8fafc;
@@ -364,14 +398,6 @@ header {
     gap: 0.5rem;
     word-wrap: break-word;
     word-break: break-all;
-
-    strong {
-      color: $title;
-      min-width: 130px;
-      display: inline-block;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-    }
   }
 }
 
@@ -504,6 +530,121 @@ header {
       }
 
       .content h3,
+      .content p {
+        white-space: normal;
+      }
+    }
+  }
+}
+
+.my-notification {
+  padding: 24px 0;
+
+  .notification-item {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(30, 30, 60, 0.06);
+    overflow: hidden;
+    padding: 12px;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    margin-bottom: 16px;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 34px rgba(30, 30, 60, 0.12);
+    }
+
+    .image {
+      flex: 0 0 200px;
+      height: 130px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f3f3f3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img,
+      .next-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+    }
+
+    .content {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      min-width: 0;
+
+      p {
+        margin: 0;
+        color: #444;
+        font-size: 0.98rem;
+        word-wrap: break-word;
+        word-break: break-word;
+      }
+
+      p:first-child {
+        color: $title;
+        font-weight: 600;
+        text-transform: capitalize;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .status {
+        font-weight: 600;
+        &.approved {
+          color: green;
+        }
+        &.rejected {
+          color: red;
+        }
+      }
+    }
+
+    .btns {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+
+      .btn {
+        min-width: 120px;
+        padding: 8px 12px;
+      }
+    }
+  }
+
+  @media (max-width: 720px) {
+    .notification-item {
+      flex-direction: column;
+      align-items: stretch;
+
+      .image {
+        width: 100%;
+        height: 180px;
+      }
+
+      .btns {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 10px;
+        padding-top: 8px;
+      }
+
+      .content p:first-child,
       .content p {
         white-space: normal;
       }

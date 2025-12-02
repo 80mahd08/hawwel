@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import Swal from "sweetalert2";
 import { useFavCount } from "@/context/FavCountProvider";
 import { usePendingCount } from "@/context/PendingCountProvider";
+import { useNotificationCount } from "@/context/NotificationCountProvider";
 
 interface SignedInContentProps {
   role: string;
@@ -26,9 +27,12 @@ export default function SignedInContent({
   const pathname = usePathname();
   const { count: favoritesCount } = useFavCount();
   const { count: pendingCount, refreshCountPending } = usePendingCount();
+  const { count: notificationCount, refreshCountNotification } =
+    useNotificationCount();
   const iconSize = 30;
   useEffect(() => {
     refreshCountPending(user?.id);
+    refreshCountNotification(user?.id);
   }, [pathname]);
   useEffect(() => {
     if (!user) return;
@@ -153,6 +157,21 @@ export default function SignedInContent({
                 alt="See favorites"
               />
               <span className="badge">{favoritesCount}</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/my-notification"
+              className={pathname === "/my-notification" ? "active" : ""}
+              data-tooltip="Your notifications"
+            >
+              <Image
+                src="/notification.svg"
+                width={iconSize}
+                height={iconSize}
+                alt="Your notifications"
+              />
+              <span className="badge">{notificationCount}</span>
             </Link>
           </li>
         </ul>

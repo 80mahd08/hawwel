@@ -10,6 +10,8 @@ const pendingSchema = new Schema({
     required: true,
   },
   houseId: { type: Schema.Types.ObjectId, ref: "house", required: true },
+  startDate: { type: Date, required: false },
+  endDate: { type: Date, required: false },
   createdAt: { type: Date, default: Date.now },
 });
 

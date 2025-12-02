@@ -6,6 +6,7 @@ const houseSchema = new Schema({
   location: { type: String, required: true },
   pricePerDay: { type: Number, required: true },
   images: { type: [String], default: [] },
+  available: { type: Boolean, default: true },
   ownerId: { type: Schema.Types.ObjectId, ref: "user", required: true },
   telephone: { type: String, required: true }, // Added telephone
 });

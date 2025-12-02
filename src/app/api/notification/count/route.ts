@@ -1,4 +1,4 @@
-import { getfavoritesCount } from "@/lib/dbFunctions";
+import { getNotificationCount } from "@/lib/dbFunctions";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -10,11 +10,12 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const count = await getfavoritesCount(clerkId);
+    const count = await getNotificationCount(clerkId);
+
     return NextResponse.json({ count });
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to fetch favorites count" },
+      { error: "Failed to fetch notification count" },
       { status: 500 }
     );
   }

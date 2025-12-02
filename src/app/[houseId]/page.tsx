@@ -1,6 +1,11 @@
-import { gethouseById, getUserByClerkId } from "@/lib/dbFunctions";
+import {
+  getApprovedByHouse,
+  gethouseById,
+  getUserByClerkId,
+  isHouseAvailable, // ADD THIS
+} from "@/lib/dbFunctions";
 import HouseSlideshow from "@/components/HouseSlideshow";
-import OrderNumberBtn from "@/components/OrderNumberBtn";
+import Order from "@/components/Order";
 import { currentUser } from "@clerk/nextjs/server";
 
 interface PageProps {
@@ -11,15 +16,18 @@ export default async function Page({ params }: PageProps) {
   try {
     const { houseId } = await params;
 
-    // Fetch maison data
+    // Fetch house data
     const house = await gethouseById(houseId);
     if (!house) {
       return (
         <div style={{ textAlign: "center", color: "red" }}>
-          house not found.
+          House not found.
         </div>
       );
     }
+
+    // Check real-time availability
+    const isAvailable = await isHouseAvailable(houseId);
 
     // Fetch current user from Clerk
     const user = await currentUser();
@@ -28,9 +36,28 @@ export default async function Page({ params }: PageProps) {
     const ownerId = house.ownerId?.toString();
     const images: string[] = house.images || [];
 
+    // FIX: Correct owner check (was backwards)
+    const isOwner = currentUserMongoDb?._id?.toString() === ownerId;
+
+    const approvedReservations = await getApprovedByHouse(houseId);
+
     return (
       <div className="house-container">
         <h1 className="house-title">{house.title}</h1>
+
+        {/* Add availability status */}
+        <div
+          style={{
+            color: isAvailable ? "green" : "red",
+            fontWeight: "bold",
+            fontSize: "18px",
+            marginBottom: "1rem",
+            textAlign: "center",
+          }}
+        >
+          {isAvailable ? "✅ Available" : "❌ Currently Unavailable"}
+        </div>
+
         <HouseSlideshow images={images} />
         <div className="house-info">
           <p>
@@ -44,30 +71,82 @@ export default async function Page({ params }: PageProps) {
             {house.description || "No description available."}
           </p>
 
-          {/* Only show message if user is owner */}
-          {ownerId && currentUserMongoDb?._id?.toString() === ownerId && (
+          {approvedReservations.length > 0 && (
+            <div>
+              <strong>Reserved dates:</strong>
+              <ul>
+                {approvedReservations.map((reservation) => (
+                  <li key={reservation._id}>
+                    {new Date(reservation.startDate).toLocaleDateString()} -{" "}
+                    {new Date(reservation.endDate).toLocaleDateString()}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* FIX: Only show message if user IS the owner */}
+          {isOwner && (
             <p style={{ color: "green", fontWeight: "bold" }}>
               This is your house.
             </p>
           )}
 
-          {/* Only show OrderNumberBtn if a user is logged in AND is not the owner */}
-          {currentUserMongoDb &&
-            currentUserMongoDb._id?.toString() !== ownerId && (
-              <OrderNumberBtn
-                ownerId={ownerId}
-                houseId={house._id?.toString() || ""}
-              />
-            )}
+          {/* FIX: Only show Order if user exists AND is NOT the owner AND house is available */}
+          {currentUserMongoDb && !isOwner && isAvailable && (
+            <Order
+              ownerId={ownerId!}
+              houseId={houseId}
+              buyerId={currentUserMongoDb._id!.toString()}
+              reservedDates={approvedReservations.map((reservation) => ({
+                startDate: reservation.startDate,
+                endDate: reservation.endDate,
+              }))}
+            />
+          )}
+
+          {/* Show message if house is unavailable */}
+          {!isAvailable && currentUserMongoDb && !isOwner && (
+            <p style={{ color: "red", fontWeight: "bold" }}>
+              This house is currently unavailable for reservations.
+            </p>
+          )}
         </div>
       </div>
     );
   } catch (error: any) {
-    console.error("Error fetching house or user:", error);
-    return (
-      <div style={{ textAlign: "center", color: "red" }}>
-        Something went wrong while loading this maison. Please try again later.
-      </div>
-    );
+    try {
+      const { houseId } = await params;
+      const house = await gethouseById(houseId);
+      const images: string[] = house.images || [];
+
+      return (
+        <div className="house-container">
+          <h1 className="house-title">{house.title}</h1>
+          <HouseSlideshow images={images} />
+          <div className="house-info">
+            <p>
+              <strong>Location:</strong> {house.location || "N/A"}
+            </p>
+            <p>
+              <strong>Price per day:</strong> DT {house.pricePerDay ?? "N/A"}
+            </p>
+            <p>
+              <strong>Description:</strong>{" "}
+              {house.description || "No description available."}
+            </p>
+            <p style={{ fontSize: "20px", fontWeight: "bolder" }}>
+              You're not logged in
+            </p>
+          </div>
+        </div>
+      );
+    } catch (error: any) {
+      return (
+        <div style={{ textAlign: "center", color: "red" }}>
+          An error occurred while loading the house details.
+        </div>
+      );
+    }
   }
 }

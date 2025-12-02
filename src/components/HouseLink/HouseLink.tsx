@@ -18,6 +18,8 @@ export type LinkHouseProps = {
   location: string;
   pricePerDay: number;
   images: string[];
+  available: boolean;
+  isAvailable?: boolean; // Add real-time availability
 };
 
 // ============================================
@@ -30,15 +32,30 @@ export default function LinkHouse({ house }: { house: LinkHouseProps }) {
   const isFavoritePage = pathname === "/see-favorites";
   const hasImage = house.images.length > 0;
 
+  // Use real-time availability if provided, otherwise fall back to stored availability
+  const isHouseAvailable =
+    house.isAvailable !== undefined ? house.isAvailable : house.available;
+
   return (
-    <div className="house-link-container">
+    <div
+      className={`house-link-container ${
+        !isHouseAvailable ? "unavailable-house" : ""
+      }`}
+    >
       <Link href={`/${house._id}`} className="house-link">
         <div className="text">
           <h2>{house.title}</h2>
           <p>{house.location}</p>
-
           <p className="price">
             <strong>DT {house.pricePerDay}</strong>
+          </p>
+          <p
+            style={{
+              color: isHouseAvailable ? "green" : "red",
+              fontWeight: "bold",
+            }}
+          >
+            {isHouseAvailable ? "✅ Available" : "❌ Unavailable"}
           </p>
         </div>
 

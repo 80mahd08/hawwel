@@ -9,6 +9,7 @@ import {
   usePendingCount,
 } from "@/context/PendingCountProvider";
 import { auth } from "@clerk/nextjs/server";
+import { NotificationCountProvider } from "@/context/NotificationCountProvider";
 
 export const metadata: Metadata = {
   title: "hawwel",
@@ -24,12 +25,14 @@ export default function RootLayout({
     <html lang="en">
       <body suppressHydrationWarning>
         <ClerkProvider>
-          <PendingCountProvider>
-            <FavCountProvider>
-              <Header />
-              {children}
-            </FavCountProvider>
-          </PendingCountProvider>
+          <NotificationCountProvider>
+            <PendingCountProvider>
+              <FavCountProvider>
+                <Header />
+                {children}
+              </FavCountProvider>
+            </PendingCountProvider>
+          </NotificationCountProvider>
         </ClerkProvider>
       </body>
     </html>

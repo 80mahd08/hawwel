@@ -1,43 +1,45 @@
 import HouseLink from "@/components/HouseLink/HouseLink";
-import { getUserByClerkId, getUserfavorites } from "@/lib/dbFunctions";
+import {
+  getUserByClerkId,
+  getUserfavorites,
+  isHouseAvailable,
+} from "@/lib/dbFunctions";
 import { currentUser } from "@clerk/nextjs/server";
-import logger from "../../../services/logger";
 
 export default async function page() {
   const user = await currentUser();
   if (!user) {
-    logger.warn("Unauthorized access attempt");
     return <div>Unauthorized</div>;
   }
   const mongoUser = await getUserByClerkId(user.id);
   if (!mongoUser) {
-    logger.warn("User not found in DB", { clerkId: user.id }); // 👈 logger
     return <div>User not found.</div>;
   }
+
   const houses = await getUserfavorites(mongoUser._id as string);
   if (houses) {
-    logger.info("Favorite houses fetched successfully", {
-      userId: mongoUser._id,
-      count: houses.length,
-    });
+    // Add real-time availability check
+    const housesWithAvailability = await Promise.all(
+      houses.map(async (fav) => {
+        const populated = (fav as any).houseId;
+        const houseObj = populated?.toObject ? populated.toObject() : populated;
+        const isAvailable = await isHouseAvailable(houseObj._id.toString());
+
+        return {
+          ...houseObj,
+          _id: houseObj._id?.toString?.() ?? String(houseObj._id),
+          ownerId: houseObj.ownerId?.toString?.(),
+          images: Array.isArray(houseObj.images) ? houseObj.images : [],
+          isAvailable, // Add real-time availability
+        };
+      })
+    );
+
     return (
       <div className="houses-list">
-        {houses.map((fav) => {
-          // fav is a favorite document with a populated `houseId` field
-          const populated = (fav as any).houseId;
-          const houseObj = populated?.toObject
-            ? populated.toObject()
-            : populated;
-
-          const plainHouse = {
-            ...houseObj,
-            _id: houseObj._id?.toString?.() ?? String(houseObj._id),
-            ownerId: houseObj.ownerId?.toString?.(),
-            images: Array.isArray(houseObj.images) ? houseObj.images : [],
-          };
-
-          return <HouseLink key={plainHouse._id} house={plainHouse} />;
-        })}
+        {housesWithAvailability.map((house) => (
+          <HouseLink key={house._id} house={house} />
+        ))}
       </div>
     );
   }
