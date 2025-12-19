@@ -97,21 +97,97 @@ export async function createHouse(houseData: Ihouse) {
   }
 }
 
-export async function getAllhouses() {
+export async function getAllhouses(filters: {
+  location?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  amenities?: string[];
+  startDate?: Date;
+  endDate?: Date;
+  page?: number;
+  limit?: number;
+} = {}) {
   try {
     await dbConnect();
 
-    return await house.find({});
+    const page = Math.max(1, Number(filters.page) || 1);
+    const limit = Math.max(1, Number(filters.limit) || 9);
+    const skip = (page - 1) * limit;
+
+    console.log(`getAllhouses: page=${page}, limit=${limit}, skip=${skip}`);
+
+    const query: any = {};
+
+    if (filters.location) {
+      query.location = { $regex: filters.location, $options: "i" };
+    }
+
+    if (filters.minPrice || filters.maxPrice) {
+      query.pricePerDay = {};
+      if (filters.minPrice) query.pricePerDay.$gte = filters.minPrice;
+      if (filters.maxPrice) query.pricePerDay.$lte = filters.maxPrice;
+    }
+
+    if (filters.amenities && filters.amenities.length > 0) {
+      query.amenities = { $all: filters.amenities };
+    }
+
+    if (filters.startDate && filters.endDate) {
+      const reservedHouseIds = await Pending.find({
+        status: "approved",
+        $or: [
+          {
+            startDate: { $lte: filters.endDate },
+            endDate: { $gte: filters.startDate },
+          },
+        ],
+      }).distinct("houseId");
+
+      if (reservedHouseIds.length > 0) {
+        query._id = { $nin: reservedHouseIds };
+      }
+    }
+
+    const totalHouses = await house.countDocuments(query);
+    const houses = await house.find(query).skip(skip).limit(limit);
+
+    console.log(`getAllhouses: found ${houses.length} houses. Total: ${totalHouses}`);
+
+    return {
+      houses,
+      totalPages: Math.ceil(totalHouses / limit),
+      currentPage: page,
+    };
   } catch (error: any) {
     throw error;
   }
 }
 
-export async function gethousesByOwner(userId: string) {
+export async function gethousesByOwner(
+  userId: string,
+  page: number = 1,
+  limit: number = 9
+) {
   try {
     await dbConnect();
+    const pageNum = Math.max(1, Number(page) || 1);
+    const limitNum = Math.max(1, Number(limit) || 9);
+    
+    console.log(`gethousesByOwner: page=${pageNum}, limit=${limitNum}`);
+    const skip = (pageNum - 1) * limitNum;
+    const total = await house.countDocuments({ ownerId: userId });
+    const houses = await house
+      .find({ ownerId: userId })
+      .skip(skip)
+      .limit(limitNum);
 
-    return await house.find({ ownerId: userId });
+    console.log(`gethousesByOwner: found ${houses.length} houses. Total: ${total}`);
+
+    return {
+      houses,
+      totalPages: Math.ceil(total / limitNum),
+      currentPage: pageNum,
+    };
   } catch (error: any) {
     throw error;
   }
@@ -147,11 +223,26 @@ export async function addfavorite(userId: string, houseId: string) {
   }
 }
 
-export async function getUserfavorites(userId: string) {
+export async function getUserfavorites(
+  userId: string,
+  page: number = 1,
+  limit: number = 9
+) {
   try {
     await dbConnect();
+    const skip = (page - 1) * limit;
+    const total = await favorite.countDocuments({ userId });
+    const favorites = await favorite
+      .find({ userId })
+      .populate("houseId")
+      .skip(skip)
+      .limit(limit);
 
-    return await favorite.find({ userId }).populate("houseId");
+    return {
+      favorites,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+    };
   } catch (error: any) {
     throw error;
   }
@@ -228,10 +319,24 @@ export async function createPending({
   }
 }
 
-export async function getPendingByOwner(ownerId: string) {
+export async function getPendingByOwner(
+  ownerId: string,
+  page: number = 1,
+  limit: number = 9
+) {
   try {
     await dbConnect();
-    return await Pending.find({ ownerId, status: "pending" });
+    const skip = (page - 1) * limit;
+    const total = await Pending.countDocuments({ ownerId, status: "pending" });
+    const pendings = await Pending.find({ ownerId, status: "pending" })
+      .skip(skip)
+      .limit(limit);
+
+    return {
+      pendings,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+    };
   } catch (error: any) {
     throw error;
   }
@@ -270,11 +375,30 @@ export async function getPendingByBuyerHouse(buyerId: string, houseId: string) {
   }
 }
 
-export async function getPendingByBuyer(buyerId: string) {
+export async function getPendingByBuyer(
+  buyerId: string,
+  page: number = 1,
+  limit: number = 9
+) {
   try {
     await dbConnect();
+    const skip = (page - 1) * limit;
+    const total = await Pending.countDocuments({
+      buyerId,
+      status: { $ne: "pending" },
+    });
+    const pendings = await Pending.find({
+      buyerId,
+      status: { $ne: "pending" },
+    })
+      .skip(skip)
+      .limit(limit);
 
-    return await Pending.find({ buyerId, status: { $ne: "pending" } });
+    return {
+      pendings,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+    };
   } catch (error: any) {
     throw error;
   }

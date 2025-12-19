@@ -103,31 +103,22 @@ function Order({
   };
 
   return (
-    <div className="order">
-      <div className="inputs" style={{ marginBottom: "20px" }}>
-        <div className="input-row">
-          <label htmlFor="startDate">
-            <strong>start date:</strong>
-          </label>
+    <div className="order-card-content">
+      <div className="date-picker-wrapper">
+        <div className="date-input-group">
+          <label htmlFor="startDate">CHECK-IN</label>
           <input
             type="date"
-            name="startDate"
             id="startDate"
             value={startDate}
             min={new Date().toISOString().split("T")[0]}
-            onChange={(e) => {
-              setStartDate(e.target.value);
-            }}
+            onChange={(e) => setStartDate(e.target.value)}
           />
         </div>
-
-        <div className="input-row">
-          <label htmlFor="endDate">
-            <strong>end date:</strong>
-          </label>
+        <div className="date-input-group">
+          <label htmlFor="endDate">CHECKOUT</label>
           <input
             type="date"
-            name="endDate"
             id="endDate"
             value={endDate}
             min={startDate || new Date().toISOString().split("T")[0]}
@@ -136,9 +127,15 @@ function Order({
         </div>
       </div>
 
-      <button onClick={handleClick} className="btn" disabled={loading}>
-        {loading ? "Sending..." : "Reserve and request the number"}
+      <button onClick={handleClick} className="reserve-btn" disabled={loading}>
+        {loading ? (
+          <span className="loading-spinner"></span>
+        ) : (
+          "Reserve"
+        )}
       </button>
+      
+      <p className="no-charge-text">You won't be charged yet</p>
     </div>
   );
 }

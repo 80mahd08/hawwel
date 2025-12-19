@@ -5,8 +5,13 @@ import {
   isHouseAvailable,
 } from "@/lib/dbFunctions";
 import { currentUser } from "@clerk/nextjs/server";
+import Pagination from "@/components/Pagination/Pagination";
 
-export default async function page() {
+export default async function page({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const user = await currentUser();
   if (!user) {
     return <div>Unauthorized</div>;
@@ -16,8 +21,19 @@ export default async function page() {
     return <div>User not found.</div>;
   }
 
-  const houses = await gethousesByOwner(mongoUser._id as string);
-  if (houses) {
+  const resolvedSearchParams = await searchParams;
+  const page = resolvedSearchParams.page
+    ? parseInt(resolvedSearchParams.page as string)
+    : 1;
+  const limit = 9;
+
+  const { houses, totalPages, currentPage } = await gethousesByOwner(
+    mongoUser._id as string,
+    page,
+    limit
+  );
+
+  if (houses && houses.length > 0) {
     // Add real-time availability check
     const housesWithAvailability = await Promise.all(
       houses.map(async (house) => {
@@ -34,10 +50,13 @@ export default async function page() {
     );
 
     return (
-      <div className="houses-list">
-        {housesWithAvailability.map((house) => (
-          <HouseLink key={house._id} house={house} />
-        ))}
+      <div>
+        <div className="houses-list">
+          {housesWithAvailability.map((house) => (
+            <HouseLink key={house._id} house={house} />
+          ))}
+        </div>
+        <Pagination totalPages={totalPages} currentPage={currentPage} />
       </div>
     );
   }

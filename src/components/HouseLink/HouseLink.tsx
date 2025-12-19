@@ -55,7 +55,7 @@ export default function LinkHouse({ house }: { house: LinkHouseProps }) {
               fontWeight: "bold",
             }}
           >
-            {isHouseAvailable ? "✅ Available" : "❌ Unavailable"}
+            {isHouseAvailable ? "Available" : "Unavailable"}
           </p>
         </div>
 

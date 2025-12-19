@@ -17,6 +17,31 @@ export default function AddHousePage() {
   const [images, setImages] = useState<FileList | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const [amenities, setAmenities] = useState<string[]>([]);
+
+  const AMENITIES_LIST = [
+    "Wifi",
+    "Air Conditioning",
+    "Pool",
+    "Parking",
+    "Kitchen",
+    "TV",
+    "Heating",
+    "Washer",
+    "Dryer",
+    "Iron",
+    "Hair Dryer",
+    "Workspace",
+  ];
+
+  const handleAmenityChange = (amenity: string) => {
+    setAmenities((prev) =>
+      prev.includes(amenity)
+        ? prev.filter((a) => a !== amenity)
+        : [...prev, amenity]
+    );
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -71,6 +96,7 @@ export default function AddHousePage() {
         ...form,
         pricePerDay: Number(form.pricePerDay),
         images: imageUrls,
+        amenities,
       };
 
       const res = await fetch("/api/house/set", {
@@ -90,9 +116,10 @@ export default function AddHousePage() {
           description: "",
           location: "",
           pricePerDay: "",
-          telephone: "", // <-- Reset telephone
+          telephone: "",
         });
         setImages(null);
+        setAmenities([]);
       } else {
         Swal.fire("Error", data.message || "Failed to add house", "error");
       }
@@ -105,57 +132,125 @@ export default function AddHousePage() {
 
   return (
     <div className="add-house-page">
-      <h2>Add Maison</h2>
-      <form onSubmit={handleSubmit} style={{ maxWidth: 400 }}>
-        <input
-          name="title"
-          placeholder="Title"
-          value={form.title}
-          onChange={handleChange}
-          required
-        />
-        <textarea
-          name="description"
-          placeholder="Description"
-          value={form.description}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="location"
-          placeholder="Location"
-          value={form.location}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="pricePerDay"
-          placeholder="Price Per Day"
-          type="number"
-          value={form.pricePerDay}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="telephone"
-          placeholder="Telephone"
-          type="tel"
-          pattern="[0-9]+"
-          inputMode="numeric"
-          value={form.telephone}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="images"
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handleChange}
-          required
-        />
-        <button type="submit" className="btn" disabled={loading}>
-          {loading ? "Adding..." : "Add Maison"}
+      <div className="form-header">
+        <h2>List Your Property</h2>
+        <p>Fill in the details below to add your house to our listings.</p>
+      </div>
+      
+      <form onSubmit={handleSubmit}>
+        <div className="form-group full-width">
+          <label htmlFor="title">Property Title</label>
+          <input
+            id="title"
+            name="title"
+            placeholder="e.g. Luxury Villa in Tunis"
+            value={form.title}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group full-width">
+          <label htmlFor="description">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Describe the key features and amenities..."
+            value={form.description}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="location">Location</label>
+            <input
+              id="location"
+              name="location"
+              placeholder="e.g. Sidi Bou Said"
+              value={form.location}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="pricePerDay">Price Per Day (DT)</label>
+            <input
+              id="pricePerDay"
+              name="pricePerDay"
+              placeholder="0.00"
+              type="number"
+              value={form.pricePerDay}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="telephone">Contact Number</label>
+          <input
+            id="telephone"
+            name="telephone"
+            placeholder="+216 00 000 000"
+            type="tel"
+            pattern="[0-9]+"
+            inputMode="numeric"
+            value={form.telephone}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group full-width">
+          <label>Amenities</label>
+          <div className="amenities-grid">
+            {AMENITIES_LIST.map((amenity) => (
+              <label key={amenity} className="amenity-checkbox">
+                <input
+                  type="checkbox"
+                  checked={amenities.includes(amenity)}
+                  onChange={() => handleAmenityChange(amenity)}
+                />
+                <span>{amenity}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="form-group full-width">
+          <label htmlFor="images">Property Images</label>
+          <div className="file-upload-wrapper">
+            <input
+              id="images"
+              name="images"
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleChange}
+              required
+              className="file-input"
+            />
+            <div className="file-upload-placeholder">
+              <span>Drag & drop images here or click to browse</span>
+              <small>Supported formats: JPG, PNG</small>
+            </div>
+          </div>
+          {images && images.length > 0 && (
+            <div className="file-preview-info">
+              {images.length} file(s) selected
+            </div>
+          )}
+        </div>
+
+        <button type="submit" className="submit-btn" disabled={loading}>
+          {loading ? (
+            <span className="loading-spinner"></span>
+          ) : (
+            "Publish Listing"
+          )}
         </button>
       </form>
     </div>

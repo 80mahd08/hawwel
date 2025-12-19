@@ -1,8 +1,13 @@
 import DispPending from "@/components/DispPending/DispPending";
 import { getPendingByOwner, getUserByClerkId } from "@/lib/dbFunctions";
 import { currentUser } from "@clerk/nextjs/server";
+import Pagination from "@/components/Pagination/Pagination";
 
-export default async function page() {
+export default async function page({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const user = await currentUser();
   if (!user) {
     return <div>Unauthorized</div>;
@@ -12,9 +17,19 @@ export default async function page() {
     return <div>User not found.</div>;
   }
 
-  const pendings = await getPendingByOwner(mongoUser._id.toString());
+  const resolvedSearchParams = await searchParams;
+  const page = resolvedSearchParams.page
+    ? parseInt(resolvedSearchParams.page as string)
+    : 1;
+  const limit = 9;
 
-  if (pendings) {
+  const { pendings, totalPages, currentPage } = await getPendingByOwner(
+    mongoUser._id.toString(),
+    page,
+    limit
+  );
+
+  if (pendings && pendings.length > 0) {
     return (
       <div className="container my-pending">
         {pendings.map((pending) => (
@@ -24,6 +39,7 @@ export default async function page() {
             mongoUser={mongoUser}
           />
         ))}
+        <Pagination totalPages={totalPages} currentPage={currentPage} />
       </div>
     );
   }

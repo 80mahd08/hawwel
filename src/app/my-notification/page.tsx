@@ -1,8 +1,13 @@
 import { getPendingByBuyer, getUserByClerkId } from "@/lib/dbFunctions";
 import { currentUser } from "@clerk/nextjs/server";
 import DispNotification from "@/components/DispNotification/DispNotification";
+import Pagination from "@/components/Pagination/Pagination";
 
-export default async function page() {
+export default async function page({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const user = await currentUser();
   if (!user) {
     return <div>Unauthorized</div>;
@@ -12,14 +17,25 @@ export default async function page() {
     return <div>User not found.</div>;
   }
 
-  const pendings = await getPendingByBuyer(mongoUser._id.toString());
+  const resolvedSearchParams = await searchParams;
+  const page = resolvedSearchParams.page
+    ? parseInt(resolvedSearchParams.page as string)
+    : 1;
+  const limit = 9;
 
-  if (pendings) {
+  const { pendings, totalPages, currentPage } = await getPendingByBuyer(
+    mongoUser._id.toString(),
+    page,
+    limit
+  );
+
+  if (pendings && pendings.length > 0) {
     return (
       <div className="container my-notification">
         {pendings.map((pending) => (
           <DispNotification key={pending._id} pending={pending} />
         ))}
+        <Pagination totalPages={totalPages} currentPage={currentPage} />
       </div>
     );
   }
