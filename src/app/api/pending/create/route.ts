@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import { getUserByClerkId, createPending } from "@/lib/dbFunctions";
+import { ReservationSchema } from "@/lib/validations";
 export async function POST(req: Request) {
   try {
     const user = await currentUser();
@@ -9,25 +10,17 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const houseId = body?.houseId;
-    const ownerId = body?.ownerId;
-
-    const startDate = body?.startDate ? new Date(body.startDate) : null;
-    const endDate = body?.endDate ? new Date(body.endDate) : null;
-
-    if (!houseId || !startDate || !endDate) {
+    
+    // Validate reservation logic
+    const validatedData = ReservationSchema.safeParse(body);
+    if (!validatedData.success) {
       return NextResponse.json(
-        { message: "houseId, startDate, and endDate are required" },
+        { message: "Invalid reservation data", errors: validatedData.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
 
-    if (startDate >= endDate) {
-      return NextResponse.json(
-        { message: "Start date must be before end date" },
-        { status: 400 }
-      );
-    }
+    const { houseId, ownerId, startDate, endDate } = validatedData.data;
 
     const mongoUser = await getUserByClerkId(user.id);
     if (!mongoUser) {

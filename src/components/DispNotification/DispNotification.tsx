@@ -1,4 +1,3 @@
-import { gethouseById } from "@/lib/dbFunctions";
 import Image from "next/image";
 import RemovePendingBtn from "./components/RemovePendingBtn";
 
@@ -9,14 +8,14 @@ export default async function DispNotification({
     _id: string;
     ownerId: string;
     buyerId: string;
-    houseId: string;
+    houseId: any;
     status: string;
     createdAt: string;
     startDate: string;
     endDate: string;
   };
 }) {
-  const house = await gethouseById(pending.houseId);
+  const house = pending.houseId;
 
   if (!house) {
     return null;
@@ -42,13 +41,20 @@ export default async function DispNotification({
         )}
       </div>
       <div className="content">
-        <div className="texts">
-          <p>house title: {house.title}</p>
-          <p style={{ color: pending.status === "approved" ? "green" : "red" }}>
-            status: {pending.status}
+        <div className="text-wrapper">
+          <p className="title">{house.title}</p>
+          <p className="status-text" style={{ 
+            color: pending.status === "approved" ? "#22c55e" : "#ef4444",
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            fontSize: '0.8rem',
+            letterSpacing: '0.05em',
+            margin: '4px 0'
+          }}>
+            Status: {pending.status}
           </p>
           <p>
-            reserved dates:{" "}
+            <span className="label">Dates:</span>
             <strong>
               {new Date(pending.startDate).toLocaleDateString()} -{" "}
               {new Date(pending.endDate).toLocaleDateString()}
@@ -56,7 +62,7 @@ export default async function DispNotification({
           </p>{" "}
           {pending.status === "approved" && (
             <p>
-              You can contact the owner at: <strong>{house.telephone}</strong>
+              <span className="label">Contact Owner:</span> <strong>{house.telephone}</strong>
             </p>
           )}
         </div>

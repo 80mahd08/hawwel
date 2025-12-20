@@ -2,12 +2,14 @@
 
 import { useNotificationCount } from "@/context/NotificationCountProvider";
 import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Swal from "sweetalert2";
 
 export default function RemovePendingBtn({ pendingId }: { pendingId: string }) {
   const { refreshCountNotification } = useNotificationCount();
   const { user } = useUser();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
@@ -44,6 +46,7 @@ export default function RemovePendingBtn({ pendingId }: { pendingId: string }) {
           icon: "success",
         });
         refreshCountNotification(user?.id);
+        router.refresh();
       }
     } catch (error: any) {
       await Swal.fire({

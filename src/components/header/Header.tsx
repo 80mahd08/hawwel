@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import SignedInContent from "./components/SignedInContent";
+import ThemeToggle from "../ThemeToggle/ThemeToggle";
 
 export default function Header() {
   const [userRole, setUserRole] = useState("");
@@ -24,25 +25,28 @@ export default function Header() {
           </Link>
         </div>
 
-        <div className="auth-section">
-          <SignedOut>
-            <div className="on-sign-out">
-              <SignInButton>
-                <button className="btn">
-                  <span>Get Started</span>
-                </button>
-              </SignInButton>
-            </div>
-          </SignedOut>
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <ThemeToggle />
+          <div className="auth-section">
+            <SignedOut>
+              <div className="on-sign-out">
+                <SignInButton>
+                  <button className="btn">
+                    <span>Get Started</span>
+                  </button>
+                </SignInButton>
+              </div>
+            </SignedOut>
 
-          <SignedIn>
-            <SignedInContent
-              role={userRole}
-              setRole={setUserRole}
-              loadingRole={isRoleLoading}
-              setLoadingRole={setIsRoleLoading}
-            />
-          </SignedIn>
+            <SignedIn>
+              <SignedInContent
+                role={userRole}
+                setRole={setUserRole}
+                loadingRole={isRoleLoading}
+                setLoadingRole={setIsRoleLoading}
+              />
+            </SignedIn>
+          </div>
         </div>
       </div>
     </header>

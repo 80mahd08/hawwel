@@ -10,6 +10,7 @@ import {
 } from "@/context/PendingCountProvider";
 import { auth } from "@clerk/nextjs/server";
 import { NotificationCountProvider } from "@/context/NotificationCountProvider";
+import PageTransition from "@/components/PageTransition/PageTransition";
 
 export const metadata: Metadata = {
   title: "hawwel",
@@ -22,14 +23,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark-theme');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body suppressHydrationWarning>
         <ClerkProvider>
           <NotificationCountProvider>
             <PendingCountProvider>
               <FavCountProvider>
                 <Header />
-                {children}
+                <PageTransition>{children}</PageTransition>
               </FavCountProvider>
             </PendingCountProvider>
           </NotificationCountProvider>

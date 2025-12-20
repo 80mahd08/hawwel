@@ -1,8 +1,11 @@
 "use client";
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import dynamic from "next/dynamic";
 import Swal from "sweetalert2";
 import { supabase } from "@/lib/supabaseClient";
+
+const LocationPicker = dynamic(() => import("@/components/LocationPicker/LocationPicker"), { ssr: false });
 
 export default function AddHousePage() {
   const { user } = useUser();
@@ -12,6 +15,8 @@ export default function AddHousePage() {
     location: "",
     pricePerDay: "",
     telephone: "",
+    lat: null as number | null,
+    lng: null as number | null,
   });
   console.log(form);
   const [images, setImages] = useState<FileList | null>(null);
@@ -92,11 +97,19 @@ export default function AddHousePage() {
         imageUrls = await uploadImagesToSupabase(images);
       }
 
+      if (form.lat === null || form.lng === null) {
+        Swal.fire("Location Required", "Please click on the map to pin your property's location.", "warning");
+        setLoading(false);
+        return;
+      }
+
       const houseData = {
         ...form,
         pricePerDay: Number(form.pricePerDay),
         images: imageUrls,
         amenities,
+        lat: form.lat,
+        lng: form.lng,
       };
 
       const res = await fetch("/api/house/set", {
@@ -117,11 +130,20 @@ export default function AddHousePage() {
           location: "",
           pricePerDay: "",
           telephone: "",
+          lat: null,
+          lng: null,
         });
         setImages(null);
         setAmenities([]);
       } else {
-        Swal.fire("Error", data.message || "Failed to add house", "error");
+        const errorDetails = data.errors
+          ? Object.entries(data.errors)
+              .map(
+                ([field, msgs]) => `${field}: ${(msgs as string[]).join(", ")}`
+              )
+              .join("\n")
+          : data.message;
+        Swal.fire("Error", errorDetails || "Failed to add house", "error");
       }
     } catch (error) {
       Swal.fire("Error", "Something went wrong", "error");
@@ -136,7 +158,7 @@ export default function AddHousePage() {
         <h2>List Your Property</h2>
         <p>Fill in the details below to add your house to our listings.</p>
       </div>
-      
+
       <form onSubmit={handleSubmit}>
         <div className="form-group full-width">
           <label htmlFor="title">Property Title</label>
@@ -155,38 +177,24 @@ export default function AddHousePage() {
           <textarea
             id="description"
             name="description"
-            placeholder="Describe the key features and amenities..."
+            placeholder="Describe the key features of your property"
             value={form.description}
             onChange={handleChange}
             required
           />
         </div>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="location">Location</label>
-            <input
-              id="location"
-              name="location"
-              placeholder="e.g. Sidi Bou Said"
-              value={form.location}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="pricePerDay">Price Per Day (DT)</label>
-            <input
-              id="pricePerDay"
-              name="pricePerDay"
-              placeholder="0.00"
-              type="number"
-              value={form.pricePerDay}
-              onChange={handleChange}
-              required
-            />
-          </div>
+        <div className="form-group full-width">
+          <label htmlFor="pricePerDay">Price Per Day (DT)</label>
+          <input
+            id="pricePerDay"
+            name="pricePerDay"
+            placeholder="0.00"
+            type="number"
+            value={form.pricePerDay}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div className="form-group">
@@ -202,6 +210,23 @@ export default function AddHousePage() {
             onChange={handleChange}
             required
           />
+        </div>
+
+        <div className="form-group full-width">
+          <label>Pin Location on Map (Required)</label>
+          <p style={{ fontSize: "0.85rem", color: "#64748b", margin: "-4px 0 8px 4px" }}>
+            Click on the map to mark exactly where your property is located. This will automatically set the city.
+          </p>
+          <LocationPicker 
+            onLocationSelect={(lat, lng, address) => {
+              setForm(f => ({ ...f, lat, lng, location: address || f.location }));
+            }} 
+          />
+          {form.lat && (
+            <div style={{ fontSize: "0.85rem", color: "#1c73a1", marginTop: "8px" }}>
+              📍 Coordinates set: {form.lat.toFixed(4)}, {form.lng?.toFixed(4)}
+            </div>
+          )}
         </div>
 
         <div className="form-group full-width">

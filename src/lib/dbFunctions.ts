@@ -1,12 +1,11 @@
-// ============================================
-// Imports
-// ============================================
 import dbConnect from "./dbConnect";
+import { cache } from "react";
 
 import User, { IUser } from "@/models/User";
 import house, { Ihouse } from "@/models/house";
 import favorite from "@/models/favorite";
 import Pending from "@/models/Pending";
+import { SearchFilterSchema, SearchFilterInput } from "./validations";
 
 // ============================================
 // Types
@@ -97,50 +96,91 @@ export async function createHouse(houseData: Ihouse) {
   }
 }
 
-export async function getAllhouses(filters: {
-  location?: string;
-  minPrice?: number;
-  maxPrice?: number;
-  amenities?: string[];
-  startDate?: Date;
-  endDate?: Date;
-  page?: number;
-  limit?: number;
-} = {}) {
+/**
+ * Helper to check if a house is available during a specific date range.
+ * If no dates are provided, it checks for "Available Now" (today).
+ */
+export async function getAvailabilityStatus(
+  houseId: string,
+  startDate?: Date,
+  endDate?: Date
+): Promise<boolean> {
+  await dbConnect();
+  
+  // 1. Check if the house is even listed
+  const houseData = await house.findById(houseId).select("available").lean();
+  if (!houseData || (houseData as any).available === false) {
+    return false;
+  }
+
+  const now = new Date();
+  const start = startDate || new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  const end = endDate || start;
+
+  const activeReservation = await Pending.findOne({
+    houseId,
+    status: "approved",
+    startDate: { $lte: end },
+    endDate: { $gte: start },
+  });
+
+  return !activeReservation;
+}
+
+export const getAllhouses = cache(async (filters: any = {}) => {
   try {
+    const result = SearchFilterSchema.safeParse(filters);
+    const validatedFilters = result.success ? result.data : SearchFilterSchema.parse({});
+    
+    const { 
+      page, 
+      limit, 
+      location: locationFilter, 
+      minPrice, 
+      maxPrice, 
+      startDate, 
+      endDate,
+      onlyAvailable,
+      amenities,
+      north,
+      south,
+      east,
+      west
+    } = validatedFilters;
+
     await dbConnect();
-
-    const page = Math.max(1, Number(filters.page) || 1);
-    const limit = Math.max(1, Number(filters.limit) || 9);
     const skip = (page - 1) * limit;
+    const query: any = { available: { $ne: false } };
 
-    console.log(`getAllhouses: page=${page}, limit=${limit}, skip=${skip}`);
-
-    const query: any = {};
-
-    if (filters.location) {
-      query.location = { $regex: filters.location, $options: "i" };
+    if (locationFilter) {
+      query.location = { $regex: locationFilter, $options: "i" };
     }
 
-    if (filters.minPrice || filters.maxPrice) {
+    if (minPrice !== undefined || maxPrice !== undefined) {
       query.pricePerDay = {};
-      if (filters.minPrice) query.pricePerDay.$gte = filters.minPrice;
-      if (filters.maxPrice) query.pricePerDay.$lte = filters.maxPrice;
+      if (minPrice !== undefined) query.pricePerDay.$gte = minPrice;
+      if (maxPrice !== undefined) query.pricePerDay.$lte = maxPrice;
     }
 
-    if (filters.amenities && filters.amenities.length > 0) {
-      query.amenities = { $all: filters.amenities };
+    if (amenities && amenities.length > 0) {
+      query.amenities = { $all: amenities };
     }
 
-    if (filters.startDate && filters.endDate) {
+    // Viewport filtering
+    if (north !== undefined && south !== undefined && east !== undefined && west !== undefined) {
+      query.lat = { $gte: south, $lte: north };
+      query.lng = { $gte: west, $lte: east };
+    }
+
+    if (onlyAvailable || (startDate && endDate)) {
+      const now = new Date();
+      const start = startDate || new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+      const end = endDate || start;
+
       const reservedHouseIds = await Pending.find({
         status: "approved",
-        $or: [
-          {
-            startDate: { $lte: filters.endDate },
-            endDate: { $gte: filters.startDate },
-          },
-        ],
+        startDate: { $lte: end },
+        endDate: { $gte: start },
       }).distinct("houseId");
 
       if (reservedHouseIds.length > 0) {
@@ -148,10 +188,23 @@ export async function getAllhouses(filters: {
       }
     }
 
-    const totalHouses = await house.countDocuments(query);
-    const houses = await house.find(query).skip(skip).limit(limit);
+    const [totalHouses, housesRaw] = await Promise.all([
+      house.countDocuments(query),
+      house.find(query).skip(skip).limit(limit).lean(),
+    ]);
 
-    console.log(`getAllhouses: found ${houses.length} houses. Total: ${totalHouses}`);
+    const houseIds = housesRaw.map(h => (h as any)._id.toString());
+    const availabilityMap = await batchIsHouseAvailable(houseIds);
+
+    const houses = housesRaw.map(h => {
+      const houseObj = h as any;
+      return {
+        ...houseObj,
+        _id: houseObj._id.toString(),
+        ownerId: houseObj.ownerId?.toString(),
+        isAvailable: availabilityMap[houseObj._id.toString()] ?? true
+      };
+    });
 
     return {
       houses,
@@ -159,9 +212,10 @@ export async function getAllhouses(filters: {
       currentPage: page,
     };
   } catch (error: any) {
+    console.error("Error in getAllhouses:", error);
     throw error;
   }
-}
+});
 
 export async function gethousesByOwner(
   userId: string,
@@ -175,16 +229,15 @@ export async function gethousesByOwner(
     
     console.log(`gethousesByOwner: page=${pageNum}, limit=${limitNum}`);
     const skip = (pageNum - 1) * limitNum;
-    const total = await house.countDocuments({ ownerId: userId });
-    const houses = await house
-      .find({ ownerId: userId })
-      .skip(skip)
-      .limit(limitNum);
+    const [total, houses] = await Promise.all([
+      house.countDocuments({ ownerId: userId }),
+      house.find({ ownerId: userId }).skip(skip).limit(limitNum).lean(),
+    ]);
 
     console.log(`gethousesByOwner: found ${houses.length} houses. Total: ${total}`);
 
     return {
-      houses,
+      houses: houses as any[],
       totalPages: Math.ceil(total / limitNum),
       currentPage: pageNum,
     };
@@ -193,16 +246,24 @@ export async function gethousesByOwner(
   }
 }
 
-export async function gethouseById(houseId: string) {
+export const gethouseById = cache(async (houseId: string) => {
   try {
-    await dbConnect();
     if (!houseId) throw new Error("house ID is required");
-    const result = await house.findById(houseId);
-    return result;
+    await dbConnect();
+    const result = await house.findById(houseId).lean();
+    if (!result) return null;
+    
+    const houseObj = result as any;
+    return {
+      ...houseObj,
+      _id: houseObj._id.toString(),
+      ownerId: houseObj.ownerId?.toString(),
+    };
   } catch (error: any) {
+    console.error(`Error in gethouseById for ${houseId}:`, error);
     throw error;
   }
-}
+});
 
 // ============================================
 // FAVORITE FUNCTIONS
@@ -231,15 +292,13 @@ export async function getUserfavorites(
   try {
     await dbConnect();
     const skip = (page - 1) * limit;
-    const total = await favorite.countDocuments({ userId });
-    const favorites = await favorite
-      .find({ userId })
-      .populate("houseId")
-      .skip(skip)
-      .limit(limit);
+    const [total, favorites] = await Promise.all([
+      favorite.countDocuments({ userId }),
+      favorite.find({ userId }).populate("houseId").skip(skip).limit(limit).lean(),
+    ]);
 
     return {
-      favorites,
+      favorites: favorites as any[],
       totalPages: Math.ceil(total / limit),
       currentPage: page,
     };
@@ -265,9 +324,7 @@ export async function getfavoritesCount(clerkId: string): Promise<number> {
     const user = await User.findOne({ clerkId });
     if (!user) return 0;
 
-    const count = await favorite.find({ userId: user._id });
-
-    return count.length;
+    return await favorite.countDocuments({ userId: user._id });
   } catch (error: any) {
     throw error;
   }
@@ -327,13 +384,17 @@ export async function getPendingByOwner(
   try {
     await dbConnect();
     const skip = (page - 1) * limit;
-    const total = await Pending.countDocuments({ ownerId, status: "pending" });
-    const pendings = await Pending.find({ ownerId, status: "pending" })
-      .skip(skip)
-      .limit(limit);
+    const [total, pendings] = await Promise.all([
+      Pending.countDocuments({ ownerId, status: "pending" }),
+      Pending.find({ ownerId, status: "pending" })
+        .populate("houseId")
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+    ]);
 
     return {
-      pendings,
+      pendings: pendings as any[],
       totalPages: Math.ceil(total / limit),
       currentPage: page,
     };
@@ -348,8 +409,7 @@ export async function getPendingCount(clerkId: string): Promise<number> {
     const user = await User.findOne({ clerkId });
     if (!user) return 0;
 
-    const count = await Pending.find({ ownerId: user._id, status: "pending" });
-    return count.length;
+    return await Pending.countDocuments({ ownerId: user._id, status: "pending" });
   } catch (error: any) {
     throw error;
   }
@@ -383,19 +443,21 @@ export async function getPendingByBuyer(
   try {
     await dbConnect();
     const skip = (page - 1) * limit;
-    const total = await Pending.countDocuments({
+    const query = {
       buyerId,
       status: { $ne: "pending" },
-    });
-    const pendings = await Pending.find({
-      buyerId,
-      status: { $ne: "pending" },
-    })
-      .skip(skip)
-      .limit(limit);
+    };
+    const [total, pendings] = await Promise.all([
+      Pending.countDocuments(query),
+      Pending.find(query)
+        .populate("houseId")
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+    ]);
 
     return {
-      pendings,
+      pendings: pendings as any[],
       totalPages: Math.ceil(total / limit),
       currentPage: page,
     };
@@ -450,11 +512,10 @@ export async function getNotificationCount(clerkId: string): Promise<number> {
     const user = await User.findOne({ clerkId });
     if (!user) return 0;
 
-    const count = await Pending.find({
+    return await Pending.countDocuments({
       buyerId: user._id,
       status: { $ne: "pending" },
     });
-    return count.length;
   } catch (error: any) {
     throw error;
   }
@@ -467,12 +528,16 @@ export async function getApprovedByHouse(houseId: string) {
   try {
     await dbConnect();
 
-    const today = new Date(); // current date
+    const now = new Date();
+    // Today at UTC midnight
+    const today = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+    );
 
     return await Pending.find({
       houseId,
       status: "approved",
-      endDate: { $gte: today }, // keep only future or ongoing reservations
+      endDate: { $gte: today }, // keep only future or ongoing reservations (UTC comparison)
     });
   } catch (error: any) {
     throw error;
@@ -485,39 +550,74 @@ export async function isHouseAvailable(houseId: string): Promise<boolean> {
   try {
     await dbConnect();
 
-    const now = new Date();
+    // 1. Check listing status first
+    const h = await house.findById(houseId).select("available").lean();
+    if (!h || (h as any).available === false) {
+      return false;
+    }
 
-    // Create today in UTC to match your database dates
+    const now = new Date();
     const todayUTC = new Date(
       Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
     );
-
-    console.log("=== AVAILABILITY DEBUG ===");
-    console.log("Today (UTC):", todayUTC.toISOString());
-    console.log("Now:", now.toISOString());
 
     // Check if there are any approved reservations that include today
     const activeReservation = await Pending.findOne({
       houseId,
       status: "approved",
-      startDate: { $lte: todayUTC }, // Reservation starts today or earlier
-      endDate: { $gte: todayUTC }, // Reservation ends today or later
+      startDate: { $lte: todayUTC },
+      endDate: { $gte: todayUTC },
     });
 
-    console.log("Active reservation found:", activeReservation);
-    if (activeReservation) {
-      console.log("Reservation details:", {
-        startDate: activeReservation.startDate,
-        endDate: activeReservation.endDate,
-        startISO: activeReservation.startDate?.toISOString(),
-        endISO: activeReservation.endDate?.toISOString(),
-      });
-    }
-
-    // If there's an active reservation, house is NOT available
     return !activeReservation;
   } catch (error: any) {
     console.error("Error in isHouseAvailable:", error);
-    return true; // Default to available if there's an error
+    return true; 
+  }
+}
+
+export async function batchIsHouseAvailable(
+  houseIds: string[]
+): Promise<Record<string, boolean>> {
+  try {
+    await dbConnect();
+
+    // 1. Get current listed status for all houses
+    const houses = await house.find({ _id: { $in: houseIds } }).select("available").lean();
+    const listedMap: Record<string, boolean> = {};
+    houses.forEach(h => {
+      listedMap[(h as any)._id.toString()] = (h as any).available !== false;
+    });
+
+    const now = new Date();
+    const todayUTC = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+    );
+
+    // Find all active reservations for the given house IDs
+    const activeReservations = await Pending.find({
+      houseId: { $in: houseIds },
+      status: "approved",
+      startDate: { $lte: todayUTC },
+      endDate: { $gte: todayUTC },
+    }).select("houseId");
+
+    const reservedHouseIds = new Set(
+      activeReservations.map((res) => res.houseId.toString())
+    );
+
+    const result: Record<string, boolean> = {};
+    houseIds.forEach((id) => {
+      // Available if listed AND not reserved
+      result[id] = (listedMap[id] ?? true) && !reservedHouseIds.has(id);
+    });
+
+    return result;
+  } catch (error: any) {
+    console.error("Error in batchIsHouseAvailable:", error);
+    // Return empty results or default to available
+    const fallback: Record<string, boolean> = {};
+    houseIds.forEach((id) => (fallback[id] = true));
+    return fallback;
   }
 }

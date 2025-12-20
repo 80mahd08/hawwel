@@ -2,7 +2,7 @@ import HouseLink from "@/components/HouseLink/HouseLink";
 import {
   getUserByClerkId,
   getUserfavorites,
-  isHouseAvailable,
+  batchIsHouseAvailable,
 } from "@/lib/dbFunctions";
 import { currentUser } from "@clerk/nextjs/server";
 import Pagination from "@/components/Pagination/Pagination";
@@ -34,22 +34,23 @@ export default async function page({
   );
 
   if (favorites && favorites.length > 0) {
-    // Add real-time availability check
-    const housesWithAvailability = await Promise.all(
-      favorites.map(async (fav) => {
-        const populated = (fav as any).houseId;
-        const houseObj = populated?.toObject ? populated.toObject() : populated;
-        const isAvailable = await isHouseAvailable(houseObj._id.toString());
+    // Check real-time availability for all houses in one go
+    const houseIds = favorites
+      .map((fav: any) => fav.houseId?._id?.toString())
+      .filter(Boolean);
+    const availabilityMap = await batchIsHouseAvailable(houseIds);
 
-        return {
-          ...houseObj,
-          _id: houseObj._id?.toString?.() ?? String(houseObj._id),
-          ownerId: houseObj.ownerId?.toString?.(),
-          images: Array.isArray(houseObj.images) ? houseObj.images : [],
-          isAvailable, // Add real-time availability
-        };
-      })
-    );
+    const housesWithAvailability = favorites.map((fav: any) => {
+      const houseObj = fav.houseId?.toObject ? fav.houseId.toObject() : fav.houseId;
+      const id = houseObj._id?.toString?.() ?? String(houseObj._id);
+      return {
+        ...houseObj,
+        _id: id,
+        ownerId: houseObj.ownerId?.toString?.(),
+        images: Array.isArray(houseObj.images) ? houseObj.images : [],
+        isAvailable: availabilityMap[id] ?? true,
+      };
+    });
 
     return (
       <div>
@@ -62,5 +63,5 @@ export default async function page({
       </div>
     );
   }
-  return <div>No favorite houses found.</div>;
+  return <div style={{ textAlign: "center" }}>No favorite houses found.</div>;
 }

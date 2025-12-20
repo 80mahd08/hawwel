@@ -14,6 +14,9 @@ export default function SearchFilter() {
     searchParams.get("startDate") || ""
   );
   const [endDate, setEndDate] = useState(searchParams.get("endDate") || "");
+  const [onlyAvailable, setOnlyAvailable] = useState(
+    searchParams.get("onlyAvailable") === "true"
+  );
 
   const allAmenities = [
     "Wifi",
@@ -43,12 +46,27 @@ export default function SearchFilter() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    const params = new URLSearchParams();
+    console.log("Searching with filters:", { location, minPrice, maxPrice, startDate, endDate, onlyAvailable, selectedAmenities });
+    const params = new URLSearchParams(searchParams.toString());
     if (location) params.set("location", location);
+    else params.delete("location");
+    
     if (minPrice) params.set("minPrice", minPrice);
+    else params.delete("minPrice");
+
     if (maxPrice) params.set("maxPrice", maxPrice);
+    else params.delete("maxPrice");
+
     if (startDate) params.set("startDate", startDate);
+    else params.delete("startDate");
+
     if (endDate) params.set("endDate", endDate);
+    else params.delete("endDate");
+
+    if (onlyAvailable) params.set("onlyAvailable", "true");
+    else params.delete("onlyAvailable");
+
+    params.delete("amenities");
     selectedAmenities.forEach((a) => params.append("amenities", a));
 
     router.push(`/?${params.toString()}`);
@@ -101,6 +119,19 @@ export default function SearchFilter() {
               onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
+        </div>
+
+        <div className="filter-group">
+          <label>Availability</label>
+          <label className="checkbox-label availability-toggle">
+            <input
+              type="checkbox"
+              checked={onlyAvailable}
+              onChange={(e) => setOnlyAvailable(e.target.checked)}
+            />
+            <span className="live-dot"></span>
+            Available Now
+          </label>
         </div>
 
         <div className="filter-group full-width">

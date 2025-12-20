@@ -2,7 +2,7 @@ import HouseLink from "@/components/HouseLink/HouseLink";
 import {
   getUserByClerkId,
   gethousesByOwner,
-  isHouseAvailable,
+  batchIsHouseAvailable,
 } from "@/lib/dbFunctions";
 import { currentUser } from "@clerk/nextjs/server";
 import Pagination from "@/components/Pagination/Pagination";
@@ -34,20 +34,21 @@ export default async function page({
   );
 
   if (houses && houses.length > 0) {
-    // Add real-time availability check
-    const housesWithAvailability = await Promise.all(
-      houses.map(async (house) => {
-        const isAvailable = await isHouseAvailable(house._id.toString());
-        const obj = house.toObject ? house.toObject() : (house as any);
-        return {
-          ...obj,
-          _id: obj._id?.toString?.() ?? String(obj._id),
-          ownerId: obj.ownerId?.toString?.(),
-          images: Array.isArray(obj.images) ? obj.images : [],
-          isAvailable, // Add real-time availability
-        };
-      })
-    );
+    // Check real-time availability for all houses in one go
+    const houseIds = houses.map((h) => (h as any)._id.toString());
+    const availabilityMap = await batchIsHouseAvailable(houseIds);
+
+    const housesWithAvailability = houses.map((house: any) => {
+      const obj = house.toObject ? house.toObject() : house;
+      const id = obj._id?.toString?.() ?? String(obj._id);
+      return {
+        ...obj,
+        _id: id,
+        ownerId: obj.ownerId?.toString?.(),
+        images: Array.isArray(obj.images) ? obj.images : [],
+        isAvailable: availabilityMap[id] ?? true,
+      };
+    });
 
     return (
       <div>
@@ -60,5 +61,5 @@ export default async function page({
       </div>
     );
   }
-  return <div>No houses found.</div>;
+  return <div style={{ textAlign: "center" }}>No houses found.</div>;
 }

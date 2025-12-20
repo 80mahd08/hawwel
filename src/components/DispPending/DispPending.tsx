@@ -1,4 +1,3 @@
-import { gethouseById, getUserByClerkId, getUserById } from "@/lib/dbFunctions";
 import Image from "next/image";
 import BtnAccept from "./components/BtnAccept";
 import BtnRefuse from "./components/BtnRefuse";
@@ -11,7 +10,7 @@ export default async function DispPending({
     _id: string;
     ownerId: string;
     buyerId: string;
-    houseId: string;
+    houseId: any;
     startDate: Date;
     endDate: Date;
     createdAt: string;
@@ -22,7 +21,7 @@ export default async function DispPending({
     name: string;
   };
 }) {
-  const house = await gethouseById(pending.houseId);
+  const house = pending.houseId;
 
   if (!house || !mongoUser) {
     return null;
@@ -48,10 +47,10 @@ export default async function DispPending({
         )}
       </div>
       <div className="content">
-        <h3>buyer name: {mongoUser.name}</h3>
-        <p>house title: {house.title}</p>
+        <h3><span className="label">Buyer:</span> {mongoUser.name}</h3>
+        <p className="title"><span className="label">Property:</span> {house.title}</p>
         <p>
-          reserved dates:{" "}
+          <span className="label">Reserved Dates:</span>
           <strong>
             {new Date(pending.startDate).toLocaleDateString()} -{" "}
             {new Date(pending.endDate).toLocaleDateString()}

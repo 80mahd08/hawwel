@@ -1,8 +1,9 @@
+import { Metadata } from "next";
 import {
   getApprovedByHouse,
   gethouseById,
   getUserByClerkId,
-  isHouseAvailable, // ADD THIS
+  getAvailabilityStatus,
 } from "@/lib/dbFunctions";
 import HouseSlideshow from "@/components/HouseSlideshow";
 import Order from "@/components/Order";
@@ -12,22 +13,74 @@ interface PageProps {
   params: Promise<{ houseId: string }>;
 }
 
+interface House {
+  _id: string;
+  title: string;
+  description: string;
+  location: string;
+  pricePerDay: number;
+  images: string[];
+  ownerId: any;
+  telephone: string;
+  amenities: string[];
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { houseId } = await params;
+  const houseData = await gethouseById(houseId);
+  const house = houseData as unknown as House;
+
+  if (!house) {
+    return {
+      title: "House Not Found | hawwel",
+    };
+  }
+
+  const title = `${house.title} in ${house.location || "Unknown Location"} | hawwel`;
+  const description = house.description
+    ? house.description.slice(0, 150) + (house.description.length > 150 ? "..." : "")
+    : "Book your next stay with hawwel.";
+  const image = house.images?.[0] || "/og-image.jpg";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [image],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  };
+}
+
 export default async function Page({ params }: PageProps) {
   try {
     const { houseId } = await params;
 
     // Fetch house data
-    const house = await gethouseById(houseId);
-    if (!house) {
+    const houseData = await gethouseById(houseId);
+    if (!houseData) {
       return (
-        <div style={{ textAlign: "center", color: "red" }}>
-          House not found.
+        <div style={{ textAlign: "center", color: "red", padding: "4rem" }}>
+          <h2>House not found</h2>
+          <p>The property you're looking for might have been removed or doesn't exist.</p>
         </div>
       );
     }
 
-    // Check real-time availability
-    const isAvailable = await isHouseAvailable(houseId);
+    const house = houseData as unknown as House;
+
+    // Check real-time availability using the unified helper
+    const isAvailable = await getAvailabilityStatus(houseId);
 
     // Fetch current user from Clerk
     const user = await currentUser();
@@ -48,9 +101,14 @@ export default async function Page({ params }: PageProps) {
             <h1 className="house-title">{house.title}</h1>
             <div className="house-meta">
               <span className="location">📍 {house.location || "Location not specified"}</span>
-              <span className={`status-badge ${isAvailable ? "available" : "unavailable"}`}>
-                {isAvailable ? "Available" : "Unavailable"}
-              </span>
+              {/* @ts-ignore */}
+              {house.available === false ? (
+                <span className="status-badge unavailable delisted">Delisted</span>
+              ) : isAvailable ? (
+                <span className="status-badge available">Available</span>
+              ) : (
+                <span className="status-badge unavailable reserved">Reserved</span>
+              )}
             </div>
           </div>
 
@@ -85,7 +143,7 @@ export default async function Page({ params }: PageProps) {
                 <div className="info-section reservations">
                   <h3>Reserved Dates</h3>
                   <div className="dates-list">
-                    {approvedReservations.map((reservation) => (
+                    {approvedReservations.map((reservation: any) => (
                       <div key={reservation._id} className="date-badge">
                         {new Date(reservation.startDate).toLocaleDateString()} -{" "}
                         {new Date(reservation.endDate).toLocaleDateString()}
@@ -110,15 +168,18 @@ export default async function Page({ params }: PageProps) {
                 ) : currentUserMongoDb ? (
                   <>
                     {!isAvailable && (
-                      <div className="unavailable-notice">
-                        ⚠️ This house is currently marked as unavailable, but you can check future dates.
+                      <div className="unavailable-notice" style={{ background: "rgba(239, 68, 68, 0.1)", color: "#ef4444", padding: "12px", borderRadius: "10px", marginBottom: "16px", fontSize: "0.9rem", border: "1px solid rgba(239, 68, 68, 0.2)" }}>
+                        {/* @ts-ignore */}
+                        {house.available === false 
+                          ? "⚠️ This property is currently not accepting new bookings."
+                          : "⚠️ This property is reserved for these dates, but you can check other availability."}
                       </div>
                     )}
                     <Order
                       ownerId={ownerId!}
                       houseId={houseId}
                       buyerId={currentUserMongoDb._id!.toString()}
-                      reservedDates={approvedReservations.map((reservation) => ({
+                      reservedDates={approvedReservations.map((reservation: any) => ({
                         startDate: reservation.startDate,
                         endDate: reservation.endDate,
                       }))}
@@ -136,38 +197,11 @@ export default async function Page({ params }: PageProps) {
       </div>
     );
   } catch (error: any) {
-    try {
-      const { houseId } = await params;
-      const house = await gethouseById(houseId);
-      const images: string[] = house.images || [];
-
-      return (
-        <div className="house-container">
-          <h1 className="house-title">{house.title}</h1>
-          <HouseSlideshow images={images} />
-          <div className="house-info">
-            <p>
-              <strong>Location:</strong> {house.location || "N/A"}
-            </p>
-            <p>
-              <strong>Price per day:</strong> DT {house.pricePerDay ?? "N/A"}
-            </p>
-            <p>
-              <strong>Description:</strong>{" "}
-              {house.description || "No description available."}
-            </p>
-            <p style={{ fontSize: "20px", fontWeight: "bolder" }}>
-              You're not logged in
-            </p>
-          </div>
-        </div>
-      );
-    } catch (error: any) {
-      return (
-        <div style={{ textAlign: "center", color: "red" }}>
-          An error occurred while loading the house details.
-        </div>
-      );
-    }
+    console.error("Error in Page:", error);
+    return (
+      <div style={{ textAlign: "center", color: "red", padding: "4rem" }}>
+        An error occurred while loading the house details.
+      </div>
+    );
   }
 }

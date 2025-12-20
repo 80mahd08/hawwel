@@ -39,5 +39,5 @@ export default async function page({
       </div>
     );
   }
-  return <div>No pending requests found.</div>;
+  return <div style={{ textAlign: "center" }}>No pending requests found.</div>;
 }
