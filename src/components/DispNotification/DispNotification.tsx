@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import RemovePendingBtn from "./components/RemovePendingBtn";
 
@@ -24,25 +25,29 @@ export default async function DispNotification({
     <div className="notification-item">
       {" "}
       <div className="image">
-        {house.images && house.images.length > 0 ? (
-          <Image
-            src={house.images[0]}
-            alt={house.title}
-            width={200}
-            height={150}
-          />
-        ) : (
-          <Image
-            src="/placeholder.png"
-            alt="placeholder"
-            width={200}
-            height={150}
-          />
-        )}
+        <Link href={`/${house._id}`}>
+          {house.images && house.images.length > 0 ? (
+            <Image
+              src={house.images[0]}
+              alt={house.title}
+              width={200}
+              height={150}
+            />
+          ) : (
+            <Image
+              src="/placeholder.png"
+              alt="placeholder"
+              width={200}
+              height={150}
+            />
+          )}
+        </Link>
       </div>
       <div className="content">
         <div className="text-wrapper">
-          <p className="title">{house.title}</p>
+          <Link href={`/${house._id}`} className="title-link">
+            <p className="title">{house.title}</p>
+          </Link>
           <p className="status-text" style={{ 
             color: pending.status === "approved" ? "#22c55e" : "#ef4444",
             fontWeight: 700,
@@ -66,9 +71,7 @@ export default async function DispNotification({
             </p>
           )}
         </div>
-        {pending.status === "rejected" && (
-          <RemovePendingBtn pendingId={pending._id} />
-        )}
+        <RemovePendingBtn pendingId={pending._id} />
       </div>
     </div>
   );

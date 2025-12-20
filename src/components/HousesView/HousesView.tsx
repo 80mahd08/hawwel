@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import HouseLink from "@/components/HouseLink/HouseLink";
 import Pagination from "@/components/Pagination/Pagination";
@@ -14,10 +14,12 @@ interface HousesViewProps {
   totalPages: number;
   currentPage: number;
   initialView: "list" | "map";
+  enableMapToggle?: boolean;
 }
 
-export default function HousesView({ houses, totalPages, currentPage, initialView }: HousesViewProps) {
+export default function HousesView({ houses, totalPages, currentPage, initialView, enableMapToggle = true }: HousesViewProps) {
   const [view, setView] = useState(initialView);
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   // Sync with URL if it changes externally
@@ -27,22 +29,32 @@ export default function HousesView({ houses, totalPages, currentPage, initialVie
 
   return (
     <div>
-      <div className="view-toggle-container" style={{ display: "flex", justifyContent: "center", margin: "20px 0", gap: "10px" }}>
-        <a 
-          href={`/?${new URLSearchParams({ ...Object.fromEntries(searchParams.entries()), view: "list" }).toString()}`}
-          className={`btn ${view === "list" ? "" : "secondary"}`}
-          style={{ borderRadius: "10px", padding: "8px 24px" }}
-        >
-          📋 List View
-        </a>
-        <a 
-          href={`/?${new URLSearchParams({ ...Object.fromEntries(searchParams.entries()), view: "map" }).toString()}`}
-          className={`btn ${view === "map" ? "" : "secondary"}`}
-          style={{ borderRadius: "10px", padding: "8px 24px" }}
-        >
-          🗺️ Map View
-        </a>
-      </div>
+      {enableMapToggle && (
+        <div className="view-toggle-container" style={{ display: "flex", justifyContent: "center", margin: "20px 0", gap: "10px" }}>
+          <button 
+            onClick={() => {
+              const params = new URLSearchParams(searchParams.toString());
+              params.set("view", "list");
+              router.push(`/?${params.toString()}`, { scroll: false });
+            }}
+            className={`btn ${view === "list" ? "" : "secondary"}`}
+            style={{ borderRadius: "10px", padding: "8px 24px" }}
+          >
+            📋 List View
+          </button>
+          <button 
+             onClick={() => {
+              const params = new URLSearchParams(searchParams.toString());
+              params.set("view", "map");
+              router.push(`/?${params.toString()}`, { scroll: false });
+            }}
+            className={`btn ${view === "map" ? "" : "secondary"}`}
+            style={{ borderRadius: "10px", padding: "8px 24px" }}
+          >
+            🗺️ Map View
+          </button>
+        </div>
+      )}
 
       <AnimatePresence mode="wait">
         {view === "list" ? (

@@ -8,6 +8,7 @@ export const HouseSchema = z.object({
   telephone: z.string().regex(/^[0-9+]+$/, "Invalid telephone format"),
   amenities: z.array(z.string()).default([]),
   images: z.array(z.string().url("Invalid image URL")).min(1, "At least one image is required"),
+  propertyType: z.enum(["Studio", "Apartment", "House", "Villa", "Townhouse", "Cottage"]).optional(),
   lat: z.number().optional(),
   lng: z.number().optional(),
 });
@@ -32,6 +33,11 @@ export const SearchFilterSchema = z.object({
     if (typeof val === "string") return [val];
     return val;
   }),
+  propertyType: z.union([z.string(), z.array(z.string())]).optional().transform((val) => {
+    if (typeof val === "string") return [val];
+    return val;
+  }),
+  sortBy: z.enum(["price-asc", "price-desc", "rating-desc", "newest"]).optional(),
   onlyAvailable: z.coerce.boolean().optional(),
   page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().int().positive().default(9),

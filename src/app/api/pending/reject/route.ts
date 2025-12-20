@@ -36,6 +36,34 @@ export async function POST(req: Request) {
 
     await updatePendingStatus(pendingId, "rejected");
 
+    // Send Email Notification to Buyer
+    try {
+      const User = (await import("@/models/User")).default;
+      const House = (await import("@/models/house")).default;
+      const { sendEmail, getStatusUpdateTemplate } = await import("@/lib/email");
+
+      const [buyer, houseObj] = await Promise.all([
+        User.findById(pending.buyerId),
+        House.findById(pending.houseId)
+      ]);
+
+      if (buyer?.email) {
+        await sendEmail({
+          to: buyer.email,
+          subject: "Booking Update ℹ️",
+          html: getStatusUpdateTemplate({
+            userName: buyer.name || "Guest",
+            houseTitle: houseObj?.title || "the property",
+            status: "rejected",
+            startDate: new Date(pending.startDate).toLocaleDateString(),
+            endDate: new Date(pending.endDate).toLocaleDateString()
+          }),
+        });
+      }
+    } catch (emailError) {
+      console.error("Failed to send rejection email:", emailError);
+    }
+
     return NextResponse.json(
       { ok: true, message: "Pending rejected" },
       { status: 200 }

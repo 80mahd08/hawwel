@@ -17,6 +17,10 @@ export default function SearchFilter() {
   const [onlyAvailable, setOnlyAvailable] = useState(
     searchParams.get("onlyAvailable") === "true"
   );
+  const [selectedPropertyTypes, setSelectedPropertyTypes] = useState<string[]>(
+    searchParams.getAll("propertyType") || []
+  );
+  const [sortBy, setSortBy] = useState(searchParams.get("sortBy") || "");
 
   const allAmenities = [
     "Wifi",
@@ -46,7 +50,7 @@ export default function SearchFilter() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Searching with filters:", { location, minPrice, maxPrice, startDate, endDate, onlyAvailable, selectedAmenities });
+    console.log("Searching with filters:", { location, minPrice, maxPrice, startDate, endDate, onlyAvailable, selectedAmenities, selectedPropertyTypes, sortBy });
     const params = new URLSearchParams(searchParams.toString());
     if (location) params.set("location", location);
     else params.delete("location");
@@ -65,6 +69,12 @@ export default function SearchFilter() {
 
     if (onlyAvailable) params.set("onlyAvailable", "true");
     else params.delete("onlyAvailable");
+
+    params.delete("propertyType");
+    selectedPropertyTypes.forEach((type) => params.append("propertyType", type));
+
+    if (sortBy) params.set("sortBy", sortBy);
+    else params.delete("sortBy");
 
     params.delete("amenities");
     selectedAmenities.forEach((a) => params.append("amenities", a));
@@ -118,6 +128,41 @@ export default function SearchFilter() {
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
             />
+          </div>
+        </div>
+
+        <div className="filter-group">
+          <label>Sort By</label>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="sort-select"
+          >
+            <option value="">Default (Newest)</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating-desc">Highest Rated</option>
+            <option value="newest">Newly Listed</option>
+          </select>
+        </div>
+
+        <div className="filter-group full-width">
+          <label>Property Type</label>
+          <div className="amenities-list">
+            {["Studio", "Apartment", "House", "Villa", "Townhouse", "Cottage"].map((type) => (
+              <label key={type} className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={selectedPropertyTypes.includes(type)}
+                  onChange={() => setSelectedPropertyTypes((prev) =>
+                    prev.includes(type)
+                      ? prev.filter((t) => t !== type)
+                      : [...prev, type]
+                  )}
+                />
+                {type}
+              </label>
+            ))}
           </div>
         </div>
 

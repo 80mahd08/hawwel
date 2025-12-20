@@ -8,12 +8,14 @@ import Link from "next/link";
 import Image from "next/image";
 
 // Custom marker for "Price Pins"
-const createPriceIcon = (price: number) => {
+// Custom marker for "Price Pins"
+const createPriceIcon = (price: number, rating?: number) => {
+  const ratingHtml = rating ? `<span class="marker-rating">★ ${rating.toFixed(1)}</span>` : '';
   return L.divIcon({
     className: "custom-price-marker-wrapper",
-    html: `<div class="custom-price-marker">DT ${price}</div>`,
-    iconSize: [80, 42],
-    iconAnchor: [40, 42],
+    html: `<div class="custom-price-marker">${ratingHtml}<span>DT ${price}</span></div>`,
+    iconSize: [rating ? 100 : 80, 42], // Wider if rating exists
+    iconAnchor: [rating ? 50 : 40, 42],
   });
 };
 
@@ -84,7 +86,7 @@ export default function MapView({ houses }: MapViewProps) {
           <Marker 
             key={house._id} 
             position={[house.lat, house.lng]} 
-            icon={createPriceIcon(house.pricePerDay)}
+            icon={createPriceIcon(house.pricePerDay, house.rating)}
           >
             <Popup className="house-map-popup">
               <div className="popup-inner">
@@ -125,6 +127,7 @@ export default function MapView({ houses }: MapViewProps) {
           display: flex;
           align-items: center;
           justify-content: center;
+          gap: 6px;
           font-weight: 800;
           font-size: 0.9rem;
           box-shadow: var(--shadow-sm);
@@ -159,6 +162,14 @@ export default function MapView({ houses }: MapViewProps) {
 
         .custom-price-marker:hover::after {
           border-top-color: var(--title);
+        }
+
+        .marker-rating {
+          color: #fbbf24;
+          font-weight: 700;
+          display: inline-flex;
+          align-items: center;
+          gap: 2px;
         }
 
         .house-map-popup .leaflet-popup-content-wrapper {

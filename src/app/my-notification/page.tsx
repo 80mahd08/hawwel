@@ -1,6 +1,7 @@
 import { getPendingByBuyer, getUserByClerkId } from "@/lib/dbFunctions";
 import { currentUser } from "@clerk/nextjs/server";
 import DispNotification from "@/components/DispNotification/DispNotification";
+import ClearAllNotificationsBtn from "@/components/DispNotification/components/ClearAllNotificationsBtn";
 import Pagination from "@/components/Pagination/Pagination";
 
 export default async function page({
@@ -32,6 +33,7 @@ export default async function page({
   if (pendings && pendings.length > 0) {
     return (
       <div className="container my-notification">
+        <ClearAllNotificationsBtn />
         {pendings.map((pending) => (
           <DispNotification key={pending._id} pending={pending} />
         ))}

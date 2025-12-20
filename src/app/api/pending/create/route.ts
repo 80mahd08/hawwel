@@ -38,6 +38,37 @@ export async function POST(req: Request) {
       endDate,
     });
 
+    // Send Email Notification to Owner
+    try {
+      const dbConnect = (await import("@/lib/dbConnect")).default;
+      const User = (await import("@/models/User")).default;
+      const House = (await import("@/models/house")).default;
+      const { sendEmail, getBookingRequestTemplate } = await import("@/lib/email");
+
+      await dbConnect();
+      const [owner, houseObj] = await Promise.all([
+        User.findById(ownerId),
+        House.findById(houseId)
+      ]);
+
+      if (owner?.email) {
+        await sendEmail({
+          to: owner.email,
+          subject: "New Booking Request 🏠",
+          html: getBookingRequestTemplate({
+            ownerName: owner.name || "Owner",
+            buyerName: mongoUser.name || "A traveler",
+            houseTitle: houseObj?.title || "your property",
+            startDate: new Date(startDate).toLocaleDateString(),
+            endDate: new Date(endDate).toLocaleDateString(),
+          }),
+        });
+      }
+    } catch (emailError) {
+      console.error("Failed to send notification email:", emailError);
+      // Don't fail the request if email fails
+    }
+
     return NextResponse.json(
       { message: "Pending created", pending },
       { status: 201 }

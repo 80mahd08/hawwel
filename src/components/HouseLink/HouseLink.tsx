@@ -21,6 +21,7 @@ export type LinkHouseProps = {
   images: string[];
   available: boolean;
   isAvailable?: boolean; // Add real-time availability
+  rating?: number;
 };
 
 // ============================================
@@ -60,6 +61,10 @@ export default function LinkHouse({ house, index = 0 }: { house: LinkHouseProps,
               width={500}
               height={300}
             />
+            <div className="rating-badge">
+              <span className="star">★</span>
+              <span>{house.rating ? house.rating.toFixed(1) : "New"}</span>
+            </div>
           </div>
         )}
 

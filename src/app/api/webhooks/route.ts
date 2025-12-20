@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
     const clerkId = user.id ?? "";
     const email = user.email_addresses?.[0]?.email_address ?? "";
     const name = [user.first_name, user.last_name].filter(Boolean).join(" ");
+    const imageUrl = user.image_url ?? "";
 
     if (!clerkId) {
       return new Response("Missing Clerk ID", { status: 400 });
@@ -37,11 +38,11 @@ export async function POST(req: NextRequest) {
 
     switch (type) {
       case "user.created":
-        await handleUserCreated(clerkId, email, name);
+        await handleUserCreated(clerkId, email, name, imageUrl);
         break;
 
       case "user.updated":
-        await handleUserUpdated(clerkId, email, name);
+        await handleUserUpdated(clerkId, email, name, imageUrl);
         break;
 
       case "user.deleted":
@@ -58,17 +59,17 @@ export async function POST(req: NextRequest) {
 // ============================================
 // Event Handlers
 // ============================================
-async function handleUserCreated(clerkId: string, email: string, name: string) {
+async function handleUserCreated(clerkId: string, email: string, name: string, imageUrl: string) {
   const existingUser = await getUserByClerkId(clerkId);
   if (existingUser) {
     return;
   }
 
-  await createUser({ clerkId, email, name, role: "USER" });
+  await createUser({ clerkId, email, name, imageUrl, role: "USER" });
 }
 
-async function handleUserUpdated(clerkId: string, email: string, name: string) {
-  await updateUserByClerkId(clerkId, { email, name });
+async function handleUserUpdated(clerkId: string, email: string, name: string, imageUrl: string) {
+  await updateUserByClerkId(clerkId, { email, name, imageUrl });
 }
 
 async function handleUserDeleted(clerkId: string) {

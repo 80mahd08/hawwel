@@ -40,7 +40,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    await deletePending(pendingId);
+    // Soft delete: just hide it from the buyer
+    await Pending.findByIdAndUpdate(pendingId, { buyerArchived: true });
 
     return NextResponse.json(
       { ok: true, message: "Pending removed" },

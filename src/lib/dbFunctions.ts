@@ -5,6 +5,7 @@ import User, { IUser } from "@/models/User";
 import house, { Ihouse } from "@/models/house";
 import favorite from "@/models/favorite";
 import Pending from "@/models/Pending";
+import Review, { IReview } from "@/models/Review";
 import { SearchFilterSchema, SearchFilterInput } from "./validations";
 
 // ============================================
@@ -142,6 +143,8 @@ export const getAllhouses = cache(async (filters: any = {}) => {
       endDate,
       onlyAvailable,
       amenities,
+      propertyType,
+      sortBy,
       north,
       south,
       east,
@@ -166,6 +169,11 @@ export const getAllhouses = cache(async (filters: any = {}) => {
       query.amenities = { $all: amenities };
     }
 
+    // Property type filtering
+    if (propertyType && propertyType.length > 0) {
+      query.propertyType = { $in: propertyType };
+    }
+
     // Viewport filtering
     if (north !== undefined && south !== undefined && east !== undefined && west !== undefined) {
       query.lat = { $gte: south, $lte: north };
@@ -188,9 +196,28 @@ export const getAllhouses = cache(async (filters: any = {}) => {
       }
     }
 
+    // Dynamic sorting based on sortBy parameter
+    let sortOptions: any = {};
+    switch (sortBy) {
+      case "price-asc":
+        sortOptions = { pricePerDay: 1 };
+        break;
+      case "price-desc":
+        sortOptions = { pricePerDay: -1 };
+        break;
+      case "rating-desc":
+        sortOptions = { rating: -1, createdAt: -1 };
+        break;
+      case "newest":
+        sortOptions = { createdAt: -1 };
+        break;
+      default:
+        sortOptions = { createdAt: -1 }; // Default to newest
+    }
+
     const [totalHouses, housesRaw] = await Promise.all([
       house.countDocuments(query),
-      house.find(query).skip(skip).limit(limit).lean(),
+      house.find(query).sort(sortOptions).skip(skip).limit(limit).lean(),
     ]);
 
     const houseIds = housesRaw.map(h => (h as any)._id.toString());
@@ -388,6 +415,7 @@ export async function getPendingByOwner(
       Pending.countDocuments({ ownerId, status: "pending" }),
       Pending.find({ ownerId, status: "pending" })
         .populate("houseId")
+        .populate("buyerId", "name email imageUrl")
         .skip(skip)
         .limit(limit)
         .lean(),
@@ -446,6 +474,7 @@ export async function getPendingByBuyer(
     const query = {
       buyerId,
       status: { $ne: "pending" },
+      buyerArchived: { $ne: true },
     };
     const [total, pendings] = await Promise.all([
       Pending.countDocuments(query),
@@ -502,6 +531,21 @@ export async function deletePending(pendingId: string) {
   }
 }
 
+export async function clearAllNotifications(userId: string) {
+  try {
+    await dbConnect();
+    // Soft delete: hide all non-pending requests from buyer
+    return await Pending.updateMany({
+      buyerId: userId,
+      status: { $ne: "pending" }
+    }, {
+      $set: { buyerArchived: true }
+    });
+  } catch (error: any) {
+    throw error;
+  }
+}
+
 // ============================================
 // NOTIFICATION FUNCTIONS
 // ============================================
@@ -515,6 +559,7 @@ export async function getNotificationCount(clerkId: string): Promise<number> {
     return await Pending.countDocuments({
       buyerId: user._id,
       status: { $ne: "pending" },
+      buyerArchived: { $ne: true },
     });
   } catch (error: any) {
     throw error;
@@ -619,5 +664,97 @@ export async function batchIsHouseAvailable(
     const fallback: Record<string, boolean> = {};
     houseIds.forEach((id) => (fallback[id] = true));
     return fallback;
+  }
+}
+
+// ============================================
+// REVIEW FUNCTIONS
+// ============================================
+export async function createReview(reviewData: {
+  houseId: string;
+  userId: string;
+  rating: number;
+  comment: string;
+}) {
+  try {
+    await dbConnect();
+    
+    // Create the review
+    const review = await Review.create(reviewData);
+
+    // Calculate new average rating for the house
+    const reviews = await Review.find({ houseId: reviewData.houseId });
+    if (reviews.length > 0) {
+      const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
+      const averageRating = totalRating / reviews.length;
+      
+      // Update house with new average (rounded to 1 decimal place)
+      await house.findByIdAndUpdate(reviewData.houseId, { 
+        rating: Math.round(averageRating * 10) / 10 
+      });
+    }
+
+    return review;
+  } catch (error: any) {
+    throw error;
+  }
+}
+
+export async function canUserReview(userId: string, houseId: string): Promise<boolean> {
+  try {
+    await dbConnect();
+    
+    // Check if user has ANY approved reservation for this house
+    const reservation = await Pending.findOne({
+      buyerId: userId,
+      houseId: houseId,
+      status: "approved",
+    });
+
+    return !!reservation;
+  } catch (error: any) {
+    console.error("Error in canUserReview:", error);
+    return false;
+  }
+}
+
+export async function getReviewsByHouseId(houseId: string) {
+  try {
+    await dbConnect();
+    return await Review.find({ houseId })
+      .sort({ createdAt: -1 })
+      .populate("userId", "name imageUrl")
+      .lean();
+  } catch (error: any) {
+    throw error;
+  }
+}
+
+export async function getFeaturedHouses(limit: number = 4) {
+  try {
+    await dbConnect();
+    return await house
+      .find({ available: true, rating: { $gte: 4 } }) // Only available and highly rated
+      .sort({ rating: -1, pricePerDay: 1 }) // Highest rating, then cheapest
+      .limit(limit)
+      .lean();
+  } catch (error: any) {
+    console.error("Error fetching featured houses:", error);
+    return [];
+  }
+}
+
+export async function getRecentReviews(limit: number = 6) {
+  try {
+    await dbConnect();
+    return await Review.find({})
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .populate("userId", "name")
+      .populate("houseId", "_id title images") // Populate house details for linking
+      .lean();
+  } catch (error: any) {
+    console.error("Error fetching recent reviews:", error);
+    return [];
   }
 }

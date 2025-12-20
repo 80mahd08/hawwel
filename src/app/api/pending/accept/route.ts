@@ -36,6 +36,35 @@ export async function POST(req: Request) {
 
     await updatePendingStatus(pendingId, "approved");
 
+    // Send Email Notification to Buyer
+    try {
+      const User = (await import("@/models/User")).default;
+      const House = (await import("@/models/house")).default;
+      const { sendEmail, getStatusUpdateTemplate } = await import("@/lib/email");
+
+      const [buyer, houseObj] = await Promise.all([
+        User.findById(pending.buyerId),
+        House.findById(houseId)
+      ]);
+
+      if (buyer?.email) {
+        await sendEmail({
+          to: buyer.email,
+          subject: "Booking Approved! 🎉",
+          html: getStatusUpdateTemplate({
+            userName: buyer.name || "Guest",
+            houseTitle: houseObj?.title || "the property",
+            status: "approved",
+            startDate: new Date(pending.startDate).toLocaleDateString(),
+            endDate: new Date(pending.endDate).toLocaleDateString(),
+            telephone: houseObj?.telephone
+          }),
+        });
+      }
+    } catch (emailError) {
+      console.error("Failed to send approval email:", emailError);
+    }
+
     return NextResponse.json(
       { ok: true, message: "Pending accepted and reservation confirmed" },
       { status: 200 }

@@ -15,6 +15,7 @@ export default function AddHousePage() {
     location: "",
     pricePerDay: "",
     telephone: "",
+    propertyType: "",
     lat: null as number | null,
     lng: null as number | null,
   });
@@ -130,6 +131,7 @@ export default function AddHousePage() {
           location: "",
           pricePerDay: "",
           telephone: "",
+          propertyType: "",
           lat: null,
           lng: null,
         });
@@ -195,6 +197,25 @@ export default function AddHousePage() {
             onChange={handleChange}
             required
           />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="propertyType">Property Type *</label>
+          <select
+            id="propertyType"
+            name="propertyType"
+            value={form.propertyType}
+            onChange={(e) => setForm({ ...form, propertyType: e.target.value })}
+            required
+          >
+            <option value="">Select property type...</option>
+            <option value="Studio">Studio</option>
+            <option value="Apartment">Apartment</option>
+            <option value="House">House</option>
+            <option value="Villa">Villa</option>
+            <option value="Townhouse">Townhouse</option>
+            <option value="Cottage">Cottage</option>
+          </select>
         </div>
 
         <div className="form-group">

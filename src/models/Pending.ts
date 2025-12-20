@@ -14,6 +14,7 @@ const pendingSchema = new Schema({
   startDate: { type: Date, required: false },
   endDate: { type: Date, required: false },
   createdAt: { type: Date, default: Date.now },
+  buyerArchived: { type: Boolean, default: false },
 });
 
 pendingSchema.index({ startDate: 1, endDate: 1 });

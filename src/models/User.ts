@@ -4,6 +4,7 @@ const userSchema = new Schema({
   clerkId: { type: String, required: true, unique: true },
   email: { type: String, required: true },
   name: { type: String },
+  imageUrl: { type: String },
   role: {
     type: String,
     enum: ["USER", "OWNER"],

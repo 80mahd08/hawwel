@@ -4,9 +4,14 @@ import {
   gethouseById,
   getUserByClerkId,
   getAvailabilityStatus,
+  getReviewsByHouseId,
+  canUserReview,
 } from "@/lib/dbFunctions";
 import HouseSlideshow from "@/components/HouseSlideshow";
 import Order from "@/components/Order";
+import ReviewsSection from "@/components/ReviewsSection";
+import StarRating from "@/components/StarRating";
+import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 import { currentUser } from "@clerk/nextjs/server";
 
 interface PageProps {
@@ -23,6 +28,8 @@ interface House {
   ownerId: any;
   telephone: string;
   amenities: string[];
+  propertyType?: string;
+  rating: number;
 }
 
 export async function generateMetadata({
@@ -93,6 +100,12 @@ export default async function Page({ params }: PageProps) {
     const isOwner = currentUserMongoDb?._id?.toString() === ownerId;
 
     const approvedReservations = await getApprovedByHouse(houseId);
+    const reviews = await getReviewsByHouseId(houseId);
+    
+    // Check if current user can review
+    const canReview = currentUserMongoDb 
+      ? await canUserReview(currentUserMongoDb._id.toString(), houseId) 
+      : false;
 
     return (
       <div className="house-details-page">
@@ -101,14 +114,15 @@ export default async function Page({ params }: PageProps) {
             <h1 className="house-title">{house.title}</h1>
             <div className="house-meta">
               <span className="location">📍 {house.location || "Location not specified"}</span>
-              {/* @ts-ignore */}
-              {house.available === false ? (
-                <span className="status-badge unavailable delisted">Delisted</span>
-              ) : isAvailable ? (
-                <span className="status-badge available">Available</span>
-              ) : (
-                <span className="status-badge unavailable reserved">Reserved</span>
+              {house.propertyType && (
+                <span className="property-type">
+                  🏠 {house.propertyType}
+                </span>
               )}
+              <span className="rating-badge" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <StarRating rating={house.rating || 0} size={16} /> 
+                <span style={{ fontWeight: 600 }}>{house.rating ? house.rating.toFixed(1) : "New"}</span>
+              </span>
             </div>
           </div>
 
@@ -139,19 +153,16 @@ export default async function Page({ params }: PageProps) {
                 )}
               </div>
 
-              {approvedReservations.length > 0 && (
-                <div className="info-section reservations">
-                  <h3>Reserved Dates</h3>
-                  <div className="dates-list">
-                    {approvedReservations.map((reservation: any) => (
-                      <div key={reservation._id} className="date-badge">
-                        {new Date(reservation.startDate).toLocaleDateString()} -{" "}
-                        {new Date(reservation.endDate).toLocaleDateString()}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <div className="info-section availability">
+                 <AvailabilityCalendar reservedDates={approvedReservations} />
+              </div>
+
+              <ReviewsSection 
+                houseId={houseId} 
+                reviews={reviews as any} 
+                currentUser={currentUserMongoDb} 
+                canReview={canReview}
+              />
             </div>
 
             <div className="house-sidebar">

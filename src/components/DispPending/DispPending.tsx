@@ -47,7 +47,31 @@ export default async function DispPending({
         )}
       </div>
       <div className="content">
-        <h3><span className="label">Buyer:</span> {mongoUser.name}</h3>
+        <div className="buyer-info" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+          {(pending.buyerId as any)?.imageUrl ? (
+            <img 
+              src={(pending.buyerId as any).imageUrl} 
+              alt="Buyer" 
+              style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }}
+            />
+          ) : (
+            <div style={{ 
+              width: '40px', 
+              height: '40px', 
+              borderRadius: '50%', 
+              background: '#e2e8f0', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              fontSize: '1.2rem',
+              fontWeight: 'bold',
+              color: '#64748b'
+            }}>
+              {(pending.buyerId as any)?.name?.charAt(0).toUpperCase() || "?"}
+            </div>
+          )}
+          <h3>{(pending.buyerId as any)?.name || "Unknown Buyer"}</h3>
+        </div>
         <p className="title"><span className="label">Property:</span> {house.title}</p>
         <p>
           <span className="label">Reserved Dates:</span>

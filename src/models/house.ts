@@ -10,6 +10,12 @@ const houseSchema = new Schema({
   ownerId: { type: Schema.Types.ObjectId, ref: "user", required: true, index: true },
   telephone: { type: String, required: true },
   amenities: { type: [String], default: [] },
+  propertyType: {
+    type: String,
+    enum: ["Studio", "Apartment", "House", "Villa", "Townhouse", "Cottage"],
+    required: false,
+  },
+  rating: { type: Number, default: 0, min: 0, max: 5 },
   lat: { type: Number },
   lng: { type: Number },
   location_geo: {
@@ -23,6 +29,8 @@ const houseSchema = new Schema({
       index: "2dsphere",
     },
   },
+}, {
+  timestamps: true, // Automatically adds createdAt and updatedAt
 });
 
 export type Ihouse = InferSchemaType<typeof houseSchema>;
