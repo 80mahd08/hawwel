@@ -29,10 +29,9 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ message: "Review added successfully", review }, { status: 201 });
-  } catch (error: any) {
-    console.error("Error creating review:", error);
+  } catch (error: unknown) {
     return NextResponse.json(
-      { message: error.message || "Failed to create review" },
+      { message: (error as Error).message || "Failed to create review" },
       { status: 500 }
     );
   }

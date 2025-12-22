@@ -1,0 +1,300 @@
+{
+  "HomePage": {
+    "title": "Bienvenue sur hawwel",
+    "subtitle": "Trouvez votre prochain séjour",
+    "search": "Rechercher"
+  },
+  "HeroSection": {
+    "title": "Trouvez votre prochain <span>séjour parfait</span>",
+    "subtitle": "Découvrez des maisons, villas et appartements triés sur le volet pour votre prochaine aventure."
+  },
+  "Navigation": {
+    "home": "Accueil",
+    "login": "Se connecter",
+    "signup": "S'inscrire",
+    "myHouses": "Mes Logements",
+    "addHouse": "Ajouter un logement",
+    "getStarted": "Commencer",
+    "pending": "Demandes en attente",
+    "favorites": "Favoris",
+    "notifications": "Notifications",
+    "switchRole": "Changer de rôle",
+    "hello": "Bonjour"
+  },
+  "Common": {
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue"
+  },
+  "Search": {
+    "location": "Lieu",
+    "locationPlaceholder": "Ville ou Quartier",
+    "priceRange": "Fourchette de prix (DT)",
+    "min": "Min",
+    "max": "Max",
+    "dates": "Dates",
+    "to": "au",
+    "sortBy": "Trier par",
+    "propertyType": "Type de propriété",
+    "availability": "Disponibilité",
+    "availableNow": "Disponible maintenant",
+    "amenities": "Équipements",
+    "searchBtn": "Rechercher",
+    "sort": {
+      "newest": "Par défaut (Plus récent)",
+      "priceAsc": "Prix : Croissant",
+      "priceDesc": "Prix : Décroissant",
+      "ratingDesc": "Mieux notés"
+    },
+    "propertyTypes": {
+      "Studio": "Studio",
+      "Apartment": "Appartement",
+      "House": "Maison",
+      "Villa": "Villa",
+      "Townhouse": "Maison de ville",
+      "Cottage": "Chalet"
+    },
+    "amenitiesList": {
+      "Wifi": "Wifi",
+      "AirConditioning": "Climatisation",
+      "Pool": "Piscine",
+      "Parking": "Parking",
+      "Kitchen": "Cuisine",
+      "TV": "TV",
+      "Heating": "Chauffage",
+      "Washer": "Lave-linge",
+      "Dryer": "Sèche-linge",
+      "Iron": "Fer à repasser",
+      "HairDryer": "Sèche-cheveux",
+      "Workspace": "Espace de travail"
+    }
+  },
+  "Featured": {
+    "title": "Logements en vedette",
+
+    "subtitle": "Séjours les mieux notés aimés par les voyageurs",
+    "night": "/ nuit",
+    "currency": "DT",
+    "new": "Nouveau"
+  },
+  "Reviews": {
+    "title": "Ce que disent les invités",
+    "subtitle": "Vraies expériences de vrais voyageurs",
+    "stayedAt": "Séjourné à",
+    "guestReviews": "Avis des voyageurs",
+    "reviewsCount": "{count} commentaires",
+    "shareExperience": "Partagez votre expérience",
+    "rateStay": "NOTEZ VOTRE SÉJOUR",
+    "rateStayLabel": "Notez votre séjour",
+    "thanks": "Merci !",
+    "placeholder": "Comment s'est passé votre séjour ? Qu'avez-vous préféré ?",
+    "postReview": "Publier l'avis",
+    "publishing": "Publication...",
+    "loginToReview": "Connectez-vous pour voir si vous pouvez laisser un avis.",
+    "noReviews": "Aucun commentaire pour le moment.",
+    "guest": "Voyageur"
+  },
+  "HowItWorks": {
+    "title": "Comment ça marche",
+    "subtitle": "Des étapes simples pour votre séjour parfait",
+    "steps": {
+      "discover": {
+        "title": "Découvrir",
+        "description": "Parcourez notre liste de logements vérifiés."
+      },
+      "book": {
+        "title": "Réserver",
+        "description": "Sécurisez votre séjour instantanément avec notre système facile."
+      },
+      "enjoy": {
+        "title": "Profiter",
+        "description": "Vivez l'ambiance locale et créez des souvenirs inoubliables."
+      }
+    }
+  },
+  "HousesView": {
+    "listView": "Vue Liste",
+    "mapView": "Vue Carte",
+    "noResults": "Aucun logement trouvé.",
+    "currency": "DT",
+    "day": "jour",
+    "viewProperty": "Voir la propriété"
+  },
+  "HouseDetails": {
+    "locationNotSpecified": "Emplacement non spécifié",
+    "hostedBy": "Hébergé par",
+    "propertyOwner": "Propriétaire",
+    "aboutThisPlace": "À propos de ce logement",
+    "noDescription": "Aucune description disponible.",
+    "whatThisPlaceOffers": "Ce que propose ce logement",
+    "noAmenities": "Aucun équipement spécifique listé pour cette propriété.",
+    "night": "/ nuit",
+    "currency": "DT",
+    "ownerMessage": "Vous êtes le propriétaire de cette annonce.",
+    "unavailableNotice": "⚠️ Cette propriété n'accepte actuellement pas de nouvelles réservations.",
+    "reservedNotice": "⚠️ Cette propriété est réservée pour ces dates, mais vous pouvez vérifier d'autres disponibilités.",
+    "loginMessage": "Veuillez vous connecter pour réserver cette propriété.",
+    "notFound": "Logement introuvable",
+    "notFoundDesc": "La propriété que vous recherchez a peut-être été supprimée ou n'existe pas.",
+    "errorLoading": "Une erreur est survenue lors du chargement des détails du logement.",
+    "showAllPhotos": "Afficher toutes les photos",
+    "morePhotos": "+{count} plus",
+    "noImages": "Aucune image disponible",
+    "new": "Nouveau"
+  },
+  "Notifications": {
+    "clearAll": "Tout effacer",
+    "noNotifications": "Aucune notification trouvée.",
+    "newBooking": "Nouvelle demande de réservation",
+    "bookingStatus": "Mise à jour du statut de réservation",
+    "statusLabel": "Statut :",
+    "datesLabel": "Dates :",
+    "contactOwnerLabel": "Contacter le propriétaire :",
+    "chatWithOwner": "Discuter avec le propriétaire",
+    "remove": "Supprimer",
+    "clearDialog": {
+      "button": "Tout effacer",
+      "buttonClearing": "Effacement...",
+      "title": "Effacer toutes les notifications ?",
+      "text": "Cela supprimera définitivement toutes vos notifications.",
+      "confirm": "Oui, tout effacer",
+      "cancel": "Annuler",
+      "successTitle": "Effacé !",
+      "successText": "Toutes les notifications ont été supprimées.",
+      "errorTitle": "Erreur",
+      "errorText": "Échec de l'effacement des notifications"
+    },
+    "removeDialog": {
+      "title": "Supprimer la notification ?",
+      "text": "Êtes-vous sûr de vouloir supprimer cette notification ?",
+      "confirm": "Oui, supprimer",
+      "cancel": "Annuler",
+      "successTitle": "Supprimé",
+      "successText": "Notification supprimée.",
+      "errorTitle": "Erreur",
+      "errorText": "Échec de la suppression de la notification",
+      "buttonRemoving": "Suppression..."
+    }
+  },
+  "Pending": {
+    "noPending": "Aucune demande en attente trouvée.",
+    "bookingRequest": "Demande de réservation",
+    "dates": "Dates",
+    "guests": "Voyageurs",
+    "status": "Statut",
+    "pending": "En attente",
+    "accepted": "Accepté",
+    "approved": "Approuvé",
+    "rejected": "Rejeté",
+    "approve": "Approuver",
+    "reject": "Rejeter",
+    "house": "Logement",
+    "propertyLabel": "Propriété :",
+    "reservedDatesLabel": "Dates réservées :",
+    "chatWithBuyer": "Discuter avec l'acheteur",
+    "unknownBuyer": "Acheteur inconnu",
+    "acceptDialog": {
+      "title": "Accepter la demande en attente ?",
+      "text": "Êtes-vous sûr de vouloir accepter cette demande ?",
+      "confirm": "Oui, accepter",
+      "cancel": "Annuler",
+      "successTitle": "Accepté",
+      "successText": "Demande acceptée.",
+      "errorTitle": "Erreur",
+      "errorText": "Erreur lors de l'acceptation.",
+      "buttonAccepting": "Acceptation..."
+    },
+    "rejectDialog": {
+      "title": "Rejeter la demande en attente ?",
+      "text": "Êtes-vous sûr de vouloir rejeter cette demande ?",
+      "confirm": "Oui, rejeter",
+      "cancel": "Annuler",
+      "successTitle": "Rejeté",
+      "successText": "Demande rejetée.",
+      "errorTitle": "Erreur",
+      "errorText": "Erreur lors du rejet.",
+      "buttonRejecting": "Rejet..."
+    }
+  },
+  "Order": {
+    "checkIn": "ARRIVÉE",
+    "checkOut": "DÉPART",
+    "reserve": "Réserver",
+    "reserveLoading": "Traitement...",
+    "noChargeYet": "Vous ne serez pas débité pour le moment",
+    "successTitle": "Envoyé",
+    "successMessage": "Demande de réservation envoyée.",
+    "errorTitle": "Erreur",
+    "sendRequestTitle": "Envoyer une demande ?",
+    "sendRequestMessage": "Voulez-vous envoyer une demande de réservation au propriétaire ?",
+    "yesSend": "Oui, envoyer",
+    "cancel": "Annuler",
+    "invalidDatesTitle": "Dates invalides",
+    "overlapError": "Les dates sélectionnées chevauchent des réservations existantes.",
+    "requiredDatesError": "Les dates de début et de fin sont requises.",
+    "dateOrderError": "La date de début ne peut pas être après la date de fin."
+  },
+
+  "Availability": {
+    "title": "Disponibilité",
+    "subtitle": "Les prix peuvent varier selon les dates sélectionnées.",
+    "available": "Disponible",
+    "booked": "Réservé"
+  },
+  "HouseCard": {
+    "day": "jour",
+    "currency": "DT",
+    "available": "Disponible",
+    "booked": "Réservé",
+    "new": "Nouveau",
+    "addToFavorites": "Ajouter aux favoris",
+    "loginRequired": "Veuillez vous connecter d'abord.",
+    "addedSuccess": "Ajouté aux favoris !",
+    "errorAdding": "Échec de l'ajout aux favoris.",
+    "removeFromFavorites": "Retirer des favoris",
+    "removeFavDialog": {
+      "title": "Retirer des favoris ?",
+      "text": "Êtes-vous sûr de vouloir retirer cette maison de vos favoris ?",
+      "confirm": "Oui, retirer",
+      "cancel": "Annuler",
+      "successTitle": "Retiré des favoris !",
+      "errorText": "Échec du retrait des favoris."
+    },
+    "removeHouse": "Supprimer la maison",
+    "removeHouseDialog": {
+      "title": "Supprimer la maison ?",
+      "text": "Cela supprimera définitivement la maison. Êtes-vous sûr ?",
+      "confirm": "Oui, supprimer",
+      "cancel": "Annuler",
+      "successTitle": "Supprimé",
+      "successText": "La maison a été supprimée avec succès.",
+      "errorText": "Impossible de supprimer la maison. Veuillez réessayer."
+    }
+  },
+  "AddHouse": {
+    "title": "Inscrivez votre propriété",
+    "subtitle": "Remplissez les détails ci-dessous pour ajouter votre maison à nos annonces.",
+    "propertyTitle": "Titre du bien",
+    "titlePlaceholder": "ex. Villa de luxe à Tunis",
+    "description": "Description",
+    "descPlaceholder": "Décrivez les principales caractéristiques de votre propriété",
+    "priceLabel": "Prix par jour (DT)",
+    "pricePlaceholder": "0,00",
+    "propertyType": "Type de propriété *",
+    "selectType": "Sélectionner le type...",
+    "contactNumber": "Numéro de contact",
+    "pinLocation": "Épingler l'emplacement sur la carte (Requis)",
+    "pinHelp": "Cliquez sur la carte pour marquer l'emplacement exact. Cela définira automatiquement la ville.",
+    "coordinates": "Coordonnées définies :",
+    "amenities": "Équipements",
+    "propertyImages": "Images de la propriété",
+    "dragDrop": "Glissez-déposez des images ou cliquez pour parcourir",
+    "formats": "Formats supportés : JPG, PNG",
+    "selectedFiles": "{count} fichier(s) sélectionné(s)",
+    "publishBtn": "Publier l'annonce",
+    "successTitle": "Succès",
+    "successMsg": "Maison ajoutée avec succès !",
+    "errorTitle": "Erreur",
+    "locationRequired": "Emplacement requis",
+    "locationMsg": "Veuillez cliquer sur la carte pour épingler l'emplacement."
+  }
+}

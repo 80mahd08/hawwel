@@ -1,7 +1,24 @@
-import DispPending from "@/components/DispPending/DispPending";
 import { getPendingByOwner, getUserByClerkId } from "@/lib/dbFunctions";
 import { currentUser } from "@clerk/nextjs/server";
-import Pagination from "@/components/Pagination/Pagination";
+import MyPendingClient from "./MyPendingClient";
+
+// Local interface for IPC
+interface IPendingRequest {
+  _id: string;
+  ownerId: string;
+  buyerId: string | { _id: string; name?: string; imageUrl?: string };
+  houseId: { _id: string; title: string; images: string[] };
+  startDate: Date;
+  endDate: Date;
+  createdAt: string;
+}
+
+// Local interface for mongoUser
+interface IMongoUser {
+  _id: string;
+  clerkId: string;
+  name: string;
+}
 
 export default async function page({
   searchParams,
@@ -29,19 +46,12 @@ export default async function page({
     limit
   );
 
-  if (pendings && pendings.length > 0) {
-    return (
-      <div className="container my-pending">
-        {pendings.map((pending) => (
-          <DispPending
-            key={pending._id}
-            pending={pending}
-            mongoUser={mongoUser}
-          />
-        ))}
-        <Pagination totalPages={totalPages} currentPage={currentPage} />
-      </div>
-    );
-  }
-  return <div style={{ textAlign: "center" }}>No pending requests found.</div>;
+  return (
+    <MyPendingClient 
+        pendings={JSON.parse(JSON.stringify(pendings)) as IPendingRequest[]}
+        totalPages={totalPages}
+        currentPage={currentPage}
+        mongoUser={JSON.parse(JSON.stringify(mongoUser)) as IMongoUser}
+    />
+  );
 }

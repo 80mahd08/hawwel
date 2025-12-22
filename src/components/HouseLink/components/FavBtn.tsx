@@ -3,6 +3,7 @@
 import { useUser } from "@clerk/nextjs";
 import Swal from "sweetalert2";
 import { useFavCount } from "@/context/FavCountProvider";
+import { useTranslations } from "next-intl";
 
 // ============================================
 // Types
@@ -17,6 +18,7 @@ type FavBtnProps = {
 export default function FavBtn({ houseId }: FavBtnProps) {
   const { user } = useUser();
   const { refreshCountFav } = useFavCount();
+  const t = useTranslations('HouseCard');
 
   // ----------------------------
   // Handlers
@@ -25,7 +27,7 @@ export default function FavBtn({ houseId }: FavBtnProps) {
     if (!user?.id) {
       Swal.fire({
         icon: "info",
-        title: "Please log in first.",
+        title: t('loginRequired'),
       });
       return;
     }
@@ -43,18 +45,17 @@ export default function FavBtn({ houseId }: FavBtnProps) {
 
       Swal.fire({
         icon: "success",
-        title: "Added to favorites!",
+        title: t('addedSuccess'),
         showConfirmButton: false,
         timer: 1500,
       });
 
       refreshCountFav(user.id);
     } catch (error) {
-      console.error("Error adding favorite:", error);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Failed to add to favorites.",
+        text: t('errorAdding'),
       });
     }
   };
@@ -64,7 +65,7 @@ export default function FavBtn({ houseId }: FavBtnProps) {
   // ----------------------------
   return (
     <button className="btn" onClick={handleAddFavorite}>
-      Add to favorites
+      {t('addToFavorites')}
     </button>
   );
 }

@@ -2,9 +2,10 @@
 
 import React from "react";
 import Swal from "sweetalert2";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import { useUser } from "@clerk/nextjs";
 import { useFavCount } from "@/context/FavCountProvider";
+import { useTranslations } from "next-intl";
 
 // ============================================
 // Types
@@ -20,6 +21,7 @@ export default function RemFavBtn({ houseId }: RemFavBtnProps) {
   const router = useRouter();
   const { user } = useUser();
   const { refreshCountFav } = useFavCount();
+  const t = useTranslations('HouseCard');
 
   // ----------------------------
   // Handlers
@@ -28,18 +30,18 @@ export default function RemFavBtn({ houseId }: RemFavBtnProps) {
     if (!user?.id) {
       Swal.fire({
         icon: "info",
-        title: "Please log in first.",
+        title: t('loginRequired'),
       });
       return;
     }
     // Confirm with user before removing
     const confirmation = await Swal.fire({
-      title: "Remove from favorites?",
-      text: "Are you sure you want to remove this house from your favorites?",
+      title: t('removeFavDialog.title'),
+      text: t('removeFavDialog.text'),
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, remove",
-      cancelButtonText: "Cancel",
+      confirmButtonText: t('removeFavDialog.confirm'),
+      cancelButtonText: t('removeFavDialog.cancel'),
     });
 
     if (!confirmation.isConfirmed) return;
@@ -57,7 +59,7 @@ export default function RemFavBtn({ houseId }: RemFavBtnProps) {
 
       Swal.fire({
         icon: "success",
-        title: "Removed from favorites!",
+        title: t('removeFavDialog.successTitle'),
         showConfirmButton: false,
         timer: 1500,
       });
@@ -66,11 +68,10 @@ export default function RemFavBtn({ houseId }: RemFavBtnProps) {
       refreshCountFav(user.id);
       router.refresh();
     } catch (error) {
-      console.error("Error removing favorite:", error);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Failed to remove from favorites.",
+        text: t('removeFavDialog.errorText'),
       });
     }
   };
@@ -80,7 +81,7 @@ export default function RemFavBtn({ houseId }: RemFavBtnProps) {
   // ----------------------------
   return (
     <button onClick={handleRemoveFavorite} className="btn">
-      Remove from favorites
+      {t('removeFromFavorites')}
     </button>
   );
 }

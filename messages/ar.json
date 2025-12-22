@@ -1,0 +1,299 @@
+{
+  "HomePage": {
+    "title": "مرحبا بك في حوّل",
+    "subtitle": "ابحث عن إقامتك التالية",
+    "search": "بحث"
+  },
+  "HeroSection": {
+    "title": "<span>المثالي</span> اعثر على مكانك",
+    "subtitle": "استكشف منازل وفيلات وشققاً مميزة لرحلتك القادمة."
+  },
+  "Navigation": {
+    "home": "الرئيسية",
+    "login": "تسجيل الدخول",
+    "signup": "إنشاء حساب",
+    "myHouses": "منازلي",
+    "addHouse": "أضف منزل",
+    "getStarted": "ابدأ الآن",
+    "pending": "الطلبات المعلقة",
+    "favorites": "المفضلة",
+    "notifications": "إشعارات",
+    "switchRole": "تغيير الدور",
+    "hello": "مرحباً"
+  },
+  "Common": {
+    "loading": "جار التحميل...",
+    "error": "حدث خطأ ما"
+  },
+  "Search": {
+    "location": "الموقع",
+    "locationPlaceholder": "المدينة أو الحي",
+    "priceRange": "نطاق السعر (د.ت)",
+    "min": "أدنى",
+    "max": "أقصى",
+    "dates": "التواريخ",
+    "to": "إلى",
+    "sortBy": "ترتيب حسب",
+    "propertyType": "نوع العقار",
+    "availability": "التوفر",
+    "availableNow": "متاح الآن",
+    "amenities": "المرافق",
+    "searchBtn": "بحث",
+    "sort": {
+      "newest": "الافتراضي (الأحدث)",
+      "priceAsc": "السعر: من الأقل للأعلى",
+      "priceDesc": "السعر: من الأعلى للأقل",
+      "ratingDesc": "الأعلى تقييماً"
+    },
+    "propertyTypes": {
+      "Studio": "استوديو",
+      "Apartment": "شقة",
+      "House": "منزل",
+      "Villa": "فيلا",
+      "Townhouse": "تاون هاوس",
+      "Cottage": "كوخ"
+    },
+    "amenitiesList": {
+      "Wifi": "واي فاي",
+      "AirConditioning": "تكييف",
+      "Pool": "مسبح",
+      "Parking": "موقف سيارات",
+      "Kitchen": "مطبخ",
+      "TV": "تلفاز",
+      "Heating": "تدفئة",
+      "Washer": "غسالة",
+      "Dryer": "نشافة",
+      "Iron": "مكواة",
+      "HairDryer": "مجفف شعر",
+      "Workspace": "مساحة عمل"
+    }
+  },
+  "Featured": {
+    "title": "منازل مميزة",
+    "subtitle": "إقامات عالية التقييم أحبها الضيوف",
+    "night": "/ ليلة",
+    "currency": "د.ت",
+    "new": "جديد"
+  },
+  "Reviews": {
+    "title": "ماذا يقول الضيوف",
+    "subtitle": "تجارب حقيقية من مسافرين حقيقيين",
+    "stayedAt": "أقام في",
+    "guestReviews": "آراء الضيوف",
+    "reviewsCount": "{count} تعليق",
+    "shareExperience": "شارك تجربتك",
+    "rateStay": "قيم إقامتك",
+    "rateStayLabel": "قيم إقامتك",
+    "thanks": "شكراً!",
+    "placeholder": "كيف كانت إقامتك؟ ما الذي أعجبك أكثر؟",
+    "postReview": "نشر التعليق",
+    "publishing": "جاري النشر...",
+    "loginToReview": "سجل الدخول لمعرفة ما إذا كان بإمكانك تقييم هذا العقار.",
+    "noReviews": "لا توجد تعليقات بعد. ابدأ ببناء الثقة من خلال الشفافية.",
+    "guest": "ضيف"
+  },
+  "HowItWorks": {
+    "title": "كيف يعمل",
+    "subtitle": "خطوات بسيطة لإقامتك المثالية",
+    "steps": {
+      "discover": {
+        "title": "اكتشف",
+        "description": "تصفح قائمتنا المختارة من المنازل الموثقة."
+      },
+      "book": {
+        "title": "احجز",
+        "description": "أكد حجزك فوراً بنظامنا السهل."
+      },
+      "enjoy": {
+        "title": "استمتع",
+        "description": "عش الأجواء المحلية واصنع ذكريات لا تنسى."
+      }
+    }
+  },
+  "HousesView": {
+    "listView": "عرض القائمة",
+    "mapView": "عرض الخريطة",
+    "noResults": "لم يتم العثور على منازل.",
+    "currency": "د.ت",
+    "day": "يوم",
+    "viewProperty": "عاين العقار"
+  },
+  "HouseDetails": {
+    "locationNotSpecified": "الموقع غير محدد",
+    "hostedBy": "المضيف",
+    "propertyOwner": "مالك العقار",
+    "aboutThisPlace": "عن هذا المكان",
+    "noDescription": "لا يوجد وصف متاح.",
+    "whatThisPlaceOffers": "ما يقدمه هذا المكان",
+    "noAmenities": "لا توجد مرافق محددة مدرجة لهذا العقار.",
+    "night": "/ ليلة",
+    "currency": "د.ت",
+    "ownerMessage": "أنت مالك هذا العقار.",
+    "unavailableNotice": "⚠️ هذا العقار لا يقبل حجوزات جديدة حالياً.",
+    "reservedNotice": "⚠️ هذا العقار محجوز في هذه التواريخ، لكن يمكنك التحقق من توفر آخر.",
+    "loginMessage": "يرجى تسجيل الدخول لحجز هذا العقار.",
+    "notFound": "العقار غير موجود",
+    "notFoundDesc": "العقار الذي تبحث عنه قد يكون تم حذفه أو غير موجود.",
+    "errorLoading": "حدث خطأ أثناء تحميل تفاصيل المنزل.",
+    "showAllPhotos": "إظهار كل الصور",
+    "morePhotos": "+{count} أكثر",
+    "noImages": "لا توجد صور متاحة",
+    "new": "جديد"
+  },
+  "Notifications": {
+    "clearAll": "مسح الكل",
+    "noNotifications": "لا توجد إشعارات.",
+    "newBooking": "طلب حجز جديد",
+    "bookingStatus": "تحديث حالة الحجز",
+    "statusLabel": "الحالة:",
+    "datesLabel": "التواريخ:",
+    "contactOwnerLabel": "اتصل بالمالك:",
+    "chatWithOwner": "دردش مع المالك",
+    "remove": "إزالة",
+    "clearDialog": {
+      "button": "مسح جميع الإشعارات",
+      "buttonClearing": "جاري المسح...",
+      "title": "مسح جميع الإشعارات؟",
+      "text": "سيؤدي هذا إلى إزالة جميع الإشعارات نهائيًا.",
+      "confirm": "نعم، مسح الكل",
+      "cancel": "إلغاء",
+      "successTitle": "تم المسح!",
+      "successText": "تمت إزالة جميع الإشعارات.",
+      "errorTitle": "خطأ",
+      "errorText": "فشل مسح الإشعارات"
+    },
+    "removeDialog": {
+      "title": "إزالة الإشعار؟",
+      "text": "هل أنت متأكد أنك تريد إزالة هذا الإشعار؟",
+      "confirm": "نعم، إزالة",
+      "cancel": "إلغاء",
+      "successTitle": "تمت الإزالة",
+      "successText": "تم مسح الإشعار.",
+      "errorTitle": "خطأ",
+      "errorText": "فشل إزالة الإشعار",
+      "buttonRemoving": "جاري الإزالة..."
+    }
+  },
+  "Pending": {
+    "noPending": "لا توجد طلبات معلقة.",
+    "bookingRequest": "طلب حجز",
+    "dates": "التواريخ",
+    "guests": "الضيوف",
+    "status": "الحالة",
+    "pending": "قيد الانتظار",
+    "accepted": "مقبول",
+    "approved": "مقبول",
+    "rejected": "مرفوض",
+    "approve": "قبول",
+    "reject": "رفض",
+    "house": "منزل",
+    "propertyLabel": "العقار:",
+    "reservedDatesLabel": "تواريخ الحجز:",
+    "chatWithBuyer": "دردش مع المشتري",
+    "unknownBuyer": "مشتري مجهول",
+    "acceptDialog": {
+      "title": "قبول الطلب المعلق؟",
+      "text": "هل أنت متأكد أنك تريد قبول هذا الطلب؟",
+      "confirm": "نعم، قبول",
+      "cancel": "إلغاء",
+      "successTitle": "تم القبول",
+      "successText": "تم قبول الطلب.",
+      "errorTitle": "خطأ",
+      "errorText": "خطأ في قبول الطلب.",
+      "buttonAccepting": "جاري القبول..."
+    },
+    "rejectDialog": {
+      "title": "رفض الطلب المعلق؟",
+      "text": "هل أنت متأكد أنك تريد رفض هذا الطلب؟",
+      "confirm": "نعم، رفض",
+      "cancel": "إلغاء",
+      "successTitle": "تم الرفض",
+      "successText": "تم رفض الطلب.",
+      "errorTitle": "خطأ",
+      "errorText": "خطأ في رفض الطلب.",
+      "buttonRejecting": "جاري الرفض..."
+    }
+  },
+  "Order": {
+    "checkIn": "تاريخ الوصول",
+    "checkOut": "تاريخ المغادرة",
+    "reserve": "حجز",
+    "reserveLoading": "جاري المعالجة...",
+    "noChargeYet": "لن يتم خصم أي مبلغ منك الآن",
+    "successTitle": "تم الإرسال",
+    "successMessage": "تم إرسال طلب الحجز.",
+    "errorTitle": "خطأ",
+    "sendRequestTitle": "إرسال طلب حجز؟",
+    "sendRequestMessage": "هل تريد إرسال طلب حجز إلى المالك؟",
+    "yesSend": "نعم، أرسل",
+    "cancel": "إلغاء",
+    "invalidDatesTitle": "تواريخ غير صالحة",
+    "overlapError": "التواريخ المحددة تتعارض مع حجوزات موجودة.",
+    "requiredDatesError": "تاريخ البدء والانتهاء مطلوبان.",
+    "dateOrderError": "تاريخ البدء لا يمكن أن يكون بعد تاريخ الانتهاء."
+  },
+
+  "Availability": {
+    "title": "التوفر",
+    "subtitle": "قد تختلف الأسعار حسب التواريخ المختارة.",
+    "available": "متاح",
+    "booked": "محجوز"
+  },
+  "HouseCard": {
+    "day": "يوم",
+    "currency": "د.ت",
+    "available": "متاح الآن",
+    "booked": "محجوز حاليا",
+    "new": "جديد",
+    "addToFavorites": "أضف إلى المفضلة",
+    "loginRequired": "يرجى تسجيل الدخول أولاً.",
+    "addedSuccess": "تمت الإضافة إلى المفضلة!",
+    "errorAdding": "فشل الإضافة إلى المفضلة.",
+    "removeFromFavorites": "إزالة من المفضلة",
+    "removeFavDialog": {
+      "title": "إزالة من المفضلة؟",
+      "text": "هل أنت متأكد أنك تريد إزالة هذا المنزل من المفضلة؟",
+      "confirm": "نعم، إزالة",
+      "cancel": "إلغاء",
+      "successTitle": "تمت الإزالة من المفضلة!",
+      "errorText": "فشل إزالة المنزل من المفضلة."
+    },
+    "removeHouse": "إزالة المنزل",
+    "removeHouseDialog": {
+      "title": "حذف المنزل؟",
+      "text": "سيؤدي هذا إلى حذف المنزل نهائيًا. هل أنت متأكد؟",
+      "confirm": "نعم، حذف",
+      "cancel": "إلغاء",
+      "successTitle": "تم الحذف",
+      "successText": "تم حذف المنزل بنجاح.",
+      "errorText": "تعذر حذف المنزل. حاول مرة أخرى."
+    }
+  },
+  "AddHouse": {
+    "title": "أضف عقارك",
+    "subtitle": "املأ التفاصيل أدناه لإضافة منزلك إلى قوائمنا.",
+    "propertyTitle": "عنوان العقار",
+    "titlePlaceholder": "مثال: فيلا فاخرة في تونس",
+    "description": "الوصف",
+    "descPlaceholder": "صف الميزات الرئيسية لعقارك",
+    "priceLabel": "السعر لليوم (د.ت)",
+    "pricePlaceholder": "0.00",
+    "propertyType": "نوع العقار *",
+    "selectType": "ختر نوع العقار...",
+    "contactNumber": "رقم الاتصال",
+    "pinLocation": "حدد الموقع على الخريطة (مطلوب)",
+    "pinHelp": "انقر على الخريطة لتحديد موقع عقارك بدقة. سيتم تحديد المدينة تلقائيًا.",
+    "coordinates": "الإحداثيات المحددة:",
+    "amenities": "المرافق",
+    "propertyImages": "صور العقار",
+    "dragDrop": "اسحب وأفلت الصور هنا أو انقر للتصفح",
+    "formats": "الصيغ المدعومة: JPG, PNG",
+    "selectedFiles": "تم تحديد {count} ملف(ات)",
+    "publishBtn": "نشر الإعلان",
+    "successTitle": "تم بنجاح",
+    "successMsg": "تمت إضافة المنزل بنجاح!",
+    "errorTitle": "خطأ",
+    "locationRequired": "الموقع مطلوب",
+    "locationMsg": "يرجى النقر على الخريطة لتحديد موقع عقارك."
+  }
+}

@@ -1,16 +1,24 @@
-import Image from "next/image";
+import NextImage from "next/image";
 import BtnAccept from "./components/BtnAccept";
 import BtnRefuse from "./components/BtnRefuse";
+import StartChatBtn from "../Chat/StartChatBtn";
+import { useTranslations } from "next-intl";
 
-export default async function DispPending({
+interface IBuyer {
+  _id: string;
+  name?: string;
+  imageUrl?: string;
+}
+
+export default function DispPending({
   pending,
   mongoUser,
 }: {
   pending: {
     _id: string;
     ownerId: string;
-    buyerId: string;
-    houseId: any;
+    buyerId: string | IBuyer;
+    houseId: { _id: string; title: string; images: string[] };
     startDate: Date;
     endDate: Date;
     createdAt: string;
@@ -19,9 +27,10 @@ export default async function DispPending({
     _id: string;
     clerkId: string;
     name: string;
-  };
+  } | null;
 }) {
   const house = pending.houseId;
+  const t = useTranslations('Pending');
 
   if (!house || !mongoUser) {
     return null;
@@ -31,29 +40,36 @@ export default async function DispPending({
     <div className="pending-item">
       <div className="image">
         {house.images && house.images.length > 0 ? (
-          <Image
+          <NextImage
             src={house.images[0]}
             alt={house.title}
             width={200}
             height={150}
+            unoptimized={true}
           />
         ) : (
-          <Image
+          <NextImage
             src="/placeholder.png"
             alt="placeholder"
             width={200}
             height={150}
+            unoptimized={true}
           />
         )}
       </div>
       <div className="content">
         <div className="buyer-info" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-          {(pending.buyerId as any)?.imageUrl ? (
-            <img 
-              src={(pending.buyerId as any).imageUrl} 
-              alt="Buyer" 
-              style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }}
-            />
+          {(pending.buyerId as IBuyer)?.imageUrl ? (
+            <div style={{ position: 'relative', width: '40px', height: '40px' }}>
+              <NextImage 
+                src={(pending.buyerId as IBuyer).imageUrl!} 
+                alt="Buyer" 
+                fill
+                sizes="40px"
+                style={{ borderRadius: '50%', objectFit: 'cover' }}
+                unoptimized={true}
+              />
+            </div>
           ) : (
             <div style={{ 
               width: '40px', 
@@ -67,23 +83,24 @@ export default async function DispPending({
               fontWeight: 'bold',
               color: '#64748b'
             }}>
-              {(pending.buyerId as any)?.name?.charAt(0).toUpperCase() || "?"}
+              {(pending.buyerId as IBuyer)?.name?.charAt(0).toUpperCase() || "?"}
             </div>
           )}
-          <h3>{(pending.buyerId as any)?.name || "Unknown Buyer"}</h3>
+          <h3>{(pending.buyerId as IBuyer)?.name || t('unknownBuyer')}</h3>
         </div>
-        <p className="title"><span className="label">Property:</span> {house.title}</p>
+        <p className="title"><span className="label">{t('propertyLabel')}</span> {house.title}</p>
         <p>
-          <span className="label">Reserved Dates:</span>
+          <span className="label">{t('reservedDatesLabel')}</span>
           <strong>
             {new Date(pending.startDate).toLocaleDateString()} -{" "}
             {new Date(pending.endDate).toLocaleDateString()}
           </strong>
         </p>
+        <StartChatBtn participantId={(pending.buyerId as IBuyer)?._id || (pending.buyerId as string)} label={t('chatWithBuyer')} />
       </div>
       <div className="btns">
         <BtnRefuse pendingId={pending._id} />
-        <BtnAccept pendingId={pending._id} houseId={pending.houseId} />
+        <BtnAccept pendingId={pending._id} houseId={pending.houseId._id} />
       </div>
     </div>
   );

@@ -45,9 +45,9 @@ export async function POST(req: Request) {
       { ok: true, message: "House removed" },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { error: error?.message || "Internal error" },
+      { error: (error as Error)?.message || "Internal error" },
       { status: 500 }
     );
   }

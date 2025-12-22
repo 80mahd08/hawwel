@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUserByClerkId, createHouse } from "@/lib/dbFunctions";
 import { HouseSchema } from "@/lib/validations";
+import { Ihouse } from "@/models/house";
 
 export async function POST(req: NextRequest) {
   try {
@@ -38,12 +39,12 @@ export async function POST(req: NextRequest) {
         type: "Point",
         coordinates: [validatedData.data.lng, validatedData.data.lat],
       },
-    } as any);
+    } as unknown as Ihouse);
 
     return NextResponse.json({ message: "success", house }, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { message: error.message || "Error creating house" },
+      { message: (error as Error).message || "Error creating house" },
       { status: 500 }
     );
   }

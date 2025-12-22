@@ -2,24 +2,26 @@
 
 import { useNotificationCount } from "@/context/NotificationCountProvider";
 import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { useTranslations } from "next-intl";
 
 export default function ClearAllNotificationsBtn() {
   const { refreshCountNotification } = useNotificationCount();
   const { user } = useUser();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const t = useTranslations('Notifications');
 
   const handleClearAll = async () => {
     const confirmed = await Swal.fire({
-      title: "Clear all notifications?",
-      text: "This will remove all your notifications permanently.",
+      title: t('clearDialog.title'),
+      text: t('clearDialog.text'),
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, clear all",
-      cancelButtonText: "Cancel",
+      confirmButtonText: t('clearDialog.confirm'),
+      cancelButtonText: t('clearDialog.cancel'),
     });
 
     if (!confirmed.isConfirmed) return;
@@ -33,14 +35,14 @@ export default function ClearAllNotificationsBtn() {
       const data = await res.json();
       if (!res.ok) {
         await Swal.fire({
-          title: "Error",
-          text: data?.error || "Failed to clear notifications",
+          title: t('clearDialog.errorTitle'),
+          text: data?.error || t('clearDialog.errorText'),
           icon: "error",
         });
       } else {
         await Swal.fire({
-          title: "Cleared!",
-          text: "All notifications have been removed.",
+          title: t('clearDialog.successTitle'),
+          text: t('clearDialog.successText'),
           icon: "success",
           timer: 1500,
           showConfirmButton: false,
@@ -48,10 +50,10 @@ export default function ClearAllNotificationsBtn() {
         refreshCountNotification(user?.id);
         router.refresh();
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       await Swal.fire({
-        title: "Error",
-        text: error?.message || "Failed to clear notifications",
+        title: t('clearDialog.errorTitle'),
+        text: (error as Error)?.message || t('clearDialog.errorText'),
         icon: "error",
       });
     } finally {
@@ -82,7 +84,7 @@ export default function ClearAllNotificationsBtn() {
             e.currentTarget.style.background = "transparent";
         }}
       >
-        {loading ? "Clearing..." : "Clear All Notifications"}
+        {loading ? t('clearDialog.buttonClearing') : t('clearDialog.button')}
       </button>
     </div>
   );

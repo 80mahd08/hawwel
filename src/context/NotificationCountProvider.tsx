@@ -16,7 +16,6 @@ export const NotificationCountProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ clerkId, children }) => {
   const [count, setCount] = useState(0);
-  console.log(count);
 
   const refreshCountNotification = useCallback(
     async (uid?: string) => {
@@ -33,6 +32,16 @@ export const NotificationCountProvider: React.FC<{
     },
     [clerkId]
   );
+
+  // Listen for real-time updates
+  React.useEffect(() => {
+    const handleRefresh = () => {
+      refreshCountNotification();
+    };
+
+    window.addEventListener("refresh-booking-data", handleRefresh);
+    return () => window.removeEventListener("refresh-booking-data", handleRefresh);
+  }, [refreshCountNotification]);
 
   return (
     <NotificationCountContext.Provider

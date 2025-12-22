@@ -1,0 +1,301 @@
+{
+  "HomePage": {
+    "title": "Welcome to hawwel",
+    "subtitle": "Find your next stay",
+    "search": "Search"
+  },
+  "HeroSection": {
+    "title": "Find your next <span>perfect stay</span>",
+    "subtitle": "Discover handpicked homes, villas, and apartments for your next adventure."
+  },
+  "Navigation": {
+    "home": "Home",
+    "login": "Log in",
+    "signup": "Sign up",
+    "myHouses": "My Houses",
+    "addHouse": "Add House",
+    "getStarted": "Get Started",
+    "pending": "Pending Requests",
+    "favorites": "Favorites",
+    "notifications": "Notifications",
+    "switchRole": "Switch Role",
+    "hello": "Hello"
+  },
+  "Common": {
+    "loading": "Loading...",
+    "error": "Something went wrong"
+  },
+  "Search": {
+    "location": "Location",
+    "locationPlaceholder": "City or Neighborhood",
+    "priceRange": "Price Range (DT)",
+    "min": "Min",
+    "max": "Max",
+    "dates": "Dates",
+    "to": "to",
+    "sortBy": "Sort By",
+    "propertyType": "Property Type",
+    "availability": "Availability",
+    "availableNow": "Available Now",
+    "amenities": "Amenities",
+    "searchBtn": "Search",
+    "sort": {
+      "newest": "Default (Newest)",
+      "priceAsc": "Price: Low to High",
+      "priceDesc": "Price: High to Low",
+      "ratingDesc": "Highest Rated"
+    },
+    "propertyTypes": {
+      "Studio": "Studio",
+      "Apartment": "Apartment",
+      "House": "House",
+      "Villa": "Villa",
+      "Townhouse": "Townhouse",
+      "Cottage": "Cottage"
+    },
+    "amenitiesList": {
+      "Wifi": "Wifi",
+      "AirConditioning": "Air Conditioning",
+      "Pool": "Pool",
+      "Parking": "Parking",
+      "Kitchen": "Kitchen",
+      "TV": "TV",
+      "Heating": "Heating",
+      "Washer": "Washer",
+      "Dryer": "Dryer",
+      "Iron": "Iron",
+      "HairDryer": "Hair Dryer",
+      "Workspace": "Workspace"
+    }
+  },
+  "Featured": {
+    "title": "Featured Homes",
+    "subtitle": "Top-rated stays loved by guests",
+    "night": "/ night",
+    "currency": "DT",
+    "new": "New"
+  },
+
+  "Reviews": {
+    "title": "What Guests Are Saying",
+    "subtitle": "Real experiences from real travelers",
+    "stayedAt": "Stayed at",
+    "guestReviews": "Guest Reviews",
+    "reviewsCount": "{count} reviews",
+    "shareExperience": "Share your experience",
+    "rateStay": "RATE YOUR STAY",
+    "rateStayLabel": "Rate your stay",
+    "thanks": "Thanks!",
+    "placeholder": "How was your stay? What did you like best?",
+    "postReview": "Post Review",
+    "publishing": "Publishing...",
+    "loginToReview": "Login to see if you can review this property.",
+    "noReviews": "No reviews yet. Establish trust by being transparent.",
+    "guest": "Guest"
+  },
+  "HowItWorks": {
+    "title": "How it works",
+    "subtitle": "Simple steps to your perfect stay",
+    "steps": {
+      "discover": {
+        "title": "Discover",
+        "description": "Browse through our curated list of verified homes."
+      },
+      "book": {
+        "title": "Book",
+        "description": "Secure your stay instantly with our easy booking system."
+      },
+      "enjoy": {
+        "title": "Enjoy",
+        "description": "Experience the local vibe and make unforgettable memories."
+      }
+    }
+  },
+  "HousesView": {
+    "listView": "List View",
+    "mapView": "Map View",
+    "noResults": "No houses found.",
+    "currency": "DT",
+    "day": "day",
+    "viewProperty": "View Property"
+  },
+  "HouseDetails": {
+    "locationNotSpecified": "Location not specified",
+    "hostedBy": "Hosted by",
+    "propertyOwner": "Property Owner",
+    "aboutThisPlace": "About this place",
+    "noDescription": "No description available.",
+    "whatThisPlaceOffers": "What this place offers",
+    "noAmenities": "No specific amenities listed for this property.",
+    "night": "/ night",
+    "currency": "DT",
+    "ownerMessage": "You are the owner of this listing.",
+    "unavailableNotice": "⚠️ This property is currently not accepting new bookings.",
+    "reservedNotice": "⚠️ This property is reserved for these dates, but you can check other availability.",
+    "loginMessage": "Please log in to book this property.",
+    "notFound": "House not found",
+    "notFoundDesc": "The property you're looking for might have been removed or doesn't exist.",
+    "errorLoading": "An error occurred while loading the house details.",
+    "showAllPhotos": "Show all photos",
+    "morePhotos": "+{count} more",
+    "noImages": "No images available",
+    "new": "New"
+  },
+  "Notifications": {
+    "clearAll": "Clear All",
+    "noNotifications": "No notifications found.",
+    "newBooking": "New Booking Request",
+    "bookingStatus": "Booking Status Update",
+    "statusLabel": "Status:",
+    "datesLabel": "Dates:",
+    "contactOwnerLabel": "Contact Owner:",
+    "chatWithOwner": "Chat with Owner",
+    "remove": "Remove",
+    "clearDialog": {
+      "button": "Clear All Notifications",
+      "buttonClearing": "Clearing...",
+      "title": "Clear all notifications?",
+      "text": "This will remove all your notifications permanently.",
+      "confirm": "Yes, clear all",
+      "cancel": "Cancel",
+      "successTitle": "Cleared!",
+      "successText": "All notifications have been removed.",
+      "errorTitle": "Error",
+      "errorText": "Failed to clear notifications"
+    },
+    "removeDialog": {
+      "title": "Remove notification?",
+      "text": "Are you sure you want to remove this notification?",
+      "confirm": "Yes, remove",
+      "cancel": "Cancel",
+      "successTitle": "Removed",
+      "successText": "Notification removed.",
+      "errorTitle": "Error",
+      "errorText": "Failed to remove notification",
+      "buttonRemoving": "Removing..."
+    }
+  },
+  "Pending": {
+    "noPending": "No pending requests found.",
+    "bookingRequest": "Booking Request",
+    "dates": "Dates",
+    "guests": "Guests",
+
+    "status": "Status",
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "approve": "Approve",
+    "reject": "Reject",
+    "house": "House",
+    "propertyLabel": "Property:",
+    "reservedDatesLabel": "Reserved Dates:",
+    "chatWithBuyer": "Chat with Buyer",
+    "unknownBuyer": "Unknown Buyer",
+    "acceptDialog": {
+      "title": "Accept pending request?",
+      "text": "Are you sure you want to accept this pending request?",
+      "confirm": "Yes, accept",
+      "cancel": "Cancel",
+      "successTitle": "Accepted",
+      "successText": "Pending accepted.",
+      "errorTitle": "Error",
+      "errorText": "Error accepting pending.",
+      "buttonAccepting": "Accepting..."
+    },
+    "rejectDialog": {
+      "title": "Reject pending request?",
+      "text": "Are you sure you want to reject this pending request?",
+      "confirm": "Yes, reject",
+      "cancel": "Cancel",
+      "successTitle": "Rejected",
+      "successText": "Pending rejected.",
+      "errorTitle": "Error",
+      "errorText": "Error rejecting pending.",
+      "buttonRejecting": "Rejecting..."
+    }
+  },
+  "Order": {
+    "checkIn": "CHECK-IN",
+    "checkOut": "CHECKOUT",
+    "reserve": "Reserve",
+    "reserveLoading": "Processing...",
+    "noChargeYet": "You won't be charged yet",
+    "successTitle": "Sent",
+    "successMessage": "Order request sent.",
+    "errorTitle": "Error",
+    "sendRequestTitle": "Send order request?",
+    "sendRequestMessage": "Do you want to send an order request to the owner?",
+    "yesSend": "Yes, send",
+    "cancel": "Cancel",
+    "invalidDatesTitle": "Invalid Dates",
+    "overlapError": "Selected dates overlap with existing reservations.",
+    "requiredDatesError": "Both start and end dates are required.",
+    "dateOrderError": "Start date cannot be after end date."
+  },
+
+  "Availability": {
+    "title": "Availability",
+    "subtitle": "Prices may vary depending on the dates selected.",
+    "available": "Available",
+    "booked": "Booked"
+  },
+  "HouseCard": {
+    "day": "day",
+    "currency": "DT",
+    "available": "Available Now",
+    "booked": "Currently Booked",
+    "new": "New",
+    "addToFavorites": "Add to favorites",
+    "loginRequired": "Please log in first.",
+    "addedSuccess": "Added to favorites!",
+    "errorAdding": "Failed to add to favorites.",
+    "removeFromFavorites": "Remove from favorites",
+    "removeFavDialog": {
+      "title": "Remove from favorites?",
+      "text": "Are you sure you want to remove this house from your favorites?",
+      "confirm": "Yes, remove",
+      "cancel": "Cancel",
+      "successTitle": "Removed from favorites!",
+      "errorText": "Failed to remove from favorites."
+    },
+    "removeHouse": "Remove house",
+    "removeHouseDialog": {
+      "title": "Delete house?",
+      "text": "This will permanently delete the house. Are you sure?",
+      "confirm": "Yes, delete",
+      "cancel": "Cancel",
+      "successTitle": "Deleted",
+      "successText": "The house was deleted successfully.",
+      "errorText": "Could not delete house. Please try again."
+    }
+  },
+  "AddHouse": {
+    "title": "List Your Property",
+    "subtitle": "Fill in the details below to add your house to our listings.",
+    "propertyTitle": "Property Title",
+    "titlePlaceholder": "e.g. Luxury Villa in Tunis",
+    "description": "Description",
+    "descPlaceholder": "Describe the key features of your property",
+    "priceLabel": "Price Per Day (DT)",
+    "pricePlaceholder": "0.00",
+    "propertyType": "Property Type *",
+    "selectType": "Select property type...",
+    "contactNumber": "Contact Number",
+    "pinLocation": "Pin Location on Map (Required)",
+    "pinHelp": "Click on the map to mark exactly where your property is located. This will automatically set the city.",
+    "coordinates": "Coordinates set:",
+    "amenities": "Amenities",
+    "propertyImages": "Property Images",
+    "dragDrop": "Drag & drop images here or click to browse",
+    "formats": "Supported formats: JPG, PNG",
+    "selectedFiles": "{count} file(s) selected",
+    "publishBtn": "Publish Listing",
+    "successTitle": "Success",
+    "successMsg": "House added successfully!",
+    "errorTitle": "Error",
+    "locationRequired": "Location Required",
+    "locationMsg": "Please click on the map to pin your property's location."
+  }
+}

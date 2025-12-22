@@ -3,7 +3,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import dbConnect from "@/lib/dbConnect";
 import { getUserByClerkId, clearAllNotifications } from "@/lib/dbFunctions";
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
     const user = await currentUser();
     if (!user) {
@@ -22,9 +22,9 @@ export async function POST(req: Request) {
       { ok: true, message: "All notifications cleared" },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { error: error?.message || "Internal error" },
+      { error: (error as Error)?.message || "Internal error" },
       { status: 500 }
     );
   }

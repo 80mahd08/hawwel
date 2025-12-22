@@ -33,6 +33,16 @@ export const PendingCountProvider: React.FC<{
     [clerkId]
   );
 
+  // Listen for real-time updates
+  React.useEffect(() => {
+    const handleRefresh = () => {
+      refreshCountPending();
+    };
+
+    window.addEventListener("refresh-booking-data", handleRefresh);
+    return () => window.removeEventListener("refresh-booking-data", handleRefresh);
+  }, [refreshCountPending]);
+
   return (
     <PendingCountContext.Provider
       value={{ count, setCount, refreshCountPending }}

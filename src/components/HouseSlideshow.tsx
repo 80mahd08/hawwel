@@ -1,12 +1,15 @@
 "use client";
+import NextImage from "next/image";
 import { useState, useEffect } from "react";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 export default function HouseSlideshow({ images }: { images: string[] }) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const t = useTranslations('HouseDetails');
 
   // Prevent scroll when lightbox is open
   useEffect(() => {
@@ -18,7 +21,7 @@ export default function HouseSlideshow({ images }: { images: string[] }) {
   }, [isOpen]);
 
   if (!images || images.length === 0) {
-    return <div className="no-images">No images available</div>;
+    return <div className="no-images">{t('noImages')}</div>;
   }
 
   const openLightbox = (index: number) => {
@@ -63,8 +66,15 @@ export default function HouseSlideshow({ images }: { images: string[] }) {
             transitionDuration={300}
           >
             {images.map((img, idx) => (
-              <div className="each-slide" key={idx} onClick={() => openLightbox(idx)}>
-                <img src={img} alt={`House image ${idx + 1}`} />
+              <div className="each-slide" key={idx} onClick={() => openLightbox(idx)} style={{ position: 'relative', height: '300px' }}>
+                <NextImage 
+                  src={img} 
+                  alt={`House image ${idx + 1}`} 
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  priority={idx === 0}
+                  unoptimized={true}
+                />
               </div>
             ))}
           </Slide>
@@ -74,18 +84,24 @@ export default function HouseSlideshow({ images }: { images: string[] }) {
         <div className={`desktop-grid ${gridClass}`}>
           {/* Renders images based on count */}
           {images.slice(0, 5).map((img, idx) => {
-            // Logic for "main" vs "sub" classes is handled by CSS grid-areas now
-            // But we attach click handlers
             return (
               <div 
                 key={idx} 
                 className={`gallery-item item-${idx + 1}`} 
                 onClick={() => openLightbox(idx)}
+                style={{ position: 'relative' }}
               >
-                <img src={img} alt={`House view ${idx + 1}`} />
+                <NextImage 
+                  src={img} 
+                  alt={`House view ${idx + 1}`} 
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  style={{ objectFit: 'cover' }}
+                  unoptimized={true}
+                />
                 {images.length > 5 && idx === 4 && (
                   <div className="more-overlay">
-                    <span>+{images.length - 5} more</span>
+                    <span>{t('morePhotos', {count: images.length - 5})}</span>
                   </div>
                 )}
               </div>
@@ -93,7 +109,7 @@ export default function HouseSlideshow({ images }: { images: string[] }) {
           })}
           
           <button className="show-all-btn" onClick={() => openLightbox(0)}>
-            <span className="icon">⋮⋮</span> Show all photos
+            <span className="icon">⋮⋮</span> {t('showAllPhotos')}
           </button>
         </div>
       </div>
@@ -117,16 +133,23 @@ export default function HouseSlideshow({ images }: { images: string[] }) {
             <div className="lightbox-main-stage" onClick={(e) => e.stopPropagation()}>
                <button className="nav-btn prev" onClick={prevSlide}>‹</button>
                
-               <div className="image-display-wrapper">
-                 <motion.img 
+               <div className="image-display-wrapper" style={{ position: 'relative', width: '100%', height: '80vh' }}>
+                 <motion.div
                    key={currentIndex}
-                   src={images[currentIndex]} 
-                   alt={`Gallery image ${currentIndex + 1}`}
                    initial={{ opacity: 0, scale: 0.98 }}
                    animate={{ opacity: 1, scale: 1 }}
                    transition={{ duration: 0.3 }}
-                   className="current-image"
-                 />
+                   style={{ position: 'relative', width: '100%', height: '100%' }}
+                 >
+                   <NextImage 
+                     src={images[currentIndex]} 
+                     alt={`Gallery image ${currentIndex + 1}`}
+                     fill
+                     style={{ objectFit: 'contain' }}
+                     className="current-image"
+                     unoptimized={true}
+                   />
+                 </motion.div>
                </div>
 
                <button className="nav-btn next" onClick={nextSlide}>›</button>
@@ -140,8 +163,16 @@ export default function HouseSlideshow({ images }: { images: string[] }) {
                     key={idx} 
                     className={`thumb-item ${idx === currentIndex ? 'active' : ''}`}
                     onClick={() => goToSlide(idx)}
+                    style={{ position: 'relative', width: '80px', height: '60px', flexShrink: 0 }}
                   >
-                    <img src={img} alt={`Thumb ${idx + 1}`} />
+                    <NextImage 
+                      src={img} 
+                      alt={`Thumb ${idx + 1}`} 
+                      fill
+                      sizes="80px"
+                      style={{ objectFit: 'cover', borderRadius: '4px' }}
+                      unoptimized={true}
+                    />
                   </div>
                 ))}
               </div>

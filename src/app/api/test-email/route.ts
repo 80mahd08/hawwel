@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import { sendEmail } from "@/lib/email";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const user = await currentUser();
     
@@ -39,11 +39,11 @@ export async function GET(req: Request) {
       info 
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json({ 
       error: "Internal Error", 
-      details: error?.message,
-      stack: error?.stack
+      details: (error as Error)?.message,
+      stack: (error as Error)?.stack
     }, { status: 500 });
   }
 }

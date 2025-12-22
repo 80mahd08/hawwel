@@ -47,7 +47,6 @@ function LocationMarker({ onLocationSelect, initialLat, initialLng }: LocationPi
         
         onLocationSelect(lat, lng, address);
       } catch (error) {
-        console.error("Reverse geocoding error:", error);
         onLocationSelect(lat, lng);
       }
     },

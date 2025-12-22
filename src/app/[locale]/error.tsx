@@ -11,14 +11,13 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error(error);
   }, [error]);
 
   return (
     <div className="error-container">
       <div className="error-content">
         <h1>Oops! Something went wrong</h1>
-        <p>We're sorry, but an unexpected error occurred. Please try again or return home.</p>
+        <p>We&apos;re sorry, but an unexpected error occurred. Please try again or return home.</p>
         <div className="error-actions">
           <button onClick={() => reset()} className="btn">
             Try again

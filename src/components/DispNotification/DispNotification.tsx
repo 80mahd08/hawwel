@@ -1,15 +1,22 @@
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import Image from "next/image";
 import RemovePendingBtn from "./components/RemovePendingBtn";
+import StartChatBtn from "../Chat/StartChatBtn";
+import { useTranslations } from "next-intl";
 
-export default async function DispNotification({
+export default function DispNotification({
   pending,
 }: {
   pending: {
     _id: string;
     ownerId: string;
     buyerId: string;
-    houseId: any;
+    houseId: {
+      _id: string;
+      title: string;
+      images: string[];
+      telephone?: string;
+    };
     status: string;
     createdAt: string;
     startDate: string;
@@ -17,6 +24,8 @@ export default async function DispNotification({
   };
 }) {
   const house = pending.houseId;
+  const t = useTranslations('Notifications');
+  const tPending = useTranslations('Pending');
 
   if (!house) {
     return null;
@@ -32,6 +41,7 @@ export default async function DispNotification({
               alt={house.title}
               width={200}
               height={150}
+              unoptimized={true}
             />
           ) : (
             <Image
@@ -39,6 +49,7 @@ export default async function DispNotification({
               alt="placeholder"
               width={200}
               height={150}
+              unoptimized={true}
             />
           )}
         </Link>
@@ -56,19 +67,22 @@ export default async function DispNotification({
             letterSpacing: '0.05em',
             margin: '4px 0'
           }}>
-            Status: {pending.status}
+            {t('statusLabel')} {tPending(pending.status.toLowerCase())}
           </p>
           <p>
-            <span className="label">Dates:</span>
+            <span className="label">{t('datesLabel')}</span>
             <strong>
               {new Date(pending.startDate).toLocaleDateString()} -{" "}
               {new Date(pending.endDate).toLocaleDateString()}
             </strong>
           </p>{" "}
           {pending.status === "approved" && (
-            <p>
-              <span className="label">Contact Owner:</span> <strong>{house.telephone}</strong>
-            </p>
+            <>
+              <p>
+                <span className="label">{t('contactOwnerLabel')}</span> <strong>{house.telephone}</strong>
+              </p>
+              <StartChatBtn participantId={pending.ownerId} label={t('chatWithOwner')} />
+            </>
           )}
         </div>
         <RemovePendingBtn pendingId={pending._id} />

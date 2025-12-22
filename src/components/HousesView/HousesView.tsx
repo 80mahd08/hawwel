@@ -1,16 +1,30 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
+import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import HouseLink from "@/components/HouseLink/HouseLink";
 import Pagination from "@/components/Pagination/Pagination";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 const MapView = dynamic(() => import("@/components/MapView/MapView"), { ssr: false });
 
+export interface IHouseListing {
+    _id: string;
+    title: string;
+    images: string[];
+    location: string;
+    pricePerDay: number;
+    rating?: number;
+    available: boolean;
+    lat?: number;
+    lng?: number;
+}
+
 interface HousesViewProps {
-  houses: any[];
+  houses: IHouseListing[];
   totalPages: number;
   currentPage: number;
   initialView: "list" | "map";
@@ -21,6 +35,7 @@ export default function HousesView({ houses, totalPages, currentPage, initialVie
   const [view, setView] = useState(initialView);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const t = useTranslations('HousesView');
 
   // Sync with URL if it changes externally
   useEffect(() => {
@@ -40,7 +55,7 @@ export default function HousesView({ houses, totalPages, currentPage, initialVie
             className={`btn ${view === "list" ? "" : "secondary"}`}
             style={{ borderRadius: "10px", padding: "8px 24px" }}
           >
-            📋 List View
+            📋 {t('listView')}
           </button>
           <button 
              onClick={() => {
@@ -51,7 +66,7 @@ export default function HousesView({ houses, totalPages, currentPage, initialVie
             className={`btn ${view === "map" ? "" : "secondary"}`}
             style={{ borderRadius: "10px", padding: "8px 24px" }}
           >
-            🗺️ Map View
+            🗺️ {t('mapView')}
           </button>
         </div>
       )}
@@ -76,7 +91,7 @@ export default function HousesView({ houses, totalPages, currentPage, initialVie
                 ))
               ) : (
                 <div className="no-results" style={{ width: "100%", textAlign: "center", padding: "40px" }}>
-                  <h3>No houses found.</h3>
+                  <h3>{t('noResults')}</h3>
                 </div>
               )}
             </div>

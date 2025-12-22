@@ -5,8 +5,9 @@ import User, { IUser } from "@/models/User";
 import house, { Ihouse } from "@/models/house";
 import favorite from "@/models/favorite";
 import Pending from "@/models/Pending";
-import Review, { IReview } from "@/models/Review";
+import Review from "@/models/Review";
 import { SearchFilterSchema, SearchFilterInput } from "./validations";
+import { FilterQuery, Types } from "mongoose";
 
 // ============================================
 // Types
@@ -25,7 +26,7 @@ export async function createUser(userData: UserInput) {
 
     const user = await User.create(userData);
     return user;
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -35,7 +36,7 @@ export async function getUserByClerkId(clerkId: string) {
     await dbConnect();
 
     return await User.findOne({ clerkId });
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -44,7 +45,7 @@ export async function getUserById(userId: string) {
   try {
     await dbConnect();
     return await User.findById(userId);
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -56,7 +57,7 @@ export async function updateUserByClerkId(
     await dbConnect();
 
     return await User.findOneAndUpdate({ clerkId }, updateData, { new: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -66,7 +67,7 @@ export async function deleteUserByClerkId(clerkId: string) {
     await dbConnect();
 
     return await User.findOneAndDelete({ clerkId });
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -80,7 +81,7 @@ export async function updateRoleToOwner(clerkId: string) {
       { role: "OWNER" },
       { new: true }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -92,7 +93,7 @@ export async function createHouse(houseData: Ihouse) {
   try {
     await dbConnect();
     return await house.create(houseData);
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -109,8 +110,8 @@ export async function getAvailabilityStatus(
   await dbConnect();
   
   // 1. Check if the house is even listed
-  const houseData = await house.findById(houseId).select("available").lean();
-  if (!houseData || (houseData as any).available === false) {
+  const houseData = await house.findById(houseId).select("available").lean() as { available?: boolean } | null;
+  if (!houseData || houseData.available === false) {
     return false;
   }
 
@@ -128,7 +129,7 @@ export async function getAvailabilityStatus(
   return !activeReservation;
 }
 
-export const getAllhouses = cache(async (filters: any = {}) => {
+export const getAllhouses = cache(async (filters: Partial<SearchFilterInput> = {}) => {
   try {
     const result = SearchFilterSchema.safeParse(filters);
     const validatedFilters = result.success ? result.data : SearchFilterSchema.parse({});
@@ -153,7 +154,7 @@ export const getAllhouses = cache(async (filters: any = {}) => {
 
     await dbConnect();
     const skip = (page - 1) * limit;
-    const query: any = { available: { $ne: false } };
+    const query: FilterQuery<Ihouse> = { available: { $ne: false } };
 
     if (locationFilter) {
       query.location = { $regex: locationFilter, $options: "i" };
@@ -197,7 +198,7 @@ export const getAllhouses = cache(async (filters: any = {}) => {
     }
 
     // Dynamic sorting based on sortBy parameter
-    let sortOptions: any = {};
+    let sortOptions: Record<string, 1 | -1> = {};
     switch (sortBy) {
       case "price-asc":
         sortOptions = { pricePerDay: 1 };
@@ -219,12 +220,12 @@ export const getAllhouses = cache(async (filters: any = {}) => {
       house.countDocuments(query),
       house.find(query).sort(sortOptions).skip(skip).limit(limit).lean(),
     ]);
-
-    const houseIds = housesRaw.map(h => (h as any)._id.toString());
+ 
+    const houseIds = housesRaw.map(h => (h as unknown as { _id: Types.ObjectId })._id.toString());
     const availabilityMap = await batchIsHouseAvailable(houseIds);
 
     const houses = housesRaw.map(h => {
-      const houseObj = h as any;
+      const houseObj = h as unknown as Ihouse & { _id: Types.ObjectId; ownerId?: Types.ObjectId };
       return {
         ...houseObj,
         _id: houseObj._id.toString(),
@@ -238,8 +239,7 @@ export const getAllhouses = cache(async (filters: any = {}) => {
       totalPages: Math.ceil(totalHouses / limit),
       currentPage: page,
     };
-  } catch (error: any) {
-    console.error("Error in getAllhouses:", error);
+  } catch (error: unknown) {
     throw error;
   }
 });
@@ -253,22 +253,18 @@ export async function gethousesByOwner(
     await dbConnect();
     const pageNum = Math.max(1, Number(page) || 1);
     const limitNum = Math.max(1, Number(limit) || 9);
-    
-    console.log(`gethousesByOwner: page=${pageNum}, limit=${limitNum}`);
     const skip = (pageNum - 1) * limitNum;
     const [total, houses] = await Promise.all([
       house.countDocuments({ ownerId: userId }),
       house.find({ ownerId: userId }).skip(skip).limit(limitNum).lean(),
     ]);
 
-    console.log(`gethousesByOwner: found ${houses.length} houses. Total: ${total}`);
-
     return {
-      houses: houses as any[],
+      houses: houses as unknown as Ihouse[],
       totalPages: Math.ceil(total / limitNum),
       currentPage: pageNum,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -277,17 +273,17 @@ export const gethouseById = cache(async (houseId: string) => {
   try {
     if (!houseId) throw new Error("house ID is required");
     await dbConnect();
-    const result = await house.findById(houseId).lean();
+    const result = await house.findById(houseId).populate("ownerId", "name imageUrl").lean();
     if (!result) return null;
     
-    const houseObj = result as any;
+    const houseObj = result as unknown as Ihouse & { _id: Types.ObjectId; ownerId: { _id: Types.ObjectId } | Types.ObjectId };
     return {
       ...houseObj,
       _id: houseObj._id.toString(),
-      ownerId: houseObj.ownerId?.toString(),
+      ownerId: (houseObj.ownerId as { _id: Types.ObjectId })._id?.toString() || (houseObj.ownerId as Types.ObjectId).toString(),
+      owner: houseObj.ownerId,
     };
-  } catch (error: any) {
-    console.error(`Error in gethouseById for ${houseId}:`, error);
+  } catch (error: unknown) {
     throw error;
   }
 });
@@ -306,7 +302,7 @@ export async function addfavorite(userId: string, houseId: string) {
 
     const newFav = await favorite.create({ userId, houseId });
     return { favorite: newFav, alreadyExists: false };
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -325,11 +321,11 @@ export async function getUserfavorites(
     ]);
 
     return {
-      favorites: favorites as any[],
+      favorites: favorites as unknown as { houseId: Ihouse }[],
       totalPages: Math.ceil(total / limit),
       currentPage: page,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -339,7 +335,7 @@ export async function removefavorite(userId: string, houseId: string) {
     await dbConnect();
 
     return await favorite.findOneAndDelete({ userId, houseId });
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -352,7 +348,7 @@ export async function getfavoritesCount(clerkId: string): Promise<number> {
     if (!user) return 0;
 
     return await favorite.countDocuments({ userId: user._id });
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -398,7 +394,7 @@ export async function createPending({
     });
 
     return pending;
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -422,11 +418,11 @@ export async function getPendingByOwner(
     ]);
 
     return {
-      pendings: pendings as any[],
+      pendings: pendings as unknown as { houseId: Ihouse; buyerId: IUser }[],
       totalPages: Math.ceil(total / limit),
       currentPage: page,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -437,8 +433,14 @@ export async function getPendingCount(clerkId: string): Promise<number> {
     const user = await User.findOne({ clerkId });
     if (!user) return 0;
 
+    // If user is basic USER, count their outbound requests
+    if (user.role === "USER") {
+      return await Pending.countDocuments({ buyerId: user._id, status: "pending" });
+    }
+
+    // If user is OWNER, count inbound requests
     return await Pending.countDocuments({ ownerId: user._id, status: "pending" });
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -447,7 +449,7 @@ export async function getPendingByhouse(houseId: string) {
   try {
     await dbConnect();
     return await Pending.find({ houseId }).populate("buyerId");
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -458,7 +460,7 @@ export async function getPendingByBuyerHouse(buyerId: string, houseId: string) {
 
     // return a single pending matching buyer + house with status 'pending'
     return await Pending.findOne({ buyerId, houseId, status: "pending" });
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -486,11 +488,20 @@ export async function getPendingByBuyer(
     ]);
 
     return {
-      pendings: pendings as any[],
+      pendings: pendings as unknown as (Ihouse & { 
+        _id: string; 
+        houseId: Ihouse; 
+        status: string; 
+        createdAt: string; 
+        startDate: string; 
+        endDate: string;
+        ownerId: string;
+        buyerId: string;
+      })[],
       totalPages: Math.ceil(total / limit),
       currentPage: page,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -506,8 +517,8 @@ export async function updatePendingStatus(
     if (!pending) {
       throw new Error("Pending not found");
     }
-
-    if ((pending as any).status === status) {
+ 
+    if ((pending as unknown as { status: string }).status === status) {
       return pending;
     }
 
@@ -517,7 +528,7 @@ export async function updatePendingStatus(
       { new: true }
     );
     return updated;
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -526,7 +537,7 @@ export async function deletePending(pendingId: string) {
   try {
     await dbConnect();
     return await Pending.findByIdAndDelete(pendingId);
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -541,7 +552,7 @@ export async function clearAllNotifications(userId: string) {
     }, {
       $set: { buyerArchived: true }
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -561,7 +572,7 @@ export async function getNotificationCount(clerkId: string): Promise<number> {
       status: { $ne: "pending" },
       buyerArchived: { $ne: true },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -584,7 +595,7 @@ export async function getApprovedByHouse(houseId: string) {
       status: "approved",
       endDate: { $gte: today }, // keep only future or ongoing reservations (UTC comparison)
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -596,8 +607,8 @@ export async function isHouseAvailable(houseId: string): Promise<boolean> {
     await dbConnect();
 
     // 1. Check listing status first
-    const h = await house.findById(houseId).select("available").lean();
-    if (!h || (h as any).available === false) {
+    const h = await house.findById(houseId).select("available").lean() as { available?: boolean } | null;
+    if (!h || h.available === false) {
       return false;
     }
 
@@ -615,8 +626,7 @@ export async function isHouseAvailable(houseId: string): Promise<boolean> {
     });
 
     return !activeReservation;
-  } catch (error: any) {
-    console.error("Error in isHouseAvailable:", error);
+  } catch (error: unknown) {
     return true; 
   }
 }
@@ -631,7 +641,7 @@ export async function batchIsHouseAvailable(
     const houses = await house.find({ _id: { $in: houseIds } }).select("available").lean();
     const listedMap: Record<string, boolean> = {};
     houses.forEach(h => {
-      listedMap[(h as any)._id.toString()] = (h as any).available !== false;
+      listedMap[(h as unknown as { _id: Types.ObjectId })._id.toString()] = (h as unknown as { available?: boolean }).available !== false;
     });
 
     const now = new Date();
@@ -658,8 +668,7 @@ export async function batchIsHouseAvailable(
     });
 
     return result;
-  } catch (error: any) {
-    console.error("Error in batchIsHouseAvailable:", error);
+  } catch (error: unknown) {
     // Return empty results or default to available
     const fallback: Record<string, boolean> = {};
     houseIds.forEach((id) => (fallback[id] = true));
@@ -695,7 +704,7 @@ export async function createReview(reviewData: {
     }
 
     return review;
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -712,8 +721,7 @@ export async function canUserReview(userId: string, houseId: string): Promise<bo
     });
 
     return !!reservation;
-  } catch (error: any) {
-    console.error("Error in canUserReview:", error);
+  } catch (error: unknown) {
     return false;
   }
 }
@@ -725,7 +733,7 @@ export async function getReviewsByHouseId(houseId: string) {
       .sort({ createdAt: -1 })
       .populate("userId", "name imageUrl")
       .lean();
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -738,8 +746,7 @@ export async function getFeaturedHouses(limit: number = 4) {
       .sort({ rating: -1, pricePerDay: 1 }) // Highest rating, then cheapest
       .limit(limit)
       .lean();
-  } catch (error: any) {
-    console.error("Error fetching featured houses:", error);
+  } catch (error: unknown) {
     return [];
   }
 }
@@ -750,11 +757,10 @@ export async function getRecentReviews(limit: number = 6) {
     return await Review.find({})
       .sort({ createdAt: -1 })
       .limit(limit)
-      .populate("userId", "name")
+      .populate("userId", "name imageUrl")
       .populate("houseId", "_id title images") // Populate house details for linking
       .lean();
-  } catch (error: any) {
-    console.error("Error fetching recent reviews:", error);
+  } catch (error: unknown) {
     return [];
   }
 }

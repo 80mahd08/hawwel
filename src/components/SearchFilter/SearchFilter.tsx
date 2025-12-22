@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "@/i18n/routing";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function SearchFilter() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const t = useTranslations('Search');
 
   const [location, setLocation] = useState(searchParams.get("location") || "");
   const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
@@ -50,7 +53,6 @@ export default function SearchFilter() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Searching with filters:", { location, minPrice, maxPrice, startDate, endDate, onlyAvailable, selectedAmenities, selectedPropertyTypes, sortBy });
     const params = new URLSearchParams(searchParams.toString());
     if (location) params.set("location", location);
     else params.delete("location");
@@ -86,28 +88,28 @@ export default function SearchFilter() {
     <div className="search-filter-container">
       <form onSubmit={handleSearch} className="search-form">
         <div className="filter-group">
-          <label>Location</label>
+          <label>{t('location')}</label>
           <input
             type="text"
-            placeholder="City or Neighborhood"
+            placeholder={t('locationPlaceholder')}
             value={location}
             onChange={(e) => setLocation(e.target.value)}
           />
         </div>
 
         <div className="filter-group">
-          <label>Price Range (DT)</label>
+          <label>{t('priceRange')}</label>
           <div className="price-inputs">
             <input
               type="number"
-              placeholder="Min"
+              placeholder={t('min')}
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
             />
             <span>-</span>
             <input
               type="number"
-              placeholder="Max"
+              placeholder={t('max')}
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
             />
@@ -115,14 +117,14 @@ export default function SearchFilter() {
         </div>
 
         <div className="filter-group">
-          <label>Dates</label>
+          <label>{t('dates')}</label>
           <div className="date-inputs">
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
             />
-            <span>to</span>
+            <span>{t('to')}</span>
             <input
               type="date"
               value={endDate}
@@ -132,22 +134,22 @@ export default function SearchFilter() {
         </div>
 
         <div className="filter-group">
-          <label>Sort By</label>
+          <label>{t('sortBy')}</label>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
             className="sort-select"
           >
-            <option value="">Default (Newest)</option>
-            <option value="price-asc">Price: Low to High</option>
-            <option value="price-desc">Price: High to Low</option>
-            <option value="rating-desc">Highest Rated</option>
-            <option value="newest">Newly Listed</option>
+            <option value="">{t('sort.newest')}</option>
+            <option value="price-asc">{t('sort.priceAsc')}</option>
+            <option value="price-desc">{t('sort.priceDesc')}</option>
+            <option value="rating-desc">{t('sort.ratingDesc')}</option>
+            <option value="newest">{t('sort.newest')}</option>
           </select>
         </div>
 
         <div className="filter-group full-width">
-          <label>Property Type</label>
+          <label>{t('propertyType')}</label>
           <div className="amenities-list">
             {["Studio", "Apartment", "House", "Villa", "Townhouse", "Cottage"].map((type) => (
               <label key={type} className="checkbox-label">
@@ -160,14 +162,14 @@ export default function SearchFilter() {
                       : [...prev, type]
                   )}
                 />
-                {type}
+                {t(`propertyTypes.${type}`)}
               </label>
             ))}
           </div>
         </div>
 
         <div className="filter-group">
-          <label>Availability</label>
+          <label>{t('availability')}</label>
           <label className="checkbox-label availability-toggle">
             <input
               type="checkbox"
@@ -175,12 +177,12 @@ export default function SearchFilter() {
               onChange={(e) => setOnlyAvailable(e.target.checked)}
             />
             <span className="live-dot"></span>
-            Available Now
+            {t('availableNow')}
           </label>
         </div>
 
         <div className="filter-group full-width">
-          <label>Amenities</label>
+          <label>{t('amenities')}</label>
           <div className="amenities-list">
             {allAmenities.map((amenity) => (
               <label key={amenity} className="checkbox-label">
@@ -189,14 +191,14 @@ export default function SearchFilter() {
                   checked={selectedAmenities.includes(amenity)}
                   onChange={() => handleAmenityChange(amenity)}
                 />
-                {amenity}
+                {t(`amenitiesList.${amenity.replace(/\s+/g, '')}`)}
               </label>
             ))}
           </div>
         </div>
 
         <button type="submit" className="btn search-btn">
-          Search
+          {t('searchBtn')}
         </button>
       </form>
     </div>

@@ -6,6 +6,8 @@ import {
 } from "@/lib/dbFunctions";
 import { currentUser } from "@clerk/nextjs/server";
 import Pagination from "@/components/Pagination/Pagination";
+import { IHouseListing } from "@/components/HousesView/HousesView";
+import { Ihouse } from "@/models/house";
 
 export default async function page({
   searchParams,
@@ -35,28 +37,33 @@ export default async function page({
 
   if (favorites && favorites.length > 0) {
     // Check real-time availability for all houses in one go
-    const houseIds = favorites
-      .map((fav: any) => fav.houseId?._id?.toString())
-      .filter(Boolean);
+    const houseIds = (favorites as unknown as { houseId: { _id: string } }[])
+      .map((fav) => fav.houseId?._id?.toString() || String(fav.houseId?._id))
+      .filter((id): id is string => !!id && id !== "undefined");
     const availabilityMap = await batchIsHouseAvailable(houseIds);
 
-    const housesWithAvailability = favorites.map((fav: any) => {
-      const houseObj = fav.houseId?.toObject ? fav.houseId.toObject() : fav.houseId;
-      const id = houseObj._id?.toString?.() ?? String(houseObj._id);
+    const housesWithAvailability = (favorites as unknown as { houseId: Ihouse }[]).map((fav) => {
+      const houseObj = fav.houseId;
+      const id = (houseObj as unknown as { _id: string })._id?.toString() || "";
       return {
         ...houseObj,
         _id: id,
-        ownerId: houseObj.ownerId?.toString?.(),
-        images: Array.isArray(houseObj.images) ? houseObj.images : [],
+        location: houseObj?.location || "",
+        pricePerDay: houseObj?.pricePerDay || 0,
+        available: houseObj?.available ?? true,
+        ownerId: houseObj?.ownerId?.toString(),
+        images: Array.isArray(houseObj?.images) ? (houseObj.images as string[]) : [],
         isAvailable: availabilityMap[id] ?? true,
-      };
+        lat: (houseObj?.lat ?? undefined) as number | undefined,
+        lng: (houseObj?.lng ?? undefined) as number | undefined,
+      } as unknown as IHouseListing & { isAvailable: boolean };
     });
 
     return (
       <div>
         <div className="houses-list">
           {housesWithAvailability.map((house) => (
-            <HouseLink key={house._id} house={house} />
+            <HouseLink key={house._id} house={JSON.parse(JSON.stringify(house))} />
           ))}
         </div>
         <Pagination totalPages={totalPages} currentPage={currentPage} />

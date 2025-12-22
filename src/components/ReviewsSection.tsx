@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import NextImage from "next/image";
 import Swal from "sweetalert2";
 import StarRating from "./StarRating";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 
 interface User {
   _id: string;
@@ -19,10 +21,18 @@ interface Review {
   createdAt: string;
 }
 
+interface ICurrentUser {
+  _id: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
+  imageUrl?: string;
+}
+
 interface ReviewsSectionProps {
   houseId: string;
   reviews: Review[];
-  currentUser: any; 
+  currentUser: ICurrentUser | null; 
   canReview: boolean;
 }
 
@@ -33,6 +43,8 @@ export default function ReviewsSection({ houseId, reviews: initialReviews, curre
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
 
+  const t = useTranslations('Reviews');
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (rating === 0) {
@@ -42,6 +54,11 @@ export default function ReviewsSection({ houseId, reviews: initialReviews, curre
 
     setSubmitting(true);
     try {
+      if (!currentUser) {
+        Swal.fire(t('loginToReview'), "", "warning");
+        return;
+      }
+
       const res = await fetch("/api/reviews/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -61,7 +78,7 @@ export default function ReviewsSection({ houseId, reviews: initialReviews, curre
           _id: data.review._id,
           userId: {
             _id: userId,
-            name: currentUser.name || `${currentUser.firstName} ${currentUser.lastName}`.trim(),
+            name: currentUser.name || `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim(),
             imageUrl: currentUser.imageUrl,
           },
           rating: data.review.rating,
@@ -77,7 +94,7 @@ export default function ReviewsSection({ houseId, reviews: initialReviews, curre
       } else {
         Swal.fire("Error", data.message || "Failed to submit review", "error");
       }
-    } catch (error) {
+    } catch {
       Swal.fire("Error", "Something went wrong", "error");
     } finally {
       setSubmitting(false);
@@ -87,19 +104,27 @@ export default function ReviewsSection({ houseId, reviews: initialReviews, curre
   return (
     <div className="reviews-section">
       <div className="reviews-header-block">
-        <h3>Guest Reviews</h3>
-        <span className="review-count">{reviews.length} reviews</span>
+        <h3>{t('guestReviews')}</h3>
+        <span className="review-count">{t('reviewsCount', {count: reviews.length})}</span>
       </div>
       
       {/* Review Form - Only if eligible */}
       {currentUser && canReview ? (
         <div className="review-form-container">
-          <h4>Share your experience</h4>
+          <h4>{t('shareExperience')}</h4>
           <form onSubmit={handleSubmit}>
             <div className="form-content">
                <div className="user-preview">
                  {currentUser.imageUrl ? (
-                   <img src={currentUser.imageUrl} alt="You" />
+                   <div style={{ position: 'relative', width: '40px', height: '40px' }}>
+                     <NextImage 
+                       src={currentUser.imageUrl} 
+                       alt="You" 
+                       fill
+                       sizes="40px"
+                       style={{ borderRadius: '50%', objectFit: 'cover' }}
+                     />
+                   </div>
                  ) : (
                    <div className="avatar-placeholder">{currentUser.firstName?.[0]}</div>
                  )}
@@ -107,12 +132,12 @@ export default function ReviewsSection({ houseId, reviews: initialReviews, curre
                <div className="input-area">
                  <div className="rating-select">
                    <StarRating rating={rating} onRatingChange={setRating} interactive size={24} />
-                   <span className="rating-label">{rating > 0 ? "Thanks!" : "Rate your stay"}</span>
+                   <span className="rating-label">{rating > 0 ? t('thanks') : t('rateStayLabel')}</span>
                  </div>
                  <textarea
                    value={comment}
                    onChange={(e) => setComment(e.target.value)}
-                   placeholder="How was your stay? What did you like best?"
+                   placeholder={t('placeholder')}
                    required
                    rows={3}
                  />
@@ -120,14 +145,14 @@ export default function ReviewsSection({ houseId, reviews: initialReviews, curre
             </div>
             <div className="form-actions">
               <button type="submit" className="submit-review-btn" disabled={submitting}>
-                {submitting ? "Publishing..." : "Post Review"}
+                {submitting ? t('publishing') : t('postReview')}
               </button>
             </div>
           </form>
         </div>
       ) : !currentUser ? (
         <div className="auth-prompt">
-          <p>Login to see if you can review this property.</p>
+          <p>{t('loginToReview')}</p>
         </div>
       ) : null}
 
@@ -139,14 +164,23 @@ export default function ReviewsSection({ houseId, reviews: initialReviews, curre
               <div className="review-card-header">
                 <div className="reviewer-profile">
                    {review.userId.imageUrl ? (
-                     <img src={review.userId.imageUrl} alt="Reviewer" className="reviewer-avatar" />
+                     <div style={{ position: 'relative', width: '40px', height: '40px' }}>
+                       <NextImage 
+                         src={review.userId.imageUrl} 
+                         alt="Reviewer" 
+                         fill
+                         sizes="40px"
+                         className="reviewer-avatar" 
+                         style={{ borderRadius: '50%', objectFit: 'cover' }}
+                       />
+                     </div>
                    ) : (
                      <div className="reviewer-avatar-placeholder">
                        {review.userId.name ? review.userId.name.charAt(0).toUpperCase() : "?"}
                      </div>
                    )}
                    <div className="reviewer-meta">
-                     <span className="name">{review.userId.name || "Guest"}</span>
+                     <span className="name">{review.userId.name || t('guest')}</span>
                      <span className="date">{new Date(review.createdAt).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</span>
                    </div>
                 </div>
@@ -165,7 +199,7 @@ export default function ReviewsSection({ houseId, reviews: initialReviews, curre
         ) : (
           <div className="empty-reviews">
             <span className="icon">💬</span>
-            <p>No reviews yet. Establish trust by being transparent.</p>
+            <p>{t('noReviews')}</p>
           </div>
         )}
       </div>

@@ -1,10 +1,11 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 import RemFavBtn from "./components/RemFavBtn";
 import FavBtn from "./components/FavBtn";
@@ -30,6 +31,7 @@ export type LinkHouseProps = {
 export default function LinkHouse({ house, index = 0 }: { house: LinkHouseProps, index?: number }) {
   const pathname = usePathname();
   const { user } = useUser();
+  const t = useTranslations('HouseCard');
 
   const isFavoritePage = pathname === "/see-favorites";
   const hasImage = house.images.length > 0;
@@ -60,10 +62,11 @@ export default function LinkHouse({ house, index = 0 }: { house: LinkHouseProps,
               className="house-image"
               width={500}
               height={300}
+              unoptimized={true}
             />
             <div className="rating-badge">
               <span className="star">★</span>
-              <span>{house.rating ? house.rating.toFixed(1) : "New"}</span>
+              <span>{house.rating ? house.rating.toFixed(1) : t('new')}</span>
             </div>
           </div>
         )}
@@ -72,7 +75,7 @@ export default function LinkHouse({ house, index = 0 }: { house: LinkHouseProps,
           <h2>{house.title}</h2>
           <p>📍 {house.location}</p>
           <p className="price">
-            <strong>DT {house.pricePerDay}</strong> / day
+            <strong>{t('currency')} {house.pricePerDay}</strong> / {t('day')}
           </p>
           <p
             className="availability"
@@ -80,7 +83,7 @@ export default function LinkHouse({ house, index = 0 }: { house: LinkHouseProps,
               color: isHouseAvailable ? "#10b981" : "#ef4444",
             }}
           >
-            {isHouseAvailable ? "● Available Now" : "○ Currently Booked"}
+            {isHouseAvailable ? `● ${t('available')}` : `○ ${t('booked')}`}
           </p>
         </div>
       </Link>

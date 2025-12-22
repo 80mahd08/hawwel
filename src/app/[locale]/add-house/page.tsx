@@ -4,11 +4,15 @@ import { useUser } from "@clerk/nextjs";
 import dynamic from "next/dynamic";
 import Swal from "sweetalert2";
 import { supabase } from "@/lib/supabaseClient";
+import { useTranslations } from "next-intl";
 
 const LocationPicker = dynamic(() => import("@/components/LocationPicker/LocationPicker"), { ssr: false });
 
 export default function AddHousePage() {
   const { user } = useUser();
+  const t = useTranslations('AddHouse');
+  const tSearch = useTranslations('Search');
+  
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -19,7 +23,6 @@ export default function AddHousePage() {
     lat: null as number | null,
     lng: null as number | null,
   });
-  console.log(form);
   const [images, setImages] = useState<FileList | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -69,21 +72,17 @@ export default function AddHousePage() {
         .replace(/_+/g, "_");
       const filePath = `houses/${Date.now()}_${safeName}`;
       try {
-        const { data, error } = await supabase.storage
+        await supabase.storage
           .from("house-images")
           .upload(filePath, file);
-
-        if (error) throw error;
 
         const { data: publicUrlData } = supabase.storage
           .from("house-images")
           .getPublicUrl(filePath);
-        console.log("Uploaded image URL:", publicUrlData.publicUrl);
 
         urls.push(publicUrlData.publicUrl);
-      } catch (error) {
-        console.error("Image upload failed:", error);
-        throw error;
+      } catch (err) {
+        throw err;
       }
     }
     return urls;
@@ -99,7 +98,7 @@ export default function AddHousePage() {
       }
 
       if (form.lat === null || form.lng === null) {
-        Swal.fire("Location Required", "Please click on the map to pin your property's location.", "warning");
+        Swal.fire(t('locationRequired'), t('locationMsg'), "warning");
         setLoading(false);
         return;
       }
@@ -124,7 +123,7 @@ export default function AddHousePage() {
 
       const data = await res.json();
       if (res.ok) {
-        Swal.fire("Success", "Maison added!", "success");
+        Swal.fire(t('successTitle'), t('successMsg'), "success");
         setForm({
           title: "",
           description: "",
@@ -145,10 +144,10 @@ export default function AddHousePage() {
               )
               .join("\n")
           : data.message;
-        Swal.fire("Error", errorDetails || "Failed to add house", "error");
+        Swal.fire(t('errorTitle'), errorDetails || "Failed to add house", "error");
       }
-    } catch (error) {
-      Swal.fire("Error", "Something went wrong", "error");
+    } catch {
+      Swal.fire(t('errorTitle'), "Something went wrong", "error");
     } finally {
       setLoading(false);
     }
@@ -157,17 +156,17 @@ export default function AddHousePage() {
   return (
     <div className="add-house-page">
       <div className="form-header">
-        <h2>List Your Property</h2>
-        <p>Fill in the details below to add your house to our listings.</p>
+        <h2>{t('title')}</h2>
+        <p>{t('subtitle')}</p>
       </div>
 
       <form onSubmit={handleSubmit}>
         <div className="form-group full-width">
-          <label htmlFor="title">Property Title</label>
+          <label htmlFor="title">{t('propertyTitle')}</label>
           <input
             id="title"
             name="title"
-            placeholder="e.g. Luxury Villa in Tunis"
+            placeholder={t('titlePlaceholder')}
             value={form.title}
             onChange={handleChange}
             required
@@ -175,11 +174,11 @@ export default function AddHousePage() {
         </div>
 
         <div className="form-group full-width">
-          <label htmlFor="description">Description</label>
+          <label htmlFor="description">{t('description')}</label>
           <textarea
             id="description"
             name="description"
-            placeholder="Describe the key features of your property"
+            placeholder={t('descPlaceholder')}
             value={form.description}
             onChange={handleChange}
             required
@@ -187,11 +186,11 @@ export default function AddHousePage() {
         </div>
 
         <div className="form-group full-width">
-          <label htmlFor="pricePerDay">Price Per Day (DT)</label>
+          <label htmlFor="pricePerDay">{t('priceLabel')}</label>
           <input
             id="pricePerDay"
             name="pricePerDay"
-            placeholder="0.00"
+            placeholder={t('pricePlaceholder')}
             type="number"
             value={form.pricePerDay}
             onChange={handleChange}
@@ -200,7 +199,7 @@ export default function AddHousePage() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="propertyType">Property Type *</label>
+          <label htmlFor="propertyType">{t('propertyType')}</label>
           <select
             id="propertyType"
             name="propertyType"
@@ -208,18 +207,18 @@ export default function AddHousePage() {
             onChange={(e) => setForm({ ...form, propertyType: e.target.value })}
             required
           >
-            <option value="">Select property type...</option>
-            <option value="Studio">Studio</option>
-            <option value="Apartment">Apartment</option>
-            <option value="House">House</option>
-            <option value="Villa">Villa</option>
-            <option value="Townhouse">Townhouse</option>
-            <option value="Cottage">Cottage</option>
+            <option value="">{t('selectType')}</option>
+            <option value="Studio">{tSearch('propertyTypes.Studio')}</option>
+            <option value="Apartment">{tSearch('propertyTypes.Apartment')}</option>
+            <option value="House">{tSearch('propertyTypes.House')}</option>
+            <option value="Villa">{tSearch('propertyTypes.Villa')}</option>
+            <option value="Townhouse">{tSearch('propertyTypes.Townhouse')}</option>
+            <option value="Cottage">{tSearch('propertyTypes.Cottage')}</option>
           </select>
         </div>
 
         <div className="form-group">
-          <label htmlFor="telephone">Contact Number</label>
+          <label htmlFor="telephone">{t('contactNumber')}</label>
           <input
             id="telephone"
             name="telephone"
@@ -234,9 +233,9 @@ export default function AddHousePage() {
         </div>
 
         <div className="form-group full-width">
-          <label>Pin Location on Map (Required)</label>
+          <label>{t('pinLocation')}</label>
           <p style={{ fontSize: "0.85rem", color: "#64748b", margin: "-4px 0 8px 4px" }}>
-            Click on the map to mark exactly where your property is located. This will automatically set the city.
+            {t('pinHelp')}
           </p>
           <LocationPicker 
             onLocationSelect={(lat, lng, address) => {
@@ -245,13 +244,13 @@ export default function AddHousePage() {
           />
           {form.lat && (
             <div style={{ fontSize: "0.85rem", color: "#1c73a1", marginTop: "8px" }}>
-              📍 Coordinates set: {form.lat.toFixed(4)}, {form.lng?.toFixed(4)}
+              📍 {t('coordinates')} {form.lat.toFixed(4)}, {form.lng?.toFixed(4)}
             </div>
           )}
         </div>
 
         <div className="form-group full-width">
-          <label>Amenities</label>
+          <label>{t('amenities')}</label>
           <div className="amenities-grid">
             {AMENITIES_LIST.map((amenity) => (
               <label key={amenity} className="amenity-checkbox">
@@ -260,14 +259,14 @@ export default function AddHousePage() {
                   checked={amenities.includes(amenity)}
                   onChange={() => handleAmenityChange(amenity)}
                 />
-                <span>{amenity}</span>
+                <span>{tSearch(`amenitiesList.${amenity.replace(/\s+/g, '')}`)}</span>
               </label>
             ))}
           </div>
         </div>
 
         <div className="form-group full-width">
-          <label htmlFor="images">Property Images</label>
+          <label htmlFor="images">{t('propertyImages')}</label>
           <div className="file-upload-wrapper">
             <input
               id="images"
@@ -280,13 +279,13 @@ export default function AddHousePage() {
               className="file-input"
             />
             <div className="file-upload-placeholder">
-              <span>Drag & drop images here or click to browse</span>
-              <small>Supported formats: JPG, PNG</small>
+              <span>{t('dragDrop')}</span>
+              <small>{t('formats')}</small>
             </div>
           </div>
           {images && images.length > 0 && (
             <div className="file-preview-info">
-              {images.length} file(s) selected
+              {t('selectedFiles', { count: images.length })}
             </div>
           )}
         </div>
@@ -295,7 +294,7 @@ export default function AddHousePage() {
           {loading ? (
             <span className="loading-spinner"></span>
           ) : (
-            "Publish Listing"
+             t('publishBtn')
           )}
         </button>
       </form>

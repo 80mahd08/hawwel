@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     const count = await getNotificationCount(clerkId);
 
     return NextResponse.json({ count });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to fetch notification count" },
       { status: 500 }

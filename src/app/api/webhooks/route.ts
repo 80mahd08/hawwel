@@ -13,6 +13,14 @@ import house from "@/models/house";
 import favorite from "@/models/favorite";
 import Pending from "@/models/Pending";
 
+interface IClerkUserWebhookData {
+  id: string;
+  email_addresses?: { email_address: string }[];
+  first_name?: string;
+  last_name?: string;
+  image_url?: string;
+}
+
 // ============================================
 // Webhook Handler
 // ============================================
@@ -26,7 +34,7 @@ export async function POST(req: NextRequest) {
       return new Response("Ignored event", { status: 200 });
     }
 
-    const user = data as Record<string, any>;
+    const user = data as unknown as IClerkUserWebhookData;
     const clerkId = user.id ?? "";
     const email = user.email_addresses?.[0]?.email_address ?? "";
     const name = [user.first_name, user.last_name].filter(Boolean).join(" ");
@@ -51,8 +59,8 @@ export async function POST(req: NextRequest) {
     }
 
     return new Response("✅ Webhook processed", { status: 200 });
-  } catch (error) {
-    return new Response("Error verifying webhook", { status: 400 });
+  } catch (error: unknown) {
+    return new Response(`Error verifying webhook: ${(error as Error).message}`, { status: 400 });
   }
 }
 

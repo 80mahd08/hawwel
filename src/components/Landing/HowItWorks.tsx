@@ -1,20 +1,23 @@
 import React from "react";
+import { useTranslations } from "next-intl";
 
 export default function HowItWorks() {
+  const t = useTranslations('HowItWorks');
+  
   const steps = [
     {
-      title: "Discover",
-      description: "Browse through our curated list of verified homes.",
+      title: t('steps.discover.title'),
+      description: t('steps.discover.description'),
       icon: "🔍",
     },
     {
-      title: "Book",
-      description: "Secure your stay instantly with our easy booking system.",
+      title: t('steps.book.title'),
+      description: t('steps.book.description'),
       icon: "📅",
     },
     {
-      title: "Enjoy",
-      description: "Experience the local vibe and make unforgettable memories.",
+      title: t('steps.enjoy.title'),
+      description: t('steps.enjoy.description'),
       icon: "✨",
     },
   ];
@@ -22,8 +25,8 @@ export default function HowItWorks() {
   return (
     <section className="how-it-works-section">
       <div className="container">
-        <h2 className="section-title">How it works</h2>
-        <p className="section-subtitle">Simple steps to your perfect stay</p>
+        <h2 className="section-title">{t('title')}</h2>
+        <p className="section-subtitle">{t('subtitle')}</p>
         
         <div className="steps-grid">
           {steps.map((step, index) => (

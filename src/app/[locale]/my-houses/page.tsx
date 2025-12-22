@@ -6,6 +6,8 @@ import {
 } from "@/lib/dbFunctions";
 import { currentUser } from "@clerk/nextjs/server";
 import Pagination from "@/components/Pagination/Pagination";
+import { IHouseListing } from "@/components/HousesView/HousesView";
+import { Ihouse } from "@/models/house";
 
 export default async function page({
   searchParams,
@@ -35,26 +37,30 @@ export default async function page({
 
   if (houses && houses.length > 0) {
     // Check real-time availability for all houses in one go
-    const houseIds = houses.map((h) => (h as any)._id.toString());
+    const houseIds = (houses as unknown as { _id: string }[]).map((h) => h._id?.toString() || "");
     const availabilityMap = await batchIsHouseAvailable(houseIds);
 
-    const housesWithAvailability = houses.map((house: any) => {
-      const obj = house.toObject ? house.toObject() : house;
-      const id = obj._id?.toString?.() ?? String(obj._id);
+    const housesWithAvailability: IHouseListing[] = (houses as unknown as Ihouse[]).map((house) => {
+      const id = (house as unknown as { _id: string })._id?.toString() || "";
       return {
-        ...obj,
+        ...house,
         _id: id,
-        ownerId: obj.ownerId?.toString?.(),
-        images: Array.isArray(obj.images) ? obj.images : [],
+        location: house.location || "",
+        pricePerDay: house.pricePerDay || 0,
+        available: house.available ?? true,
+        ownerId: house.ownerId?.toString(),
+        images: Array.isArray(house.images) ? (house.images as string[]) : [],
         isAvailable: availabilityMap[id] ?? true,
-      };
+        lat: (house.lat ?? undefined) as number | undefined,
+        lng: (house.lng ?? undefined) as number | undefined,
+      } as unknown as IHouseListing;
     });
 
     return (
       <div>
         <div className="houses-list">
           {housesWithAvailability.map((house) => (
-            <HouseLink key={house._id} house={house} />
+            <HouseLink key={house._id} house={JSON.parse(JSON.stringify(house))} />
           ))}
         </div>
         <Pagination totalPages={totalPages} currentPage={currentPage} />

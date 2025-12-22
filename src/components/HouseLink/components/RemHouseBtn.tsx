@@ -1,19 +1,21 @@
 "use client";
 import React from "react";
 import Swal from "sweetalert2";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 
 export default function RemHouseBtn({ houseId }: { houseId: string }) {
   const router = useRouter();
+  const t = useTranslations('HouseCard');
 
   const handleRemoveHouse = async () => {
     const confirmed = await Swal.fire({
-      title: "Delete house?",
-      text: "This will permanently delete the house. Are you sure?",
+      title: t('removeHouseDialog.title'),
+      text: t('removeHouseDialog.text'),
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, delete",
-      cancelButtonText: "Cancel",
+      confirmButtonText: t('removeHouseDialog.confirm'),
+      cancelButtonText: t('removeHouseDialog.cancel'),
     });
 
     if (!confirmed.isConfirmed) return;
@@ -28,16 +30,16 @@ export default function RemHouseBtn({ houseId }: { houseId: string }) {
       if (!res.ok) throw new Error("Failed to remove house");
 
       await Swal.fire({
-        title: "Deleted",
-        text: "The house was deleted successfully.",
+        title: t('removeHouseDialog.successTitle'),
+        text: t('removeHouseDialog.successText'),
         icon: "success",
       });
 
       router.refresh();
-    } catch (err) {
+    } catch {
       await Swal.fire({
         title: "Error",
-        text: "Could not delete house. Please try again.",
+        text: t('removeHouseDialog.errorText'),
         icon: "error",
       });
     }
@@ -45,7 +47,7 @@ export default function RemHouseBtn({ houseId }: { houseId: string }) {
 
   return (
     <button onClick={handleRemoveHouse} className="btn">
-      Remove house
+      {t('removeHouse')}
     </button>
   );
 }

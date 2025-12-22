@@ -1,8 +1,23 @@
 import { getPendingByBuyer, getUserByClerkId } from "@/lib/dbFunctions";
 import { currentUser } from "@clerk/nextjs/server";
-import DispNotification from "@/components/DispNotification/DispNotification";
-import ClearAllNotificationsBtn from "@/components/DispNotification/components/ClearAllNotificationsBtn";
-import Pagination from "@/components/Pagination/Pagination";
+import MyNotificationClient from "./MyNotificationClient";
+
+// Local interface for IPC
+interface IPendingNotification {
+  _id: string;
+  ownerId: string;
+  buyerId: string;
+  houseId: {
+    _id: string;
+    title: string;
+    images: string[];
+    telephone?: string;
+  };
+  status: string;
+  createdAt: string;
+  startDate: string;
+  endDate: string;
+}
 
 export default async function page({
   searchParams,
@@ -30,16 +45,11 @@ export default async function page({
     limit
   );
 
-  if (pendings && pendings.length > 0) {
-    return (
-      <div className="container my-notification">
-        <ClearAllNotificationsBtn />
-        {pendings.map((pending) => (
-          <DispNotification key={pending._id} pending={pending} />
-        ))}
-        <Pagination totalPages={totalPages} currentPage={currentPage} />
-      </div>
-    );
-  }
-  return <div style={{ textAlign: "center" }}>No pending requests found.</div>;
+  return (
+    <MyNotificationClient 
+        pendings={JSON.parse(JSON.stringify(pendings)) as IPendingNotification[]} 
+        totalPages={totalPages} 
+        currentPage={currentPage} 
+    />
+  );
 }

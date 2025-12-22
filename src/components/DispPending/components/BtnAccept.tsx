@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import Swal from "sweetalert2";
 import { usePendingCount } from "@/context/PendingCountProvider";
 import { useUser } from "@clerk/nextjs";
+import { useChat } from "@/context/ChatContext";
+import { useTranslations } from "next-intl";
 
 export default function BtnAccept({
   pendingId,
@@ -15,15 +17,18 @@ export default function BtnAccept({
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { user } = useUser();
+  const { socket } = useChat();
   const { refreshCountPending } = usePendingCount();
+  const t = useTranslations('Pending');
+
   const handleClick = async () => {
     const confirmed = await Swal.fire({
-      title: "Accept pending request?",
-      text: "Are you sure you want to accept this pending request?",
+      title: t('acceptDialog.title'),
+      text: t('acceptDialog.text'),
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "Yes, accept",
-      cancelButtonText: "Cancel",
+      confirmButtonText: t('acceptDialog.confirm'),
+      cancelButtonText: t('acceptDialog.cancel'),
     });
 
     if (!confirmed.isConfirmed) return;
@@ -38,20 +43,28 @@ export default function BtnAccept({
 
       const body = await res.json();
       if (!res.ok)
-        throw new Error(body?.error || body?.message || "Request failed");
+        throw new Error(body?.error || body?.message || t('acceptDialog.errorText'));
+
+      // --- REAL-TIME NOTIFICATION ---
+      if (socket?.connected && body.pending) {
+        socket.emit("booking-status-update", {
+          buyerId: body.pending.buyerId,
+          pending: body.pending,
+        });
+      }
 
       await Swal.fire({
-        title: "Accepted",
-        text: "Pending accepted.",
+        title: t('acceptDialog.successTitle'),
+        text: t('acceptDialog.successText'),
         icon: "success",
       });
       refreshCountPending(user?.id);
 
       router.refresh();
-    } catch (err: any) {
+    } catch (err: unknown) {
       await Swal.fire({
-        title: "Error",
-        text: err?.message || "Error accepting pending.",
+        title: t('acceptDialog.errorTitle'),
+        text: (err as Error)?.message || t('acceptDialog.errorText'),
         icon: "error",
       });
     } finally {
@@ -61,7 +74,7 @@ export default function BtnAccept({
 
   return (
     <button className="btn" onClick={handleClick} disabled={loading}>
-      {loading ? "Accepting..." : "accept"}
+      {loading ? t('acceptDialog.buttonAccepting') : t('approve')}
     </button>
   );
 }

@@ -1,10 +1,12 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import SearchFilter from "../SearchFilter/SearchFilter";
 
 export default function HeroSection() {
+  const t = useTranslations('HeroSection');
   return (
     <section className="hero-section">
       <div className="hero-background">
@@ -25,14 +27,16 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
           >
-            Find your next <span className="highlight">perfect stay</span>
+            {t.rich('title', {
+              span: (chunks) => <span className="highlight">{chunks}</span>
+            })}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
-            Discover handpicked homes, villas, and apartments for your next adventure.
+            {t('subtitle')}
           </motion.p>
         </motion.div>
 

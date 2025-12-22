@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import dbConnect from "@/lib/dbConnect";
 import Pending from "@/models/Pending";
-import { getUserByClerkId, deletePending } from "@/lib/dbFunctions";
+import { getUserByClerkId } from "@/lib/dbFunctions";
 
 export async function POST(req: Request) {
   try {
@@ -47,9 +47,9 @@ export async function POST(req: Request) {
       { ok: true, message: "Pending removed" },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { error: error?.message || "Internal error" },
+      { error: (error as Error)?.message || "Internal error" },
       { status: 500 }
     );
   }

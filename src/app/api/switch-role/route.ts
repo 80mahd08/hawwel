@@ -29,9 +29,9 @@ export async function POST(req: NextRequest) {
       { message: "Role updated to PROPRIETAIRE", user: updatedUser },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { message: "Error updating role" },
+      { message: (error as Error).message || "Error updating role" },
       { status: 500 }
     );
   }

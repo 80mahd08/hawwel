@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Theme variables
 :root {
   --primary: #ffffff;
@@ -138,7 +140,10 @@ img {
 header {
   background-color: var(--header-bg);
   border-bottom: 1px solid var(--border-color);
+  padding-top: 10px; // Extra space to prevent tooltips from being cut off
   transition: background-color var(--transition-speed), border-color var(--transition-speed);
+  position: relative;
+  z-index: 1000;
 
   .container {
     display: flex;
@@ -189,27 +194,68 @@ header {
                   position: absolute;
                   top: 0px;
                   right: 1px;
+                  width: 15px;
+                  height: 15px;
+                }
+                
+                // Hide label by default (desktop)
+                .nav-label {
+                  display: none;
                 }
 
                 &.active {
-                  background-color: #707070;
-
-                  &::before {
-                    content: attr(data-tooltip);
-                    position: absolute;
-                    top: -30px;
-                    color: #fff;
-                    width: max-content;
-                    text-align: center;
-                    left: -34px;
-                    padding: 5px 10px;
-                    background-color: #707070;
-                    border-radius: 10px;
+                  background-color: rgba(0,0,0,0.05); // Subtle active background
+                  
+                  .dark-theme & {
+                    background-color: rgba(255,255,255,0.1);
                   }
+                }
 
-                  &[href="/see-favorites"] {
+                // Modern Tooltip System (Top Positioned)
+                @media (min-width: 769px) {
+                  &[data-tooltip] {
                     &::before {
-                      left: -41px;
+                      content: attr(data-tooltip);
+                      position: absolute;
+                      top: -38px; // Move back to top, slightly closer
+                      left: 50%;
+                      transform: translateX(-50%) translateY(10px);
+                      background: #1e293b;
+                      color: white;
+                      padding: 5px 12px;
+                      border-radius: 8px;
+                      font-size: 13px;
+                      font-weight: 600;
+                      white-space: nowrap;
+                      opacity: 0;
+                      visibility: hidden;
+                      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+                      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                      z-index: 1000;
+                    }
+
+                    &::after {
+                      content: '';
+                      position: absolute;
+                      top: -12px; // Positioned below the tooltip
+                      left: 50%;
+                      transform: translateX(-50%) translateY(10px);
+                      border-left: 5px solid transparent;
+                      border-right: 5px solid transparent;
+                      border-top: 5px solid #1e293b; // Arrow pointing down
+                      opacity: 0;
+                      visibility: hidden;
+                      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+                      z-index: 1000;
+                    }
+
+                    &:hover::before,
+                    &.active::before,
+                    &:hover::after,
+                    &.active::after {
+                      opacity: 1;
+                      visibility: visible;
+                      transform: translateX(-50%) translateY(0);
                     }
                   }
                 }
@@ -239,11 +285,177 @@ header {
   }
 }
 
+// Hamburger Menu Styles
+.hamburger {
+  display: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  z-index: 100;
+
+  .bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    transition: all 0.3s ease-in-out;
+    background-color: var(--text);
+  }
+}
+
+// Menu Open State (animate hamburger)
+.menu-open .hamburger {
+  .bar:nth-child(2) {
+    opacity: 0;
+  }
+  .bar:nth-child(1) {
+    transform: translateY(8px) rotate(48deg);
+  }
+  .bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+}
+
 @media (max-width: 768px) {
-  header .container {
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
+  .hamburger {
+    display: block;
+  }
+
+  header {
+    position: relative; // Ensure absolute children are relative to header
+
+    .container {
+      // Keep logo and hamburger in a row
+      flex-direction: row !important; 
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-actions {
+      position: absolute;
+      top: 100%; // Push right below the header
+      left: 0;
+      width: 100%;
+      background-color: var(--header-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 0;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      z-index: 99;
+      
+      // Transition for smooth opening
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      visibility: hidden;
+      transition: all 0.3s ease-in-out;
+
+      &.open {
+        max-height: 100vh; // Allow enough height for content
+        opacity: 1;
+        visibility: visible;
+        padding: 2rem 0; 
+      }
+
+      .actions-wrapper {
+        flex-direction: column;
+        width: 100%;
+        gap: 1.5rem !important;
+      }
+
+      .auth-section {
+        .on-sign-in {
+            flex-direction: column;
+            gap: 1.5rem;
+            width: 100%;
+
+            nav {
+              width: 100%;
+              
+              ul {
+                  flex-direction: column;
+                  align-items: flex-start; // Align to start for list look
+                  gap: 0.5rem;
+                  padding: 0 2rem; // Add side padding
+                  width: 100%;
+
+                  li {
+                    width: 100%;
+
+                    a {
+                      display: flex;
+                      align-items: center;
+                      gap: 1rem;
+                      width: 100%;
+                      padding: 0.8rem 1rem;
+                      background: transparent; // Reset background default
+                      
+                      // Show nav label on mobile
+                      .nav-label {
+                        display: block;
+                        font-weight: 500;
+                        font-size: 1rem;
+                        color: var(--text);
+                      }
+
+                      // Adjust active state for mobile
+                      &.active {
+                        background-color: var(--btn-secondary-bg); // Softer active background
+                        
+                        .nav-label {
+                          font-weight: 700;
+                          color: var(--title);
+                        }
+                      }
+                    }
+                  }
+              }
+            }
+        }
+      }
+    }
+  }
+
+
+  // Hero Section Responsiveness
+  .hero-section {
+    padding: 3rem 1rem;
+    text-align: center;
+
+    h1 {
+        font-size: 2rem !important;
+        line-height: 1.3 !important;
+        
+        span {
+            display: inline-block;
+        }
+    }
+
+    p {
+        font-size: 1rem !important;
+        padding: 0 1rem;
+    }
+
+    // Adjustments for very small screens (< 560px)
+    @media (max-width: 560px) {
+      padding: 2rem 0.5rem;
+      
+      h1 {
+        font-size: 1.5rem !important; // Significantly smaller
+        
+        span {
+          display: block; // Stack text pieces to avoid overflow
+        }
+      }
+
+      p {
+        font-size: 0.9rem !important;
+        padding: 0;
+      }
+    }
   }
 }
 
@@ -415,7 +627,7 @@ header {
       font-weight: 800;
       letter-spacing: -0.5px;
       margin-bottom: 0.8rem;
-      background: linear-gradient(135deg, var(--title) 0%, lighten(#1c73a1, 15%) 100%);
+      background: linear-gradient(135deg, var(--title) 0%, color.adjust(#1c73a1, $lightness: 15%) 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -618,7 +830,7 @@ header {
 
     .submit-btn {
       margin-top: 1rem;
-      background: linear-gradient(135deg, var(--title) 0%, darken(#1c73a1, 10%) 100%);
+      background: linear-gradient(135deg, var(--title) 0%, color.adjust(#1c73a1, $lightness: -10%) 100%);
       color: #fff;
       font-size: 1.1rem;
       font-weight: 600;
@@ -1512,7 +1724,7 @@ header {
       letter-spacing: 0.02em;
 
       &:hover {
-        background: darken(#1c73a1, 5%);
+        background: color.adjust(#1c73a1, $lightness: -5%);
         transform: translateY(-2px);
         box-shadow: 0 8px 20px rgba(28, 115, 161, 0.35);
       }
@@ -1534,6 +1746,7 @@ header {
   .search-filter-container {
     padding: 20px;
     margin: 20px auto;
+    width: 95%; // Ensure it doesn't overflow
     
     .search-form {
       grid-template-columns: 1fr; // 1 column on mobile
@@ -1542,6 +1755,41 @@ header {
       .search-btn {
         width: 100%;
         margin-top: 8px;
+      }
+    }
+  }
+}
+
+@media (max-width: 560px) {
+  .search-filter-container {
+    padding: 16px; // Reduced padding
+    margin: 16px auto;
+    width: 98%; // Maximize space
+
+    .search-form {
+      gap: 16px;
+
+      .filter-group {
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        .sort-select {
+          font-size: 0.9rem; // Smaller font to prevent overflow
+          padding: 10px;
+        }
+
+        .checkbox-label {
+           padding: 8px 12px; // Smaller buttons
+           font-size: 0.85rem;
+           gap: 6px;
+        }
+
+        // Allow date/price inputs to stack if needed, or just shrink gap
+        .price-inputs, 
+        .date-inputs {
+          gap: 8px; 
+        }
       }
     }
   }
@@ -2358,11 +2606,14 @@ header {
       --rdp-background-color: rgba(var(--primary-rgb), 0.1);
       margin: 0;
       font-family: var(--font-primary);
+      position: relative; // Ensure navigation buttons position correctly relative to this container
+      width: 100%; // Ensure container spans full width so arrows go to edges
 
       .rdp-month_caption {
         font-weight: 700;
         font-size: 1.1rem;
         padding-bottom: 16px;
+        margin: 0 40px; // Make space for the absolute buttons
       }
 
       .rdp-head_cell {
@@ -2392,6 +2643,16 @@ header {
         border-radius: 50%;
         background: transparent;
         color: var(--text);
+        position: absolute; // Ensure absolute positioning
+        top: 0;
+
+        &_previous {
+          left: 0;
+        }
+
+        &_next {
+          right: 0;
+        }
         
         &:hover {
           background-color: var(--bg-hover);
@@ -2993,3 +3254,4 @@ header {
     }
   }
 }
+@keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-5px);} 60% {transform: translateY(-3px);} }

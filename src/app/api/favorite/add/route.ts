@@ -39,9 +39,9 @@ export async function POST(req: NextRequest) {
       { message: "favoritete added", favorite: favoriteResult.favorite },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { message: "Error adding favoritete" },
+      { message: (error as Error).message || "Error adding favoritete" },
       { status: 500 }
     );
   }

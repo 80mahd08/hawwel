@@ -1,9 +1,10 @@
+
 "use client";
 
 import { useState } from "react";
 import { DayPicker } from "react-day-picker";
-import { addMonths, isSameDay, isWithinInterval, parseISO } from "date-fns";
 import "react-day-picker/dist/style.css";
+import { Locale } from "date-fns";
 
 interface DateRange {
   startDate: string;
@@ -14,24 +15,33 @@ interface AvailabilityCalendarProps {
   reservedDates: DateRange[];
 }
 
+import { useTranslations, useLocale } from "next-intl";
+import { ar, fr, enUS } from 'date-fns/locale';
+
 export default function AvailabilityCalendar({ reservedDates }: AvailabilityCalendarProps) {
   const [month, setMonth] = useState<Date>(new Date());
+  const t = useTranslations('Availability');
+  const localeStr = useLocale();
+
+  const locales: Record<string, Locale> = { ar, fr, en: enUS };
+  const currentLocale = locales[localeStr] || enUS;
 
   // Convert string dates to Date objects
-  const disabledDays = reservedDates.map((range) => ({
+  const disabledDays = reservedDates.map((range: DateRange) => ({
     from: new Date(range.startDate),
     to: new Date(range.endDate),
   }));
 
-  const bookedStyle = { color: "#ef4444", fontWeight: "bold" };
-
   return (
     <div className="availability-calendar-container">
-      <h3>Availability</h3>
-      <p className="subtitle">Prices may vary depending on the dates selected.</p>
+      <h3>{t('title')}</h3>
+      <p className="subtitle">{t('subtitle')}</p>
       
       <div className="calendar-wrapper">
         <DayPicker
+
+          locale={currentLocale}
+          dir={localeStr === 'ar' ? 'rtl' : 'ltr'}
           fromDate={new Date()}
           numberOfMonths={1}
           month={month}
@@ -56,6 +66,9 @@ export default function AvailabilityCalendar({ reservedDates }: AvailabilityCale
             day: {
               margin: "auto",
             },
+            caption: {
+               // Ensure caption doesn't overlap
+            }
           }}
         />
       </div>
@@ -63,11 +76,11 @@ export default function AvailabilityCalendar({ reservedDates }: AvailabilityCale
       <div className="legend">
         <div className="legend-item">
           <span className="dot available"></span>
-          <span>Available</span>
+          <span>{t('available')}</span>
         </div>
         <div className="legend-item">
           <span className="dot new-booked" style={{ background: '#ccc', textDecoration: 'line-through' }}></span>
-          <span>Booked</span>
+          <span>{t('booked')}</span>
         </div>
       </div>
     </div>

@@ -64,8 +64,7 @@ export async function POST(req: Request) {
           }),
         });
       }
-    } catch (emailError) {
-      console.error("Failed to send notification email:", emailError);
+    } catch {
       // Don't fail the request if email fails
     }
 
@@ -73,9 +72,9 @@ export async function POST(req: Request) {
       { message: "Pending created", pending },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { message: error?.message || "Internal error" },
+      { message: (error as Error)?.message || "Internal error" },
       { status: 500 }
     );
   }

@@ -4,27 +4,30 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 // Custom marker for "Price Pins"
-// Custom marker for "Price Pins"
-const createPriceIcon = (price: number, rating?: number) => {
+const createPriceIcon = (price: number, currency: string, rating?: number) => {
   const ratingHtml = rating ? `<span class="marker-rating">★ ${rating.toFixed(1)}</span>` : '';
   return L.divIcon({
     className: "custom-price-marker-wrapper",
-    html: `<div class="custom-price-marker">${ratingHtml}<span>DT ${price}</span></div>`,
+    html: `<div class="custom-price-marker">${ratingHtml}<span>${currency} ${price}</span></div>`,
     iconSize: [rating ? 100 : 80, 42], // Wider if rating exists
     iconAnchor: [rating ? 50 : 40, 42],
   });
 };
 
+import { IHouseListing } from "../HousesView/HousesView";
+
 interface MapViewProps {
-  houses: any[];
+  houses: IHouseListing[];
 }
 
 export default function MapView({ houses }: MapViewProps) {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const t = useTranslations('HousesView');
 
   useEffect(() => {
     // Check initial theme
@@ -43,8 +46,7 @@ export default function MapView({ houses }: MapViewProps) {
     return () => observer.disconnect();
   }, []);
 
-  console.log("MapView: Rendering with houses:", houses);
-  const mapWithCoords = houses.filter(h => h.lat != null && h.lng != null);
+  const mapWithCoords = houses.filter((h): h is IHouseListing & { lat: number; lng: number } => h.lat != null && h.lng != null);
 
   // Center map logic
   const defaultCenter: [number, number] = [36.8065, 10.1815];
@@ -52,10 +54,10 @@ export default function MapView({ houses }: MapViewProps) {
     ? [mapWithCoords[0].lat, mapWithCoords[0].lng] as [number, number]
     : defaultCenter;
 
-  const ChangeView = ({ houses }: { houses: any[] }) => {
+  const ChangeView = ({ houses }: { houses: IHouseListing[] }) => {
     const map = useMap();
     useEffect(() => {
-      const validHouses = houses.filter(h => h.lat != null && h.lng != null);
+      const validHouses = houses.filter((h): h is IHouseListing & { lat: number; lng: number } => h.lat != null && h.lng != null);
       if (validHouses.length > 0) {
         const bounds = L.latLngBounds(validHouses.map(h => [h.lat, h.lng]));
         map.fitBounds(bounds, { padding: [50, 50] });
@@ -86,7 +88,7 @@ export default function MapView({ houses }: MapViewProps) {
           <Marker 
             key={house._id} 
             position={[house.lat, house.lng]} 
-            icon={createPriceIcon(house.pricePerDay, house.rating)}
+            icon={createPriceIcon(house.pricePerDay, t('currency'), house.rating)}
           >
             <Popup className="house-map-popup">
               <div className="popup-inner">
@@ -103,9 +105,9 @@ export default function MapView({ houses }: MapViewProps) {
                 <div className="popup-text">
                   <h4 style={{ margin: "0 0 4px 0", fontSize: "1.1rem", color: "var(--text)", fontWeight: "700" }}>{house.title}</h4>
                   <p style={{ margin: "0 0 12px 0", color: "var(--text-light)", fontSize: "0.9rem" }}>📍 {house.location}</p>
-                  <p style={{ margin: "0 0 12px 0", color: "var(--title)", fontWeight: "800", fontSize: "1rem" }}>DT {house.pricePerDay} / day</p>
+                  <p style={{ margin: "0 0 12px 0", color: "var(--title)", fontWeight: "800", fontSize: "1rem" }}>{t('currency')} {house.pricePerDay} / {t('day')}</p>
                   <Link href={`/${house._id}`} className="popup-btn">
-                    View Property
+                    {t('viewProperty')}
                   </Link>
                 </div>
               </div>

@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   try {
     const count = await getPendingCount(clerkId);
     return NextResponse.json({ count });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to fetch pending count" },
       { status: 500 }

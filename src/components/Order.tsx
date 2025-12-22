@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { useChat } from "@/context/ChatContext";
+import { useTranslations } from "next-intl";
 
 function Order({
   houseId,
@@ -13,7 +15,8 @@ function Order({
   buyerId: string;
   reservedDates: { startDate: string; endDate: string }[];
 }) {
-  console.log(reservedDates);
+  const { socket } = useChat();
+  const t = useTranslations('Order');
 
   const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState("");
@@ -22,16 +25,16 @@ function Order({
 
   const handleClick = async () => {
     const confirmed = await Swal.fire({
-      title: "Send order request?",
-      text: "Do you want to send an order request to the owner?",
+      title: t('sendRequestTitle'),
+      text: t('sendRequestMessage'),
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "Yes, send",
-      cancelButtonText: "Cancel",
+      confirmButtonText: t('yesSend'),
+      cancelButtonText: t('cancel'),
     });
     if (!validateDates()) {
       await Swal.fire({
-        title: "Invalid Dates",
+        title: t('invalidDatesTitle'),
         text: error || "Please check the selected dates.",
         icon: "error",
       });
@@ -50,21 +53,29 @@ function Order({
       const data = await res.json();
       if (!res.ok) {
         await Swal.fire({
-          title: "Error",
+          title: t('errorTitle'),
           text: data?.message || "Failed to create order",
           icon: "error",
         });
       } else {
+        // --- REAL-TIME NOTIFICATION ---
+        if (socket?.connected) {
+          socket.emit("booking-request", {
+            ownerId,
+            pending: data.pending,
+          });
+        }
+        
         await Swal.fire({
-          title: "Sent",
-          text: "Order request sent.",
+          title: t('successTitle'),
+          text: t('successMessage'),
           icon: "success",
         });
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       await Swal.fire({
-        title: "Error",
-        text: err?.message || "Network error",
+        title: t('errorTitle'),
+        text: (err as Error)?.message || "Network error",
         icon: "error",
       });
     } finally {
@@ -85,17 +96,17 @@ function Order({
           (inputEnd >= start && inputEnd <= end) ||
           (inputStart <= start && inputEnd >= end)
         ) {
-          setError("Selected dates overlap with existing reservations.");
+          setError(t('overlapError'));
           return false;
         }
       }
     }
     if (!startDate || !endDate) {
-      setError("Both start and end dates are required.");
+      setError(t('requiredDatesError'));
       return false;
     }
     if (new Date(startDate) > new Date(endDate)) {
-      setError("Start date cannot be after end date.");
+      setError(t('dateOrderError'));
       return false;
     }
     setError(null);
@@ -106,7 +117,7 @@ function Order({
     <div className="order-card-content">
       <div className="date-picker-wrapper">
         <div className="date-input-group">
-          <label htmlFor="startDate">CHECK-IN</label>
+          <label htmlFor="startDate">{t('checkIn')}</label>
           <input
             type="date"
             id="startDate"
@@ -116,7 +127,7 @@ function Order({
           />
         </div>
         <div className="date-input-group">
-          <label htmlFor="endDate">CHECKOUT</label>
+          <label htmlFor="endDate">{t('checkOut')}</label>
           <input
             type="date"
             id="endDate"
@@ -131,11 +142,11 @@ function Order({
         {loading ? (
           <span className="loading-spinner"></span>
         ) : (
-          "Reserve"
+          t('reserve')
         )}
       </button>
       
-      <p className="no-charge-text">You won't be charged yet</p>
+      <p className="no-charge-text">{t('noChargeYet')}</p>
     </div>
   );
 }

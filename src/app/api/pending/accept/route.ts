@@ -61,17 +61,16 @@ export async function POST(req: Request) {
           }),
         });
       }
-    } catch (emailError) {
-      console.error("Failed to send approval email:", emailError);
+    } catch {
     }
 
     return NextResponse.json(
-      { ok: true, message: "Pending accepted and reservation confirmed" },
+      { ok: true, message: "Pending accepted and reservation confirmed", pending },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { error: error?.message || "Internal error" },
+      { error: (error as Error)?.message || "Internal error" },
       { status: 500 }
     );
   }
