@@ -20,11 +20,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  experimental: {
-    serverActions: {
-      allowedOrigins: ["zvcc245l-3000.euw.devtunnels.ms", "localhost:3000"],
-    },
-  },
 };
 
 import createNextIntlPlugin from 'next-intl/plugin';
