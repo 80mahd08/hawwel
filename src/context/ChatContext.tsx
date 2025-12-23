@@ -35,8 +35,13 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   // 1. Singleton Socket Initialization
   useEffect(() => {
-    const socketUrl = process.env.NEXT_PUBLIC_CHAT_SERVER_URL || "http://localhost:3001";
+    const socketUrl = process.env.NEXT_PUBLIC_CHAT_SERVER_URL;
     
+    if (!socketUrl) {
+      console.warn("NEXT_PUBLIC_CHAT_SERVER_URL is not defined. Chat functionality will be disabled.");
+      return;
+    }
+
     // Create new socket instance
     const newSocket = io(socketUrl, {
       reconnectionAttempts: 5,
