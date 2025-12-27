@@ -11,54 +11,59 @@ interface FeaturedPropertiesProps {
 }
 
 export default function FeaturedProperties({ houses }: FeaturedPropertiesProps) {
-  const t = useTranslations('FeaturedProperties');
+  const t = useTranslations('Featured');
 
   if (!houses || houses.length === 0) return null;
 
   return (
-    <section className="featured-properties">
+    <section className="featured-properties-section">
       <div className="container">
         <div className="section-header">
           <h2 className="section-title">{t('title')}</h2>
-          <Link href="/?view=list" className="view-all">
-            {t('viewAll')} →
-          </Link>
+          <p className="section-subtitle">{t('subtitle')}</p>
         </div>
 
-        <div className="properties-grid">
+        <div className="featured-grid">
           {houses.slice(0, 3).map((house) => (
             <Link 
-              href={`/house/${house._id}`} 
+              href={`/${house._id}`} 
               key={house._id} 
               className="featured-card"
             >
-              <div className="card-image">
+              <div className="image-wrapper">
                 {house.images && house.images.length > 0 ? (
                   <Image 
                     src={house.images[0]} 
                     alt={house.title} 
                     fill 
+                    className="house-img"
                     sizes="(max-width: 768px) 100vw, 33vw"
-                    style={{ objectFit: 'cover' }}
-                    unoptimized={true}
                   />
                 ) : (
-                  <div className="image-placeholder">No Image Available</div>
+                  <div className="no-image-placeholder" style={{ width: '100%', height: '100%', background: '#e2e8f0' }}></div>
                 )}
-                <div className="price-tag">
-                  {house.pricePerDay} {t('currency')}/{t('night')}
+                <div className="rating-badge">
+                  <span className="star">★</span>
+                  <span>{house.rating ? house.rating.toFixed(1) : t('new')}</span>
                 </div>
               </div>
-              <div className="card-content">
-                <h3>{house.title}</h3>
-                <p className="location">📍 {house.location}</p>
-                <div className="card-footer">
-                  <span className="rating">⭐ {house.rating ? house.rating.toFixed(1) : t('new')}</span>
-                  <span className="book-now">{t('bookNow')}</span>
+              
+              <div className="content">
+                <h3 className="house-title">{house.title}</h3>
+                <div className="location">📍 {house.location}</div>
+                <div className="price">
+                  {house.pricePerDay} {t('currency')}
+                  <span className="period"> {t('night')}</span>
                 </div>
               </div>
             </Link>
           ))}
+        </div>
+        
+        <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+          <Link href="/?view=list" className="btn" style={{ width: 'fit-content', margin: '0 auto' }}>
+            {t('viewAll')} →
+          </Link>
         </div>
       </div>
     </section>

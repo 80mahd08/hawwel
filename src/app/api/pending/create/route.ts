@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import { getUserByClerkId, createPending } from "@/lib/dbFunctions";
 import { ReservationSchema } from "@/lib/validations";
+import dbConnect from "@/lib/dbConnect";
+import User from "@/models/User";
+import House from "@/models/house";
+import { sendEmail, getBookingRequestTemplate } from "@/lib/email";
+
 export async function POST(req: Request) {
   try {
     const user = await currentUser();
@@ -38,41 +43,45 @@ export async function POST(req: Request) {
       endDate,
     });
 
-    // Send Email Notification to Owner
-    try {
-      const dbConnect = (await import("@/lib/dbConnect")).default;
-      const User = (await import("@/models/User")).default;
-      const House = (await import("@/models/house")).default;
-      const { sendEmail, getBookingRequestTemplate } = await import("@/lib/email");
+    // ⚡ PERFORMANCE FOCUSED: SEND RESPONSE FIRST, EMAIL LATER
+    // We launch the email logic as a "fire-and-forget" background task.
+    // This ensures the UI gets an immediate success response.
+    (async () => {
+      try {
+        await dbConnect();
+        
+        // Fetch only what we need in parallel
+        const [owner, houseObj] = await Promise.all([
+          User.findById(ownerId).select("email name"),
+          House.findById(houseId).select("title")
+        ]);
 
-      await dbConnect();
-      const [owner, houseObj] = await Promise.all([
-        User.findById(ownerId),
-        House.findById(houseId)
-      ]);
-
-      if (owner?.email) {
-        await sendEmail({
-          to: owner.email,
-          subject: "New Booking Request 🏠",
-          html: getBookingRequestTemplate({
-            ownerName: owner.name || "Owner",
-            buyerName: mongoUser.name || "A traveler",
-            houseTitle: houseObj?.title || "your property",
-            startDate: new Date(startDate).toLocaleDateString(),
-            endDate: new Date(endDate).toLocaleDateString(),
-          }),
-        });
+        if (owner?.email) {
+          await sendEmail({
+            to: owner.email,
+            subject: "New Booking Request 🏠",
+            html: getBookingRequestTemplate({
+              ownerName: owner.name || "Owner",
+              buyerName: mongoUser.name || "A traveler",
+              houseTitle: houseObj?.title || "your property",
+              startDate: new Date(startDate).toLocaleDateString(),
+              endDate: new Date(endDate).toLocaleDateString(),
+            }),
+          });
+        }
+      } catch (backgroundError) {
+        // Log error silently so it doesn't crash the server, 
+        // but we might want to log this to a monitoring service in production.
+        console.error("Background Email Error:", backgroundError);
       }
-    } catch {
-      // Don't fail the request if email fails
-    }
+    })();
 
     return NextResponse.json(
       { message: "Pending created", pending },
       { status: 201 }
     );
   } catch (error: unknown) {
+    console.error("Create Pending Error:", error);
     return NextResponse.json(
       { message: (error as Error)?.message || "Internal error" },
       { status: 500 }

@@ -74,7 +74,9 @@
     "subtitle": "Séjours les mieux notés aimés par les voyageurs",
     "night": "/ nuit",
     "currency": "DT",
-    "new": "Nouveau"
+    "new": "Nouveau",
+    "viewAll": "Voir tout",
+    "bookNow": "Réserver maintenant"
   },
   "Reviews": {
     "title": "Ce que disent les invités",

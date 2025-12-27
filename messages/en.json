@@ -73,7 +73,9 @@
     "subtitle": "Top-rated stays loved by guests",
     "night": "/ night",
     "currency": "DT",
-    "new": "New"
+    "new": "New",
+    "viewAll": "View All",
+    "bookNow": "Book Now"
   },
 
   "Reviews": {
