@@ -3,22 +3,30 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
-  secure: true, // true for 465, false for other ports
+  secure: true, 
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
   tls: {
-    rejectUnauthorized: false, // Bypass SSL validation (fixes some production certificate errors)
+    rejectUnauthorized: false,
   },
+  // ⚡ CRITICAL FIX: Force IPv4.
+  // Many cloud containers (Render, Docker) fail with IPv6 (default) for Gmail.
+  family: 4, 
+  
+  // Debugging: This will log SMTP traffic to your console
+  logger: true,
+  debug: true,
+
   // Performance & Resilience settings
-  pool: true, // Use pooled connections
-  maxConnections: 1, // Limit max connections to avoid Gmail limits
-  rateLimit: 5, // Limit sending rate if sending in bulk
-  connectionTimeout: 10000, 
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
-});
+  pool: true, 
+  maxConnections: 1, 
+  rateLimit: 5, 
+  connectionTimeout: 20000, // Increased to 20s
+  greetingTimeout: 20000,
+  socketTimeout: 20000,
+} as any);
 
 export async function sendEmail({
   to,
