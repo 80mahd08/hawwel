@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -26,7 +27,7 @@ const transporter = nodemailer.createTransport({
   connectionTimeout: 20000, // Increased to 20s
   greetingTimeout: 20000,
   socketTimeout: 20000,
-} as any);
+} as SMTPTransport.Options);
 
 export async function sendEmail({
   to,
