@@ -3,8 +3,8 @@ import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465,
-  secure: true, 
+  port: 587,
+  secure: false, // true for 465, false for other ports 
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -20,13 +20,10 @@ const transporter = nodemailer.createTransport({
   logger: true,
   debug: true,
 
-  // Performance & Resilience settings
-  pool: true, 
-  maxConnections: 1, 
-  rateLimit: 5, 
-  connectionTimeout: 20000, // Increased to 20s
-  greetingTimeout: 20000,
-  socketTimeout: 20000,
+  // Simplified settings (No Pooling)
+  connectionTimeout: 30000, // 30 seconds
+  greetingTimeout: 30000,
+  socketTimeout: 30000,
 } as SMTPTransport.Options);
 
 export async function sendEmail({
