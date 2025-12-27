@@ -8,11 +8,14 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  tls: {
+    rejectUnauthorized: false, // Bypass SSL validation (fixes some production certificate errors)
+  },
   // Performance & Resilience settings
   pool: true, // Use pooled connections
   maxConnections: 1, // Limit max connections to avoid Gmail limits
   rateLimit: 5, // Limit sending rate if sending in bulk
-  connectionTimeout: 10000, // 10 seconds
+  connectionTimeout: 10000, 
   greetingTimeout: 10000,
   socketTimeout: 10000,
 });
