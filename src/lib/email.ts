@@ -1,11 +1,20 @@
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, // true for 465, false for other ports
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  // Performance & Resilience settings
+  pool: true, // Use pooled connections
+  maxConnections: 1, // Limit max connections to avoid Gmail limits
+  rateLimit: 5, // Limit sending rate if sending in bulk
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
 });
 
 export async function sendEmail({
