@@ -46,7 +46,7 @@ function LocationMarker({ onLocationSelect, initialLat, initialLng }: LocationPi
                         "";
         
         onLocationSelect(lat, lng, address);
-      } catch (error) {
+      } catch {
         onLocationSelect(lat, lng);
       }
     },

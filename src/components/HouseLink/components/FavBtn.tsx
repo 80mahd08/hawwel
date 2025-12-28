@@ -43,7 +43,7 @@ export default function FavBtn({ houseId }: FavBtnProps) {
       toast.success(t('addedSuccess'));
 
       refreshCountFav(user.id);
-    } catch (error) {
+    } catch {
       toast.error(t('errorAdding') || "Error adding to favorites");
     }
   };

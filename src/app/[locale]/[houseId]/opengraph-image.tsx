@@ -11,9 +11,16 @@ export const size = {
 
 export const contentType = 'image/png';
 
+interface House {
+  title: string;
+  location: string;
+  pricePerDay: number;
+  images: string[];
+}
+
 export default async function Image({ params }: { params: { houseId: string; locale: string } }) {
   const { houseId } = params;
-  const house: any = await gethouseById(houseId);
+  const house = (await gethouseById(houseId)) as unknown as House | null;
 
   if (!house) {
     return new ImageResponse(

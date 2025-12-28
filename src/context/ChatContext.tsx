@@ -111,7 +111,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     // -- Booking Listeners --
     const triggerRefresh = () => window.dispatchEvent(new Event("refresh-booking-data"));
 
-    socket.on("receive-booking-request", (pending) => {
+    socket.on("receive-booking-request", () => {
       Swal.fire({
         toast: true,
         position: 'top-end',

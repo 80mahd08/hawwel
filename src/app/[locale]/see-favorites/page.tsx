@@ -7,7 +7,6 @@ import {
 import { currentUser } from "@clerk/nextjs/server";
 import Pagination from "@/components/Pagination/Pagination";
 import { IHouseListing } from "@/components/HousesView/HousesView";
-import { Ihouse } from "@/models/house";
 
 export default async function page({
   searchParams,
@@ -38,12 +37,12 @@ export default async function page({
   if (favorites && favorites.length > 0) {
     // Check real-time availability for all houses in one go
     // Filter out potential nulls (orphaned favorites)
-    const validFavorites = favorites.filter((fav: any) => fav.houseId && fav.houseId._id);
+    const validFavorites = favorites.filter((fav: { houseId?: { _id: string } }) => fav.houseId && fav.houseId._id);
     
-    const houseIds = validFavorites.map((fav: any) => fav.houseId._id.toString());
+    const houseIds = validFavorites.map((fav: { houseId: { _id: string } }) => fav.houseId._id.toString());
     const availabilityMap = await batchIsHouseAvailable(houseIds);
 
-    const housesWithAvailability = validFavorites.map((fav: any) => {
+    const housesWithAvailability = validFavorites.map((fav: { houseId: { _id: string; [key: string]: unknown } }) => {
       const houseObj = fav.houseId;
       const id = houseObj._id.toString();
       return {
@@ -63,8 +62,8 @@ export default async function page({
     return (
       <div>
         <div className="houses-list">
-          {housesWithAvailability.map((house: any) => (
-            <HouseLink key={house._id} house={JSON.parse(JSON.stringify(house))} />
+          {housesWithAvailability.map((house: IHouseListing & { isAvailable: boolean }) => (
+            <HouseLink key={house._id} house={JSON.parse(JSON.stringify(house)) as IHouseListing} />
           ))}
         </div>
         <Pagination totalPages={totalPages} currentPage={currentPage} />

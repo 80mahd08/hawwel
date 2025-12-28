@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import dynamic from "next/dynamic";
-import Swal from "sweetalert2";
 import { supabase } from "@/lib/supabaseClient";
 import { useTranslations } from "next-intl";
 import { toast } from "react-hot-toast";

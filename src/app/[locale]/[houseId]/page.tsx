@@ -27,8 +27,7 @@ interface House {
   location: string;
   pricePerDay: number;
   images: string[];
-  ownerId: string;
-  owner?: {
+  ownerId: string | {
     _id: string;
     name: string;
     imageUrl: string;
@@ -57,7 +56,6 @@ export async function generateMetadata({
   const description = house.description
     ? house.description.slice(0, 150) + (house.description.length > 150 ? "..." : "")
     : "Book your next stay with hawwel.";
-  const image = house.images?.[0] || "/og-image.jpg";
 
   return {
     title,
@@ -75,10 +73,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({ params }: PageProps) {
-  const t = await getTranslations('HouseDetails');
-  const tSearch = await getTranslations('Search');
-
+export default async function Page({ params }: { params: Promise<{ houseId: string }> }) {
   try {
     const { houseId } = await params;
 
@@ -99,8 +94,8 @@ export default async function Page({ params }: PageProps) {
       );
     }
 
-    const house = rawHouseData as any;
-    const ownerId = house.ownerId?._id || house.ownerId;
+    const house = rawHouseData as unknown as House;
+    const ownerId = typeof house.ownerId === 'string' ? house.ownerId : (house.ownerId as { _id: string })?._id;
     const images: string[] = house.images || [];
 
     // Parallelize user-dependent and secondary house data fetches
@@ -111,7 +106,7 @@ export default async function Page({ params }: PageProps) {
       getReviewsByHouseId(houseId)
     ]);
 
-    const currentUserMongoDb = rawUser ? rawUser : null;
+    const currentUserMongoDb = rawUser as { _id: string; [key: string]: unknown } | null;
     const isOwner = currentUserMongoDb?._id?.toString() === ownerId;
 
     const approvedReservations = rawApprovedReservations;
@@ -119,7 +114,7 @@ export default async function Page({ params }: PageProps) {
     
     // Final check for review permission
     const canReview = currentUserMongoDb 
-      ? await canUserReview((currentUserMongoDb as any)._id.toString(), houseId) 
+      ? await canUserReview(currentUserMongoDb._id.toString(), houseId) 
       : false;
 
     return (
@@ -239,7 +234,7 @@ export default async function Page({ params }: PageProps) {
                     <Order
                       ownerId={ownerId!}
                       houseId={houseId}
-                      buyerId={(currentUserMongoDb as any)._id!.toString()}
+                      buyerId={currentUserMongoDb._id.toString()}
                       reservedDates={approvedReservations.map((reservation: { startDate: string | Date; endDate: string | Date }) => ({
                         startDate: new Date(reservation.startDate).toISOString(),
                         endDate: new Date(reservation.endDate).toISOString(),

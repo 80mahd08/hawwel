@@ -60,7 +60,7 @@ export default function RemFavBtn({ houseId }: RemFavBtnProps) {
       // Refresh count + page
       refreshCountFav(user.id);
       router.refresh();
-    } catch (error) {
+    } catch {
       toast.error(t('removeFavDialog.errorText') || "Error removing favorite");
     }
   };

@@ -9,7 +9,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const resolvedSearchParams = await searchParams;
-  const { locale } = await params;
+  await params;
   
   const location = resolvedSearchParams.location as string;
   const propertyType = resolvedSearchParams.propertyType as string;
@@ -87,7 +87,13 @@ async function ReviewsSection() {
   return <RecentReviews reviews={reviews} />;
 }
 
-async function HousesList({ filters, initialView }: { filters: any, initialView: any }) {
+async function HousesList({ 
+  filters, 
+  initialView 
+}: { 
+  filters: Record<string, string | string[] | number | Date | boolean | undefined>, 
+  initialView: "map" | "list" 
+}) {
   const { houses: rawHouses, totalPages, currentPage } = await getAllhouses(filters);
   const sortByParam = filters.sortBy as string;
   const isSorting = sortByParam && sortByParam !== 'newest';

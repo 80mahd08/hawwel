@@ -4,7 +4,7 @@ import { cache } from "react";
 import User, { IUser } from "@/models/User";
 import house, { Ihouse } from "@/models/house";
 import favorite from "@/models/favorite";
-import Pending, { IPending } from "@/models/Pending";
+import Pending from "@/models/Pending";
 import Review from "@/models/Review";
 import { SearchFilterSchema, SearchFilterInput } from "./validations";
 import { FilterQuery, Types } from "mongoose";
@@ -229,7 +229,7 @@ export const getAllhouses = cache(async (filters: Partial<SearchFilterInput> = {
     const availabilityMap = await batchIsHouseAvailable(houseIds);
 
     const housesPlain = JSON.parse(JSON.stringify(housesRaw));
-    const houses = housesPlain.map((h: any) => ({
+    const houses = housesPlain.map((h: { _id: string }) => ({
       ...h,
       isAvailable: availabilityMap[h._id] ?? true
     }));
@@ -610,7 +610,7 @@ export async function isHouseAvailable(houseId: string): Promise<boolean> {
     });
 
     return !activeReservation;
-  } catch (error: unknown) {
+  } catch {
     return true; 
   }
 }
@@ -652,7 +652,7 @@ export async function batchIsHouseAvailable(
     });
 
     return result;
-  } catch (error: unknown) {
+  } catch {
     // Return empty results or default to available
     const fallback: Record<string, boolean> = {};
     houseIds.forEach((id) => (fallback[id] = true));
@@ -705,7 +705,7 @@ export async function canUserReview(userId: string, houseId: string): Promise<bo
     });
 
     return !!reservation;
-  } catch (error: unknown) {
+  } catch {
     return false;
   }
 }
@@ -730,7 +730,7 @@ export async function getFeaturedHouses(limit: number = 4) {
       .sort({ rating: -1, pricePerDay: 1 }) // Highest rating, then cheapest
       .limit(limit)
       .lean()));
-  } catch (error: unknown) {
+  } catch {
     return [];
   }
 }
@@ -744,7 +744,7 @@ export async function getRecentReviews(limit: number = 6) {
       .populate("userId", "name imageUrl")
       .populate("houseId", "_id title images") // Populate house details for linking
       .lean()));
-  } catch (error: unknown) {
+  } catch {
     return [];
   }
 }
