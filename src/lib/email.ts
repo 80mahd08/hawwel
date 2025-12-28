@@ -16,10 +16,6 @@ const transporter = nodemailer.createTransport({
   // Many cloud containers (Render, Docker) fail with IPv6 (default) for Gmail.
   family: 4, 
   
-  // Debugging: This will log SMTP traffic to your console
-  logger: true,
-  debug: true,
-
   // Simplified settings (No Pooling)
   connectionTimeout: 30000, // 30 seconds
   greetingTimeout: 30000,
