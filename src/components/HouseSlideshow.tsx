@@ -66,7 +66,15 @@ export default function HouseSlideshow({ images }: { images: string[] }) {
             transitionDuration={300}
           >
             {images.map((img, idx) => (
-              <div className="each-slide" key={idx} onClick={() => openLightbox(idx)} style={{ position: 'relative', height: '300px' }}>
+              <div 
+                className="each-slide" 
+                key={idx} 
+                onClick={() => openLightbox(idx)} 
+                style={{ position: 'relative', height: '300px' }}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && openLightbox(idx)}
+              >
                 <NextImage 
                   src={img} 
                   alt={`House image ${idx + 1}`} 
@@ -90,6 +98,9 @@ export default function HouseSlideshow({ images }: { images: string[] }) {
                 className={`gallery-item item-${idx + 1}`} 
                 onClick={() => openLightbox(idx)}
                 style={{ position: 'relative' }}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && openLightbox(idx)}
               >
                 <NextImage 
                   src={img} 
@@ -165,7 +176,7 @@ export default function HouseSlideshow({ images }: { images: string[] }) {
                     onClick={() => goToSlide(idx)}
                     style={{ position: 'relative', width: '80px', height: '60px', flexShrink: 0 }}
                   >
-                    <NextImage 
+                  <NextImage 
                       src={img} 
                       alt={`Thumb ${idx + 1}`} 
                       fill

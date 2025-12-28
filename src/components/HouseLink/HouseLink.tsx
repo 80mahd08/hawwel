@@ -33,7 +33,7 @@ export default function LinkHouse({ house, index = 0 }: { house: LinkHouseProps,
   const { user } = useUser();
   const t = useTranslations('HouseCard');
 
-  const isFavoritePage = pathname === "/see-favorites";
+  const isFavoritePage = pathname.includes("/see-favorites");
   const hasImage = house.images.length > 0;
 
   // Use real-time availability if provided, otherwise fall back to stored availability
@@ -95,7 +95,7 @@ export default function LinkHouse({ house, index = 0 }: { house: LinkHouseProps,
           ) : (
             <FavBtn houseId={house._id!} />
           ))}
-        {pathname === "/my-houses" && <RemHouseBtn houseId={house._id!} />}
+        {pathname.includes("/my-houses") && <RemHouseBtn houseId={house._id!} />}
       </div>
     </motion.div>
   );

@@ -37,32 +37,33 @@ export default async function page({
 
   if (favorites && favorites.length > 0) {
     // Check real-time availability for all houses in one go
-    const houseIds = (favorites as unknown as { houseId: { _id: string } }[])
-      .map((fav) => fav.houseId?._id?.toString() || String(fav.houseId?._id))
-      .filter((id): id is string => !!id && id !== "undefined");
+    // Filter out potential nulls (orphaned favorites)
+    const validFavorites = favorites.filter((fav: any) => fav.houseId && fav.houseId._id);
+    
+    const houseIds = validFavorites.map((fav: any) => fav.houseId._id.toString());
     const availabilityMap = await batchIsHouseAvailable(houseIds);
 
-    const housesWithAvailability = (favorites as unknown as { houseId: Ihouse }[]).map((fav) => {
+    const housesWithAvailability = validFavorites.map((fav: any) => {
       const houseObj = fav.houseId;
-      const id = (houseObj as unknown as { _id: string })._id?.toString() || "";
+      const id = houseObj._id.toString();
       return {
         ...houseObj,
         _id: id,
-        location: houseObj?.location || "",
-        pricePerDay: houseObj?.pricePerDay || 0,
-        available: houseObj?.available ?? true,
-        ownerId: houseObj?.ownerId?.toString(),
-        images: Array.isArray(houseObj?.images) ? (houseObj.images as string[]) : [],
+        location: houseObj.location || "",
+        pricePerDay: houseObj.pricePerDay || 0,
+        available: houseObj.available ?? true,
+        ownerId: houseObj.ownerId?.toString(),
+        images: Array.isArray(houseObj.images) ? (houseObj.images as string[]) : [],
         isAvailable: availabilityMap[id] ?? true,
-        lat: (houseObj?.lat ?? undefined) as number | undefined,
-        lng: (houseObj?.lng ?? undefined) as number | undefined,
+        lat: (houseObj.lat ?? undefined) as number | undefined,
+        lng: (houseObj.lng ?? undefined) as number | undefined,
       } as unknown as IHouseListing & { isAvailable: boolean };
     });
 
     return (
       <div>
         <div className="houses-list">
-          {housesWithAvailability.map((house) => (
+          {housesWithAvailability.map((house: any) => (
             <HouseLink key={house._id} house={JSON.parse(JSON.stringify(house))} />
           ))}
         </div>

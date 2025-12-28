@@ -4,7 +4,7 @@ import { cache } from "react";
 import User, { IUser } from "@/models/User";
 import house, { Ihouse } from "@/models/house";
 import favorite from "@/models/favorite";
-import Pending from "@/models/Pending";
+import Pending, { IPending } from "@/models/Pending";
 import Review from "@/models/Review";
 import { SearchFilterSchema, SearchFilterInput } from "./validations";
 import { FilterQuery, Types } from "mongoose";
@@ -35,7 +35,9 @@ export async function getUserByClerkId(clerkId: string) {
   try {
     await dbConnect();
 
-    return await User.findOne({ clerkId });
+    const user = await User.findOne({ clerkId }).lean();
+    if (!user) return null;
+    return JSON.parse(JSON.stringify(user));
   } catch (error: unknown) {
     throw error;
   }
@@ -44,7 +46,9 @@ export async function getUserByClerkId(clerkId: string) {
 export async function getUserById(userId: string) {
   try {
     await dbConnect();
-    return await User.findById(userId);
+    const user = await User.findById(userId).lean();
+    if (!user) return null;
+    return JSON.parse(JSON.stringify(user));
   } catch (error: unknown) {
     throw error;
   }
@@ -224,15 +228,11 @@ export const getAllhouses = cache(async (filters: Partial<SearchFilterInput> = {
     const houseIds = housesRaw.map(h => (h as unknown as { _id: Types.ObjectId })._id.toString());
     const availabilityMap = await batchIsHouseAvailable(houseIds);
 
-    const houses = housesRaw.map(h => {
-      const houseObj = h as unknown as Ihouse & { _id: Types.ObjectId; ownerId?: Types.ObjectId };
-      return {
-        ...houseObj,
-        _id: houseObj._id.toString(),
-        ownerId: houseObj.ownerId?.toString(),
-        isAvailable: availabilityMap[houseObj._id.toString()] ?? true
-      };
-    });
+    const housesPlain = JSON.parse(JSON.stringify(housesRaw));
+    const houses = housesPlain.map((h: any) => ({
+      ...h,
+      isAvailable: availabilityMap[h._id] ?? true
+    }));
 
     return {
       houses,
@@ -260,7 +260,7 @@ export async function gethousesByOwner(
     ]);
 
     return {
-      houses: houses as unknown as Ihouse[],
+      houses: JSON.parse(JSON.stringify(houses)),
       totalPages: Math.ceil(total / limitNum),
       currentPage: pageNum,
     };
@@ -275,14 +275,7 @@ export const gethouseById = cache(async (houseId: string) => {
     await dbConnect();
     const result = await house.findById(houseId).populate("ownerId", "name imageUrl").lean();
     if (!result) return null;
-    
-    const houseObj = result as unknown as Ihouse & { _id: Types.ObjectId; ownerId: { _id: Types.ObjectId } | Types.ObjectId };
-    return {
-      ...houseObj,
-      _id: houseObj._id.toString(),
-      ownerId: (houseObj.ownerId as { _id: Types.ObjectId })._id?.toString() || (houseObj.ownerId as Types.ObjectId).toString(),
-      owner: houseObj.ownerId,
-    };
+    return JSON.parse(JSON.stringify(result));
   } catch (error: unknown) {
     throw error;
   }
@@ -321,7 +314,7 @@ export async function getUserfavorites(
     ]);
 
     return {
-      favorites: favorites as unknown as { houseId: Ihouse }[],
+      favorites: JSON.parse(JSON.stringify(favorites)),
       totalPages: Math.ceil(total / limit),
       currentPage: page,
     };
@@ -418,7 +411,7 @@ export async function getPendingByOwner(
     ]);
 
     return {
-      pendings: pendings as unknown as { houseId: Ihouse; buyerId: IUser }[],
+      pendings: JSON.parse(JSON.stringify(pendings)),
       totalPages: Math.ceil(total / limit),
       currentPage: page,
     };
@@ -448,7 +441,7 @@ export async function getPendingCount(clerkId: string): Promise<number> {
 export async function getPendingByhouse(houseId: string) {
   try {
     await dbConnect();
-    return await Pending.find({ houseId }).populate("buyerId");
+    return JSON.parse(JSON.stringify(await Pending.find({ houseId }).populate("buyerId").lean()));
   } catch (error: unknown) {
     throw error;
   }
@@ -488,16 +481,7 @@ export async function getPendingByBuyer(
     ]);
 
     return {
-      pendings: pendings as unknown as (Ihouse & { 
-        _id: string; 
-        houseId: Ihouse; 
-        status: string; 
-        createdAt: string; 
-        startDate: string; 
-        endDate: string;
-        ownerId: string;
-        buyerId: string;
-      })[],
+      pendings: JSON.parse(JSON.stringify(pendings)),
       totalPages: Math.ceil(total / limit),
       currentPage: page,
     };
@@ -590,11 +574,11 @@ export async function getApprovedByHouse(houseId: string) {
       Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
     );
 
-    return await Pending.find({
+    return JSON.parse(JSON.stringify(await Pending.find({
       houseId,
       status: "approved",
       endDate: { $gte: today }, // keep only future or ongoing reservations (UTC comparison)
-    });
+    }).lean()));
   } catch (error: unknown) {
     throw error;
   }
@@ -729,10 +713,10 @@ export async function canUserReview(userId: string, houseId: string): Promise<bo
 export async function getReviewsByHouseId(houseId: string) {
   try {
     await dbConnect();
-    return await Review.find({ houseId })
+    return JSON.parse(JSON.stringify(await Review.find({ houseId })
       .sort({ createdAt: -1 })
       .populate("userId", "name imageUrl")
-      .lean();
+      .lean()));
   } catch (error: unknown) {
     throw error;
   }
@@ -741,11 +725,11 @@ export async function getReviewsByHouseId(houseId: string) {
 export async function getFeaturedHouses(limit: number = 4) {
   try {
     await dbConnect();
-    return await house
+    return JSON.parse(JSON.stringify(await house
       .find({ available: true, rating: { $gte: 4 } }) // Only available and highly rated
       .sort({ rating: -1, pricePerDay: 1 }) // Highest rating, then cheapest
       .limit(limit)
-      .lean();
+      .lean()));
   } catch (error: unknown) {
     return [];
   }
@@ -754,12 +738,12 @@ export async function getFeaturedHouses(limit: number = 4) {
 export async function getRecentReviews(limit: number = 6) {
   try {
     await dbConnect();
-    return await Review.find({})
+    return JSON.parse(JSON.stringify(await Review.find({})
       .sort({ createdAt: -1 })
       .limit(limit)
       .populate("userId", "name imageUrl")
       .populate("houseId", "_id title images") // Populate house details for linking
-      .lean();
+      .lean()));
   } catch (error: unknown) {
     return [];
   }

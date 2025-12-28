@@ -3,6 +3,7 @@ import { useState } from "react";
 import Swal from "sweetalert2";
 import { useChat } from "@/context/ChatContext";
 import { useTranslations } from "next-intl";
+import { toast } from "react-hot-toast";
 
 function Order({
   houseId,
@@ -33,11 +34,7 @@ function Order({
       cancelButtonText: t('cancel'),
     });
     if (!validateDates()) {
-      await Swal.fire({
-        title: t('invalidDatesTitle'),
-        text: error || "Please check the selected dates.",
-        icon: "error",
-      });
+      toast.error(error || "Please check the selected dates.");
       return;
     }
     if (!confirmed.isConfirmed) return;
@@ -52,11 +49,7 @@ function Order({
 
       const data = await res.json();
       if (!res.ok) {
-        await Swal.fire({
-          title: t('errorTitle'),
-          text: data?.message || "Failed to create order",
-          icon: "error",
-        });
+        toast.error(data?.message || "Failed to create order");
       } else {
         // --- REAL-TIME NOTIFICATION ---
         if (socket?.connected) {
@@ -66,18 +59,10 @@ function Order({
           });
         }
         
-        await Swal.fire({
-          title: t('successTitle'),
-          text: t('successMessage'),
-          icon: "success",
-        });
+        toast.success(t('successMessage'));
       }
     } catch (err: unknown) {
-      await Swal.fire({
-        title: t('errorTitle'),
-        text: (err as Error)?.message || "Network error",
-        icon: "error",
-      });
+      toast.error((err as Error)?.message || "Network error");
     } finally {
       setLoading(false);
     }

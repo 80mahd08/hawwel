@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Swal from "sweetalert2";
 import { supabase } from "@/lib/supabaseClient";
 import { useTranslations } from "next-intl";
+import { toast } from "react-hot-toast";
 
 const LocationPicker = dynamic(() => import("@/components/LocationPicker/LocationPicker"), { ssr: false });
 
@@ -98,7 +99,7 @@ export default function AddHousePage() {
       }
 
       if (form.lat === null || form.lng === null) {
-        Swal.fire(t('locationRequired'), t('locationMsg'), "warning");
+        toast.error(t('locationRequired'));
         setLoading(false);
         return;
       }
@@ -123,7 +124,7 @@ export default function AddHousePage() {
 
       const data = await res.json();
       if (res.ok) {
-        Swal.fire(t('successTitle'), t('successMsg'), "success");
+        toast.success(t('successMsg'));
         setForm({
           title: "",
           description: "",
@@ -144,10 +145,10 @@ export default function AddHousePage() {
               )
               .join("\n")
           : data.message;
-        Swal.fire(t('errorTitle'), errorDetails || "Failed to add house", "error");
+        toast.error(errorDetails || "Failed to add house");
       }
     } catch {
-      Swal.fire(t('errorTitle'), "Something went wrong", "error");
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }

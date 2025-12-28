@@ -65,14 +65,12 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      images: [image],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [image],
     },
   };
 }
@@ -101,8 +99,8 @@ export default async function Page({ params }: PageProps) {
       );
     }
 
-    const house = JSON.parse(JSON.stringify(rawHouseData)) as unknown as House;
-    const ownerId = house.ownerId?.toString();
+    const house = rawHouseData as any;
+    const ownerId = house.ownerId?._id || house.ownerId;
     const images: string[] = house.images || [];
 
     // Parallelize user-dependent and secondary house data fetches
@@ -113,15 +111,15 @@ export default async function Page({ params }: PageProps) {
       getReviewsByHouseId(houseId)
     ]);
 
-    const currentUserMongoDb = rawUser ? JSON.parse(JSON.stringify(rawUser)) : null;
+    const currentUserMongoDb = rawUser ? rawUser : null;
     const isOwner = currentUserMongoDb?._id?.toString() === ownerId;
 
-    const approvedReservations = JSON.parse(JSON.stringify(rawApprovedReservations));
-    const reviews = JSON.parse(JSON.stringify(rawReviews));
+    const approvedReservations = rawApprovedReservations;
+    const reviews = rawReviews;
     
     // Final check for review permission
     const canReview = currentUserMongoDb 
-      ? await canUserReview(currentUserMongoDb._id.toString(), houseId) 
+      ? await canUserReview((currentUserMongoDb as any)._id.toString(), houseId) 
       : false;
 
     return (
@@ -148,8 +146,7 @@ export default async function Page({ params }: PageProps) {
           <div className="house-content-grid">
             <div className="house-main-info">
               
-              {/* Host Info Section */}
-              {house.owner && (
+              {house.ownerId && typeof house.ownerId === 'object' && (
                 <div className="info-section host-info" style={{ 
                   display: 'flex', 
                   alignItems: 'center', 
@@ -159,8 +156,8 @@ export default async function Page({ params }: PageProps) {
                 }}>
                   <div style={{ position: 'relative', width: '56px', height: '56px' }}>
                     <NextImage 
-                      src={house.owner.imageUrl || "/default-pfp.png"} 
-                      alt={house.owner.name} 
+                      src={house.ownerId.imageUrl || "/default-pfp.png"} 
+                      alt={house.ownerId.name || "Host"} 
                       fill
                       sizes="56px"
                       style={{ 
@@ -175,7 +172,7 @@ export default async function Page({ params }: PageProps) {
                   </div>
                   <div>
                     <h3 style={{ margin: '0 0 4px 0', fontSize: '1.2rem', fontWeight: 600 }}>
-                      {t('hostedBy')} {house.owner.name || "Host"}
+                      {t('hostedBy')} {house.ownerId.name || "Host"}
                     </h3>
                     <p style={{ margin: 0, color: '#666', fontSize: '0.9rem' }}>
                       {t('propertyOwner')}
@@ -242,7 +239,7 @@ export default async function Page({ params }: PageProps) {
                     <Order
                       ownerId={ownerId!}
                       houseId={houseId}
-                      buyerId={currentUserMongoDb._id!.toString()}
+                      buyerId={(currentUserMongoDb as any)._id!.toString()}
                       reservedDates={approvedReservations.map((reservation: { startDate: string | Date; endDate: string | Date }) => ({
                         startDate: new Date(reservation.startDate).toISOString(),
                         endDate: new Date(reservation.endDate).toISOString(),

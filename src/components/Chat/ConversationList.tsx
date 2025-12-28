@@ -39,13 +39,14 @@ export default function ConversationList({ onSelect }: { onSelect: (id: string) 
     <div className="conversation-list-popup" style={{
       width: '300px',
       maxHeight: '400px',
-      backgroundColor: 'white',
+      backgroundColor: 'var(--card-bg)',
       borderRadius: '12px',
-      boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+      boxShadow: 'var(--shadow-md)',
       overflowY: 'auto',
-      border: '1px solid #eaeaea'
+      border: '1px solid var(--border-color)',
+      color: 'var(--text)'
     }}>
-      <div style={{ padding: '15px', borderBottom: '1px solid #f0f0f0', fontWeight: 'bold' }}>
+      <div style={{ padding: '15px', borderBottom: '1px solid var(--border-color)', fontWeight: 'bold' }}>
         Messages
       </div>
       {loading ? (
@@ -68,11 +69,12 @@ export default function ConversationList({ onSelect }: { onSelect: (id: string) 
                 padding: '12px 15px',
                 cursor: 'pointer',
                 transition: 'background 0.2s',
-                borderBottom: '1px solid #f9f9f9',
-                backgroundColor: isUnread ? '#f0f7ff' : 'transparent'
+                borderBottom: '1px solid var(--border-color)',
+                backgroundColor: isUnread ? 'var(--btn-secondary-bg)' : 'transparent',
+                color: 'var(--text)'
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = isUnread ? '#e6f0ff' : '#f5f5f5')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = isUnread ? '#f0f7ff' : 'transparent')}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-secondary-bg)')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = isUnread ? 'var(--btn-secondary-bg)' : 'transparent')}
             >
               <div style={{ position: 'relative' }}>
                 <div style={{ position: 'relative', width: '40px', height: '40px' }}>
@@ -98,10 +100,10 @@ export default function ConversationList({ onSelect }: { onSelect: (id: string) 
                 )}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontWeight: isUnread ? 700 : 600, fontSize: '0.9rem' }}>{otherParticipant?.name}</div>
+                <div style={{ fontWeight: isUnread ? 700 : 600, fontSize: '0.9rem', color: 'var(--text)' }}>{otherParticipant?.name}</div>
                 <div style={{ 
                   fontSize: '0.8rem', 
-                  color: isUnread ? '#0070f3' : '#666', 
+                  color: isUnread ? 'var(--primary-color)' : 'var(--text-light)', 
                   fontWeight: isUnread ? 600 : 400,
                   whiteSpace: 'nowrap', 
                   overflow: 'hidden', 

@@ -72,15 +72,15 @@ export default function ChatWidget() {
             width: '60px',
             height: '60px',
             borderRadius: '50%',
-            backgroundColor: '#0070f3',
+            backgroundColor: 'var(--primary-color)',
             color: 'white',
             border: 'none',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            boxShadow: 'var(--shadow-md)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            transition: 'transform 0.2s',
+            transition: 'all 0.2s',
           }}
         >
           {showList ? <X size={28} /> : <MessageSquare size={28} />}

@@ -6,6 +6,7 @@ import { usePendingCount } from "@/context/PendingCountProvider";
 import { useUser } from "@clerk/nextjs";
 import { useChat } from "@/context/ChatContext";
 import { useTranslations } from "next-intl";
+import { toast } from "react-hot-toast";
 
 export default function BtnAccept({
   pendingId,
@@ -53,20 +54,12 @@ export default function BtnAccept({
         });
       }
 
-      await Swal.fire({
-        title: t('acceptDialog.successTitle'),
-        text: t('acceptDialog.successText'),
-        icon: "success",
-      });
+      toast.success(t('acceptDialog.successTitle'));
       refreshCountPending(user?.id);
 
       router.refresh();
     } catch (err: unknown) {
-      await Swal.fire({
-        title: t('acceptDialog.errorTitle'),
-        text: (err as Error)?.message || t('acceptDialog.errorText'),
-        icon: "error",
-      });
+      toast.error((err as Error)?.message || t('acceptDialog.errorText'));
     } finally {
       setLoading(false);
     }

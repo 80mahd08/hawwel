@@ -95,24 +95,25 @@ export default function ChatWindow({ conversationId, onClose }: { conversationId
     <div className="chat-window" style={{
       width: '320px',
       height: '450px',
-      backgroundColor: 'white',
+      backgroundColor: 'var(--card-bg)',
       borderRadius: '12px',
-      boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
+      boxShadow: 'var(--shadow-md)',
       display: 'flex',
       flexDirection: 'column',
       overflow: 'hidden',
-      border: '1px solid #eaeaea'
+      border: '1px solid var(--border-color)',
+      color: 'var(--text)'
     }}>
       {/* Header */}
       <div style={{ 
         padding: '12px 15px', 
-        backgroundColor: '#0070f3', 
+        backgroundColor: 'var(--primary-color)', 
         color: 'white', 
         display: 'flex', 
         justifyContent: 'space-between',
         alignItems: 'center'
       }}>
-        <span style={{ fontWeight: 600 }}>Chat</span>
+        <span style={{ fontWeight: 600, color: 'white' }}>Chat</span>
         <X size={18} style={{ cursor: 'pointer' }} onClick={onClose} />
       </div>
 
@@ -128,8 +129,8 @@ export default function ChatWindow({ conversationId, onClose }: { conversationId
             return (
               <div key={i} style={{
                 alignSelf: isMe ? 'flex-end' : 'flex-start',
-                backgroundColor: isMe ? '#0070f3' : '#f0f0f0',
-                color: isMe ? 'white' : 'black',
+                backgroundColor: isMe ? 'var(--primary-color)' : 'var(--btn-secondary-bg)',
+                color: isMe ? 'white' : 'var(--text)',
                 padding: '8px 12px',
                 borderRadius: '16px',
                 maxWidth: '80%',
@@ -144,7 +145,7 @@ export default function ChatWindow({ conversationId, onClose }: { conversationId
       </div>
 
       {/* Input Area */}
-      <form onSubmit={handleSend} style={{ padding: '10px', borderTop: '1px solid #eee', display: 'flex', gap: '8px' }}>
+      <form onSubmit={handleSend} style={{ padding: '10px', borderTop: '1px solid var(--border-color)', display: 'flex', gap: '8px' }}>
         <input 
           type="text" 
           value={input}
@@ -152,15 +153,17 @@ export default function ChatWindow({ conversationId, onClose }: { conversationId
           placeholder="Type a message..."
           style={{
             flex: 1,
-            border: '1px solid #ddd',
+            border: '1px solid var(--border-color)',
             borderRadius: '20px',
             padding: '8px 15px',
             outline: 'none',
-            fontSize: '0.9rem'
+            fontSize: '0.9rem',
+            backgroundColor: 'var(--input-bg)',
+            color: 'var(--text)'
           }}
         />
         <button type="submit" style={{
-          backgroundColor: '#0070f3',
+          backgroundColor: 'var(--primary-color)',
           color: 'white',
           border: 'none',
           borderRadius: '50%',
@@ -171,7 +174,7 @@ export default function ChatWindow({ conversationId, onClose }: { conversationId
           justifyContent: 'center',
           cursor: 'pointer'
         }}>
-          <Send size={16} />
+          <Send size={16} color="white" />
         </button>
       </form>
     </div>

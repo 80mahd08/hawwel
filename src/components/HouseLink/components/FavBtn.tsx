@@ -1,9 +1,9 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import Swal from "sweetalert2";
 import { useFavCount } from "@/context/FavCountProvider";
 import { useTranslations } from "next-intl";
+import { toast } from "react-hot-toast";
 
 // ============================================
 // Types
@@ -25,10 +25,7 @@ export default function FavBtn({ houseId }: FavBtnProps) {
   // ----------------------------
   const handleAddFavorite = async () => {
     if (!user?.id) {
-      Swal.fire({
-        icon: "info",
-        title: t('loginRequired'),
-      });
+      toast(t('loginRequired'), { icon: '🔑' });
       return;
     }
 
@@ -42,21 +39,12 @@ export default function FavBtn({ houseId }: FavBtnProps) {
       if (!response.ok) {
         throw new Error("Failed to add to favorites");
       }
-
-      Swal.fire({
-        icon: "success",
-        title: t('addedSuccess'),
-        showConfirmButton: false,
-        timer: 1500,
-      });
+      
+      toast.success(t('addedSuccess'));
 
       refreshCountFav(user.id);
     } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: t('errorAdding'),
-      });
+      toast.error(t('errorAdding') || "Error adding to favorites");
     }
   };
 

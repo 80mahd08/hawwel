@@ -6,6 +6,7 @@ import { useRouter } from "@/i18n/routing";
 import { useUser } from "@clerk/nextjs";
 import { useFavCount } from "@/context/FavCountProvider";
 import { useTranslations } from "next-intl";
+import { toast } from "react-hot-toast";
 
 // ============================================
 // Types
@@ -28,10 +29,7 @@ export default function RemFavBtn({ houseId }: RemFavBtnProps) {
   // ----------------------------
   const handleRemoveFavorite = async () => {
     if (!user?.id) {
-      Swal.fire({
-        icon: "info",
-        title: t('loginRequired'),
-      });
+      toast(t('loginRequired'), { icon: '🔑' });
       return;
     }
     // Confirm with user before removing
@@ -56,23 +54,14 @@ export default function RemFavBtn({ houseId }: RemFavBtnProps) {
       if (!response.ok) {
         throw new Error("Failed to remove from favorites");
       }
-
-      Swal.fire({
-        icon: "success",
-        title: t('removeFavDialog.successTitle'),
-        showConfirmButton: false,
-        timer: 1500,
-      });
+      
+      toast.success(t('removeFavDialog.successTitle'));
 
       // Refresh count + page
       refreshCountFav(user.id);
       router.refresh();
     } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: t('removeFavDialog.errorText'),
-      });
+      toast.error(t('removeFavDialog.errorText') || "Error removing favorite");
     }
   };
 

@@ -6,6 +6,7 @@ import { useUser } from "@clerk/nextjs";
 import { usePendingCount } from "@/context/PendingCountProvider";
 import { useChat } from "@/context/ChatContext";
 import { useTranslations } from "next-intl";
+import { toast } from "react-hot-toast";
 
 export default function BtnRefuse({ pendingId }: { pendingId: string }) {
   const [loading, setLoading] = useState(false);
@@ -47,19 +48,11 @@ export default function BtnRefuse({ pendingId }: { pendingId: string }) {
         });
       }
 
-      await Swal.fire({
-        title: t('rejectDialog.successTitle'),
-        text: t('rejectDialog.successText'),
-        icon: "success",
-      });
+      toast.success(t('rejectDialog.successTitle'));
       refreshCountPending(user?.id);
       router.refresh();
     } catch (err: unknown) {
-      await Swal.fire({
-        title: t('rejectDialog.errorTitle'),
-        text: (err as Error)?.message || t('rejectDialog.errorText'),
-        icon: "error",
-      });
+      toast.error((err as Error)?.message || t('rejectDialog.errorText'));
     } finally {
       setLoading(false);
     }

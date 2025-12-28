@@ -3,6 +3,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import dbConnect from "@/lib/dbConnect";
 import House from "@/models/house";
 import Pending from "@/models/Pending";
+import Favorite from "@/models/favorite";
 import { getUserByClerkId } from "@/lib/dbFunctions";
 
 export async function POST(req: Request) {
@@ -37,6 +38,9 @@ export async function POST(req: Request) {
 
     // remove pendings related to this house
     await Pending.deleteMany({ houseId });
+    
+    // remove favorites related to this house
+    await Favorite.deleteMany({ houseId });
 
     // remove the house
     await House.findByIdAndDelete(houseId);
