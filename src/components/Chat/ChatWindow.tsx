@@ -95,13 +95,15 @@ export default function ChatWindow({ conversationId, onClose }: { conversationId
     <div className="chat-window" style={{
       width: '320px',
       height: '450px',
-      backgroundColor: 'var(--card-bg)',
+      backgroundColor: 'var(--glass-bg)',
+      backdropFilter: 'blur(12px)',
+      WebkitBackdropFilter: 'blur(12px)',
       borderRadius: '12px',
       boxShadow: 'var(--shadow-md)',
       display: 'flex',
       flexDirection: 'column',
       overflow: 'hidden',
-      border: '1px solid var(--border-color)',
+      border: '1px solid var(--glass-border)',
       color: 'var(--text)'
     }}>
       {/* Header */}

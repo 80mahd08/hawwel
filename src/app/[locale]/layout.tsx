@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Outfit } from "next/font/google";
 import "@/scss/globals.scss";
 import "@/scss/normalize.scss";
 import Header from "@/components/header/Header";
@@ -31,6 +32,7 @@ export const viewport: Viewport = {
 };
 
 import { ChatProvider } from "@/context/ChatContext";
+import { CompareProvider } from "@/context/CompareContext";
 import ChatWidget from "@/components/Chat/ChatWidget";
 import { Toaster } from "react-hot-toast";
 
@@ -38,6 +40,12 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
+
+const outfit = Outfit({ 
+  subsets: ["latin"], 
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-outfit",
+});
 
 export default async function RootLayout({
   children,
@@ -81,12 +89,13 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body>
+      <body className={outfit.className}>
         <ClerkProvider>
           <NextIntlClientProvider messages={messages}>
             <NotificationCountProvider clerkId={userId || undefined}>
               <PendingCountProvider clerkId={userId || undefined}>
                 <FavCountProvider>
+                  <CompareProvider>
                   <ChatProvider>
                     <Header />
                     <PageTransition>{children}</PageTransition>
@@ -106,6 +115,7 @@ export default async function RootLayout({
                       }}
                     />
                   </ChatProvider>
+                  </CompareProvider>
                 </FavCountProvider>
               </PendingCountProvider>
             </NotificationCountProvider>

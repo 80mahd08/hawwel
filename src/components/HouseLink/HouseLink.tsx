@@ -46,6 +46,7 @@ export default function LinkHouse({ house, index = 0 }: { house: LinkHouseProps,
         !isHouseAvailable ? "unavailable-house" : ""
       }`}
       initial={{ opacity: 0, y: 20 }}
+      whileHover={{ y: -8, scale: 1.02 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ 
         duration: 0.5, 
@@ -60,9 +61,9 @@ export default function LinkHouse({ house, index = 0 }: { house: LinkHouseProps,
               src={house.images[0]}
               alt={house.title}
               className="house-image"
-              width={500}
-              height={300}
-              unoptimized={true}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              style={{ objectFit: 'cover' }}
             />
             <div className="rating-badge">
               <span className="star">★</span>

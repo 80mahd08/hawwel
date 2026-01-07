@@ -64,6 +64,7 @@ export async function generateMetadata({
       title,
       description,
       type: "website",
+      images: house.images && house.images.length > 0 ? [{ url: house.images[0] }] : [],
     },
     twitter: {
       card: "summary_large_image",

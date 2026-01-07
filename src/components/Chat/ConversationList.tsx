@@ -39,11 +39,13 @@ export default function ConversationList({ onSelect }: { onSelect: (id: string) 
     <div className="conversation-list-popup" style={{
       width: '300px',
       maxHeight: '400px',
-      backgroundColor: 'var(--card-bg)',
+      backgroundColor: 'var(--glass-bg)',
+      backdropFilter: 'blur(12px)',
+      WebkitBackdropFilter: 'blur(12px)',
       borderRadius: '12px',
       boxShadow: 'var(--shadow-md)',
       overflowY: 'auto',
-      border: '1px solid var(--border-color)',
+      border: '1px solid var(--glass-border)',
       color: 'var(--text)'
     }}>
       <div style={{ padding: '15px', borderBottom: '1px solid var(--border-color)', fontWeight: 'bold' }}>

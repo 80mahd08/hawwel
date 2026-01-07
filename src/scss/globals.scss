@@ -19,9 +19,11 @@
   --transition-speed: 0.3s;
   --primary-color: #1c73a1;
   --primary-rgb: 28, 115, 161;
-  --font-primary: 'Inter', system-ui, sans-serif;
+  --font-primary: var(--font-outfit), sans-serif;
   --skeleton-bg: #f1f5f9;
   --skeleton-shimmer: rgba(255, 255, 255, 0.5);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.5);
 }
 
 .dark-theme {
@@ -58,6 +60,8 @@
 
   --skeleton-bg: #374151;
   --skeleton-shimmer: rgba(255, 255, 255, 0.05);
+  --glass-bg: rgba(31, 41, 55, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 // Skeleton Loading System
@@ -138,7 +142,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-primary);
   color: var(--text);
   background-color: var(--bg);
   transition: background-color var(--transition-speed), color var(--transition-speed);
@@ -178,12 +182,19 @@ img {
 
 // Header styles
 header {
-  background-color: var(--header-bg);
-  border-bottom: 1px solid var(--border-color);
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   padding-top: 10px; // Extra space to prevent tooltips from being cut off
   transition: background-color var(--transition-speed), border-color var(--transition-speed);
   position: relative;
   z-index: 1000;
+
+  .dark-theme & {
+    background-color: rgba(17, 24, 39, 0.85);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
 
   .container {
     display: flex;
